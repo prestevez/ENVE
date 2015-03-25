@@ -5,11 +5,13 @@
 # install.packages("survey")
 # install.packages("ggplot2")
 # install.packages("xtable")
+# install.packages("foreign")
 
 
 # Load packages into library
 
 library(survey)
+library(foreign)
 # library(xtable)
 # library(ggplot2)
 
