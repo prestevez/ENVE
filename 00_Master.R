@@ -3,7 +3,7 @@
 # Register initial working directory
 
 setwd("~/R Workspace/ENVE")
-MainWD <- getwd()
+MainWD <- "~/R Workspace/ENVE"
 
 # Create object of file where Log will be written 
 
