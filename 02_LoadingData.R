@@ -2,7 +2,7 @@
 
 setwd(dirRawData)
 
-# ## Read ENVE 2012 Main Questionnaire data
+# ## Read ENVE 2012 Main Questionnaire data, Check if import as factor looses decimals
 # enve12 <- read.dbf("FILENAME.dbf")
 #
 # ## Read ENVE 2012 Victimisation module
