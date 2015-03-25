@@ -16,10 +16,10 @@ sink(logfile, append=TRUE, type=c("output","message"))
 
 setwd(MainWD)
 source("01_Setup.R", echo=TRUE, max.deparse.length=10000)
-# 
-# setwd(MainWD)
-# source("02_XX.R", echo=TRUE, max.deparse.length=10000)
-# 
+
+setwd(MainWD)
+source("02_LoadingData.R", echo=TRUE, max.deparse.length=10000)
+
 # setwd(MainWD)
 # source("03_XX.R", echo=TRUE, max.deparse.length=10000)
 # 
