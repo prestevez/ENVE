@@ -48,3 +48,4 @@ dirRdata <- "~/R Workspace/ENVE/Rdata"
 dirRoutput <- "~/R Workspace/ENVE/Routput"
 # dir.create(dirRoutput) # If it already exists, comment it out
 
+### END of 01_Setup.R

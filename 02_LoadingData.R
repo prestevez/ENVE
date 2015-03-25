@@ -19,3 +19,5 @@ setwd(dirRdata)
 save(list=ls(all=TRUE), file="ENVE1214.Rdata")
 
 setwd(MainWD)
+
+### END of 02_LoadingData.R
