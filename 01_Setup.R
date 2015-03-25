@@ -38,13 +38,13 @@ library(foreign)
 # Set data paths
 
 # Stores Raw Data
-dirRawData <- "RawData"
+dirRawData <- "/Users/prestevez/R Workspace/ENVE/RawData"
 
 # Directory for the R data
-dirRdata <- "Rdata"
+dirRdata <- "/Users/prestevez/R Workspace/ENVE/Rdata"
 # dir.create(dirRdata) # If it already exists, comment it out
 
 # Output directories, for graphical output mainly
-dirRoutput <- "Routput"
+dirRoutput <- "/Users/prestevez/R Workspace/ENVE/Routput"
 # dir.create(dirRoutput) # If it already exists, comment it out
 
