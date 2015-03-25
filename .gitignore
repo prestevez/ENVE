@@ -6,3 +6,5 @@ ComplexSurveys.R
 log.txt
 README_FAIL.Rmd
 Rdata
+RawData
+.DS_Store
