@@ -17,7 +17,7 @@ library(foreign)
 
 # Install and load packages from local directory
 
-# dirPackages <- "Packages"
+# dirPackages <- "/Users/prestevez/R Workspace/ENVE/Packages"
 # 
 # setwd(dirPackages)
 
