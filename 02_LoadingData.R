@@ -3,16 +3,16 @@
 setwd(dirRawData)
 
 # ## Read ENVE 2012 Main Questionnaire data
-# enve12 <- read.dbf("FILENAME.dbf")
+# enve12 <- read.dbf("FILENAME.dbf", as.is=TRUE)
 #
 # ## Read ENVE 2012 Victimisation module
-# vic12 <- read.dbf("FILENAME.dbf")
+# vic12 <- read.dbf("FILENAME.dbf", as.is=TRUE)
 # 
 # ## Read ENVE 2014 Main Questionnaire data
-# enve14 <- read.dbf("FILENAME.dbf")
+# enve14 <- read.dbf("FILENAME.dbf", as.is=TRUE)
 # 
 # ## Read ENVE 2012 Victimisation module
-# vic14 <- read.dbf("FILENAME.dbf")
+# vic14 <- read.dbf("FILENAME.dbf", as.is=TRUE)
 
 ## Save objects for use latter
 setwd(dirRdata)
