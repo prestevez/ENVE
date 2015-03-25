@@ -1,4 +1,5 @@
-## Pre-process the data. Mostly change factors to numeric.
+## 03_Pre-process the data. 
+## Mostly change factors to numeric.
 
 setwd(dirRdata)
 load("ENVE1214.Rdata")
