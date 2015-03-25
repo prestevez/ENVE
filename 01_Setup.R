@@ -17,7 +17,7 @@ library(foreign)
 
 # Install and load packages from local directory
 
-# dirPackages <- "/Users/prestevez/R Workspace/ENVE/Packages"
+# dirPackages <- "~/R Workspace/ENVE/Packages"
 # 
 # setwd(dirPackages)
 
@@ -38,13 +38,13 @@ library(foreign)
 # Set data paths
 
 # Stores Raw Data
-dirRawData <- "/Users/prestevez/R Workspace/ENVE/RawData"
+dirRawData <- "~/R Workspace/ENVE/RawData"
 
 # Directory for the R data
-dirRdata <- "/Users/prestevez/R Workspace/ENVE/Rdata"
+dirRdata <- "~/R Workspace/ENVE/Rdata"
 # dir.create(dirRdata) # If it already exists, comment it out
 
 # Output directories, for graphical output mainly
-dirRoutput <- "/Users/prestevez/R Workspace/ENVE/Routput"
+dirRoutput <- "~/R Workspace/ENVE/Routput"
 # dir.create(dirRoutput) # If it already exists, comment it out
 
