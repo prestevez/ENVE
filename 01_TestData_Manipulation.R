@@ -44,3 +44,8 @@ homicidios <- read.csv("ENVIPE//homicidios_tasas_2013.csv", header=T)
 homicidios <- homicidios[,-1]
 
 testset <- merge(testset, homicidios, by.x="ENT", by.y="CVE_ENT", all.x=T)
+
+# Number of years = envipe.viv$AP2_1
+# Sector = envipe.viv$AP1_1
+# Size = envipe.viv$AP1_2
+
