@@ -76,6 +76,13 @@ summary(testset$barrera)
 
 summary(testset)
 
+## Change NAs in count fields to zero
+
+testset$extorsiones[is.na(testset$extorsiones)] <- 0
+testset$robos[is.na(testset$robos)] <- 0
+testset$secuestros[is.na(testset$secuestros)] <- 0
+
+
 
 ## Save objects for use latter
 setwd(dirRdata)
