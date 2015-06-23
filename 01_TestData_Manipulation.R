@@ -48,4 +48,30 @@ testset <- merge(testset, homicidios, by.x="ENT", by.y="CVE_ENT", all.x=T)
 # Number of years = envipe.viv$AP2_1
 # Sector = envipe.viv$AP1_1
 # Size = envipe.viv$AP1_2
+extra <- envipe.viv[,c("CONTROL", "VIV_SEL", "AP2_1", "AP1_1", "AP1_2")]
 
+testset <- merge(testset, extra, by.x=c("control", "vivienda"), 
+                 by.y=c("CONTROL", "VIV_SEL"), all.x=T)
+
+colnames(testset)[14:16] <- c("personas", "clas_viv", "barrera")
+
+colnames(testset)
+
+str(testset)
+
+testset$ENT <- as.factor(testset$ENT)
+
+testset$personas <- as.integer(testset$personas)
+
+levels(testset$clas_viv) <- c("Casa", "Departamento", "Vecindad", "Azotea", "Local")
+
+levels(testset$clas_viv)
+
+summary(testset$clas_viv)
+
+levels(testset$barrera) <- c("Existe", "No existe", "No se observó")
+
+summary(testset$barrera)
+
+
+summary(testset)
