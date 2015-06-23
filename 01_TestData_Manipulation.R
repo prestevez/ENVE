@@ -75,3 +75,10 @@ summary(testset$barrera)
 
 
 summary(testset)
+
+
+## Save objects for use latter
+setwd(dirRdata)
+save(list=ls(all=TRUE), file="TestData.Rdata")
+
+setwd(MainWD)
