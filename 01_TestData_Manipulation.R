@@ -82,10 +82,26 @@ testset$extorsiones[is.na(testset$extorsiones)] <- 0
 testset$robos[is.na(testset$robos)] <- 0
 testset$secuestros[is.na(testset$secuestros)] <- 0
 
+str(testset)
+
+
+b_test <- testset[,c("extorsiones", "robos", "NOM_ABR", "ENT",
+                     "tasahom", "personas", "clas_viv", "barrera")]
+
+
+# str(b_test)
+
+colnames(b_test) <- c("extortions", "bribes", "state", "state_code",
+                      "state_hom", "years", "sector", "size")
+
+levels(b_test$sector) <- c("retail", "services", "manufacturing", "office", "other")
+levels(b_test$size) <- c("small", "medium", "large")
+
 
 
 ## Save objects for use latter
 setwd(dirRdata)
+save(b_test, file="b_test.Rdata")
 save(list=ls(all=TRUE), file="TestData.Rdata")
 
 setwd(MainWD)
