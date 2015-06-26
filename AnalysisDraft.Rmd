@@ -1,0 +1,221 @@
+---
+title: "Statistical Analysis"
+author: "Patricio R. Estevez Soto"
+date: "June 24 2015"
+output:
+  html_document:
+    highlight: pygments
+    keep_md: yes
+    theme: spacelab
+---
+
+Overview of the statistical procedure to analyse repeat extortion victimisation.
+
+The data used comes from the household victimisation surveys. The dependent variable is the count of extortion victimisations for each household, while the independent variables are other illustrative variables selected to test the scripts. The names were changed to reflect how the analyses might look.
+
+```{r}
+library(xtable)
+library(MASS)
+library(knitr)
+library(ggplot2)
+# install.packages("gmodels")
+library(gmodels)
+# install.packages("Hmisc")
+library(Hmisc)
+
+```
+
+
+
+```{r}
+load(file="~/R\ Workspace/ENVE/RData/b_test.Rdata")
+str(b_test) # Type of variables
+```
+
+
+## EDA
+
+### Dependent variable
+
+```{r, echo=FALSE}
+freq_tab <- data.frame(table(b_test$extortions))
+colnames(freq_tab)[1] <- "Events"
+freq_tab$Events <- as.integer(as.character(freq_tab$Events))
+freq_tab$crimes <-freq_tab$Freq * freq_tab$Events
+freq_tab$per_peop <- prop.table(freq_tab$Freq)*100
+freq_tab$per_crimes <- prop.table(freq_tab$crimes)*100
+
+```
+
+```{r, results='asis'}
+print(xtable(freq_tab, digits=c(0,0,0,0,4,4)), type="html")
+```
+
+```{r}
+
+data.frame(mean=mean(b_test$extortions), variance=var(b_test$extortions),
+           ratio=var(b_test$extortions)/mean(b_test$extortions))
+```
+
+```{r}
+#barplot(table(b_test$extortions), xlab="Extortion events", ylab="Frequency")
+qplot(extortions, data=b_test, binwidth=1)
+```
+
+The scale does not allow for easy visualisation. We try plotting on a log scale. Since there are many zeros, a convenience function `clog` is used to properly display the zeros:
+
+```{r}
+clog <- function(x) log(x + 0.5)
+```
+
+Thus the plot is called using this code:
+
+```{r}
+# barplot(clog(table(b_test$extortions)), xlab="Extortion events",
+#         ylab="Frequency (continuity-corrected logarithm)")
+
+ggplot(freq_tab, aes(x=Events, y=clog(Freq))) + geom_bar(stat="identity") +
+  ylab("Frequency (continuity-correction logarithm)")
+```
+
+Test for Poisson, evidence of overdispersion
+
+```{r}
+
+
+```
+
+
+### Independent variables
+
+```{r, echo=FALSE}
+homicidios <- read.csv("~/R\ Workspace/ENVE/ENVIPE/homicidios_tasas_2013.csv", header=T)
+```
+
+```{r, echo=FALSE}
+summ_table <- data.frame(variable=0, obs=0, incidence=0, mean=0, sd=0, var=0)
+
+ind <- 1
+for (i in 1:length(b_test))
+  {
+  if (i <= 2)
+    {
+    summ_table[ind,1] <- colnames(b_test)[i]
+    summ_table[ind,2] <- length(b_test[b_test[,i] != 0,i])
+    summ_table[ind,3] <- sum(b_test[,i])
+    summ_table[ind,4] <- mean(b_test[,i])
+    summ_table[ind,5] <- sd(b_test[,i])
+    summ_table[ind,6] <- var(b_test[,i])
+    }
+
+  else if (colnames(b_test)[i] == "years")
+    {
+    summ_table[ind,1] <- colnames(b_test)[i]
+    summ_table[ind,2] <- length(b_test[b_test[,i] != 0,i])
+    summ_table[ind,4] <- mean(b_test[,i])
+    summ_table[ind,5] <- sd(b_test[,i])
+    summ_table[ind,6] <- var(b_test[,i])
+    }
+  
+  else if (i >= 7)
+    {
+    for (a in 1:length(levels(b_test[,i])))
+      {
+      summ_table[ind,1] <- levels(b_test[,i])[a]
+      summ_table[ind,2] <- length(b_test[b_test[,i]== levels(b_test[,i])[a],i])
+      summ_table[ind,4] <- summ_table[ind,2]/length(b_test[,1])
+      ind <- ind + 1
+      }
+    }
+  ind <- ind + 1
+  }
+
+
+summ_table <- summ_table[!is.na(summ_table[,1]),]
+
+summ_table[length(summ_table[,1])+1,] <- c(0, length(homicidios[,5]), NA, 
+                      mean(homicidios[,5]), sd(homicidios[,5]), var(homicidios[,5]))
+
+summ_table[,4:6] <- round(summ_table[,4:6],3)
+
+summ_table[12,1] <- "state murder rt"
+
+```
+
+Table with descriptive statistics
+```{r, results='asis'}
+print(xtable(summ_table, digits=c(0,0,0,0,3,3,3)), type="html")
+
+```
+
+
+Distribution of victimisations by variable (Poisson tests per variable) an Bivariate plots
+#### Bribes variable
+
+#### Years
+
+#### Sector
+
+#### Size
+
+#### Area level influences
+By state (Tables)
+```{r, results='asis'}
+
+state_ext <- with(b_test, table(state, extortions))
+
+state_inc <- t(t(state_ext)*as.integer(colnames(state_ext)))
+
+state_summ1 <- data.frame(margin.table(state_ext[,2:15],1))
+
+state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_inc,1))[,2])
+
+colnames(state_summ1) <- c("Prevalence", "Incidence")
+
+state_summ1 <- cbind(state_summ1, Concentration=state_summ1$Incidence/state_summ1$Prevalence)
+
+print(xtable(state_summ1), type="html")
+
+```
+
+plots
+```{r}
+
+ggplot(state_summ1, aes(x=Prevalence, y=Incidence)) + geom_point() + geom_smooth(method="lm")
+
+
+summary(lm(Incidence~Prevalence, data=state_summ1))
+
+cor.test(state_summ1$Prevalence, state_summ1$Incidence)
+
+
+ggplot(state_summ1, aes(x=Prevalence, y=Concentration)) + geom_point() + geom_smooth(method="lm")
+
+summary(lm(Incidence~Concentration, data=state_summ1))
+
+cor.test(state_summ1$Prevalence, state_summ1$Concentration)
+
+
+```
+
+
+(MAPS)
+
+
+## Modelling
+
+
+### Poisson Model
+
+### Quasi Poisson
+
+
+### Negative Binomial
+
+### Hurdle
+
+### ZINB
+
+### Comparison between models
+
+
