@@ -141,11 +141,14 @@ chinb
 probs <- dpois(0:ext_dist[length(ext_dist$Events),1], lambda=lamb)
 
 # Normal Chi Squared test
-test <- chisq.test(x=obsexp$Obs., p=probs)
+test <- chisq.test(x=obsexp$Obs, p=probs)
 test
 
+test2 <- chisq.test(x=dpois(0:30, lambda=mean(b_test$extortions)), p=probs)
+test2
+
 # Chi Squared using simulated p-value
-testsim <- chisq.test(x=obsexp$Obs., p=probs, simulate.p.value=TRUE)
+testsim <- chisq.test(x=obsexp$Obs, p=probs, simulate.p.value=TRUE)
 testsim
 
 str(test)
@@ -160,17 +163,143 @@ ks.ztest_p <- ks.test(testset$extorsiones, "dpois", lamb)
 ks.ztest_p
 ## Testing for negative binomial distribution
 
-fitdistr(testset$extorsiones, "negative binomial")
+fitdistr(testset$extorsiones, "negative binomial")$loglik
 
-fitdistr(testset$extorsiones, "Poisson")
+fitdistr(testset$extorsiones, "Poisson")$loglik
 
 fitnb <- fitdistr(testset$extorsiones, "negative binomial")
 
-str(fitnb)
+## Using fitdist from fitdstrplus pckg
 
-fitnb$estimate[1]
+pois1 <- fitdist(b_test$extortions, "pois", method="mle")
+pois2 <- fitdist(b_test$extortions, "pois", method="mme")
+pois3 <- fitdistr(b_test$extortions, "poisson")
 
-ks.ztest <- ks.test(testset$extorsiones, "dnbinom", size=fitnb$estimate[1], mu=fitnb$estimate[2])
+gfpois1 <- goodfit(b_test$extortions, type="poisson", method="ML")
+
+gfpois1
+
+
+obs_exppois1 <- data.frame(count=gfpois1$count, obs=gfpois1$observed, exp=gfpois1$fitted)
+
+cs<-factor(0:30)
+levels(cs)[4:31]<-"3+" 
+levels(cs)
+
+ef<-as.vector(tapply(obs_exppois1$exp,cs,sum))
+of<-as.vector(tapply(obs_exppois1$obs,cs,sum))
+
+ef
+of
+
+chisq_pois1 <- sum((of-ef)^2/ef)
+chisq_pois1
+chisq.test(of, p=ef/sum(ef))
+
+1-pchisq(chisq_pois1, 3)
+
+summary(pois1)
+summary(pois2)
+pois3
+
+gofstat(list(pois1, pois2))
+ks.pois1 <- ks.test(b_test$extortions, "dpois", pois1$estimate)
+ks.pois1
+ks.pois3 <- ks.test(b_test$extortions, "dpois", pois3$estimate)
+ks.pois3
+
+
+nbinom1 <- fitdist(b_test$extortions, "nbinom", method="mle")
+nbinom2 <- fitdist(b_test$extortions, "nbinom", method="mme")
+nibnom3 <- fitdistr(b_test$extortions, "negative binomial")
+
+summary(nbinom1)
+summary(nbinom2)
+
+nibnom3
+
+obs_expnb3 <- data.frame(count=gfnb1$count, obs=gfnb1$observed, exp=gfnb1$fitted)
+
+cs<-factor(0:30)
+levels(cs)[9:31]<-"8+" 
+levels(cs)
+
+ef<-as.vector(tapply(obs_expnb3$exp,cs,sum))
+of<-as.vector(tapply(obs_expnb3$obs,cs,sum))
+
+ef
+of
+
+chisq_nb3 <- sum((of-ef)^2/ef)
+
+chisq.test(of, p=ef/sum(ef))
+
+chisq_nb3
+1-pchisq(chisq_nb3, 8)
+
+gofstat(list(nbinom1,nbinom2, pois1, pois2))
+ks.nb1 <- ks.test(b_test$extortions, "pnbinom", size=nbinom1$estimate[1],
+                  mu=nbinom1$estimate[2])
+ks.nb1
+
+gfnb1 <- goodfit(b_test$extortions, type="nbinomial", method="ML")
+
+str(gfnb1)
+gfnb1$par$size
+
+zip1 <- fitdist(b_test$extortions, "ZIP", start=list(mu=mean(b_test$extortions, p=0.15)))
+
+summary(zip1)
+gofstat(list(nbinom1,nbinom2, pois1, pois2, zip1))
+
+sig <- nbinom1$estimate[1]
+
+zinb1 <- fitdist(b_test$extortions, "ZINBI", start=list(mu=mean(b_test$extortions), 
+                                                        sigma=0.15))
+
+exp_zinb <- dZINBI(0:30, mu=mean(b_test$extortions), sigma=11, 
+                   nu=0.25)*length(b_test$extortions)
+
+
+obsexp_zinb <- data.frame(obs_expnb3[,1:2], exp_zinb)
+obsexp_zinb
+
+max(which(obsexp_zinb$exp_zinb >= 4))
+
+cs<-factor(0:30)
+levels(cs)[7:31]<-"6+" 
+levels(cs)
+
+ef<-as.vector(tapply(obsexp_zinb$exp_zinb,cs,sum))
+of<-as.vector(tapply(obsexp_zinb$obs,cs,sum))
+
+ef
+of
+
+chisq_zinb <- sum((of-ef)^2/ef)
+chisq_zinb
+1-pchisq(chisq_zinb, length(of)-1)
+
+str(chisq.test(of, p=ef/sum(ef)))
+
+
+
+
+gofstat(list(nbinom1,nbinom2, pois1, pois2, zip1, zinb1))
+
+
+theta.ml(b_test$extortions, mean(b_test$extortions))[1]
+
+
+str(nbinom1)
+
+
+ks.ztest <- ks.test(testset$extorsiones, "dnbinom", size=nbinom1$estimate[1],
+                    mu=nbinom1$estimate[2])
+
+ks.ztest
+
+ks.ztest <- ks.test(testset$extorsiones, "poisson")
 
 ks.ztest
 
@@ -213,7 +342,7 @@ anova(model.nb, test="Chisq")
 
 drop1(model.nb, test="Chisq")
 
-options(scipen = 99999)
+options(scipen = 0)
 
 lm <- lm(extorsiones ~ robos + tasahom + personas + clas_viv,
                   data=testset)
