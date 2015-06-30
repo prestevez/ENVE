@@ -576,7 +576,8 @@ ggplot(esi_df, aes(x=Events, y=clog(Freq), fill=Size)) +
 
 
 #### Area level influences
-By state (Tables)
+Repeat victimisation may vary by state, and by state level influences. 
+
 ```{r, echo=FALSE}
 
 state_ext <- with(b_test, table(state_code, extortions))
@@ -602,70 +603,68 @@ state_summ1 <- cbind(state_summ1, CVE_ENT= as.integer(rownames(state_summ1)))
 state_summ1 <- merge(state_summ1, state_hom, by="CVE_ENT")
 ```
 
+```{r, echo=FALSE}
+load(file="~/R\ Workspace/ENVE/Rdata/maps.Rdata")
+```
+
+```{r}
+mex_states
+```
 
 ```{r, results='asis'}
 print(xtable(state_summ1), type="html")
 
 ```
 
+##### Prevalence, Incidence and Concentration by state
+
+```{r}
+mex_preval
+mex_inci
+mex_con
+```
+
+##### Area prevalence and concentration
+
 plots
 ```{r}
 
 ggplot(state_summ1, aes(x=Prevalence, y=Incidence)) + geom_point() + 
   geom_smooth(method="lm")
-
-summary(lm(Incidence~Prevalence, data=state_summ1))
-
 with(state_summ1, cor.test(Incidence, Prevalence))
 
 ggplot(state_summ1, aes(x=Prevalence, y=Concentration)) +
   geom_point() + geom_smooth(method="lm")
-
-summary(lm(Concentration~Prevalence, data=state_summ1))
-
 with(state_summ1, cor.test(Concentration, Prevalence))
+```
 
-ggplot(state_summ1, aes(x=tasahom, y=Concentration)) +
-  geom_point() + geom_smooth(method="lm")
+##### Area level murder rates and extortion
 
-summary(lm(Concentration~tasahom, data=state_summ1))
-with(state_summ1, cor.test(Concentration, tasahom))
+```{r}
+mex_murd
+```
 
-
+```{r}
 ggplot(state_summ1, aes(x=tasahom, y=Incidence)) +
   geom_point() + geom_smooth(method="lm")
-
-summary(lm(Incidence~tasahom, data=state_summ1))
 with(state_summ1, cor.test(Incidence, tasahom))
-
 
 ggplot(state_summ1, aes(x=tasahom, y=Prevalence)) +
   geom_point() + geom_smooth(method="lm")
-
-summary(lm(Prevalence~tasahom, data=state_summ1))
 with(state_summ1, cor.test(Prevalence, tasahom))
 
-
-
+ggplot(state_summ1, aes(x=tasahom, y=Concentration)) +
+  geom_point() + geom_smooth(method="lm")
+with(state_summ1, cor.test(Concentration, tasahom))
 ```
-
-
-(MAPS)
-
 
 ## Modelling
 
+### Mixed model (area prevalence, tasa hom, fixed effect)
 
 ### Poisson Model
 
-### Quasi Poisson
-
-
 ### Negative Binomial
-
-### Hurdle
-
-### ZINB
 
 ### Comparison between models
 
