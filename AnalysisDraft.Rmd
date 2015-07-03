@@ -3,11 +3,12 @@ title: "Statistical Analysis"
 author: "Patricio R. Estevez Soto"
 date: "June 24 2015"
 output:
+  pdf_document: default
   html_document:
     highlight: pygments
     keep_md: yes
     theme: spacelab
-  pdf_document: default
+  word_document: default
 ---
 
 Overview of the statistical procedure to analyse repeat extortion victimisation.
@@ -18,19 +19,6 @@ The data used comes from the household victimisation surveys. The dependent vari
 library(xtable)
 library(MASS)
 library(ggplot2)
-# library(knitr)
-# # install.packages("gmodels")
-# library(gmodels)
-# # install.packages("Hmisc")
-# library(Hmisc)
-# # install.packages("vcd")
-# library(vcd)
-# # install.packages("fitdistrplus")
-# library(fitdistrplus)
-# # install.packages("gamlss")
-# library(gamlss)
-# # install.packages("VGAM")
-# library(VGAM)
 ```
 
 ```{r}
@@ -437,7 +425,7 @@ cor.test(b_test$bribes, y=b_test$extortions, method="pearson")
 
 #### Years
 ```{r, echo=FALSE}
-ext_years <- with(b_test, table(cut(years, breaks=c(0,5,10,15,20,25), right=FALSE),
+ext_years <- with(b_test, table(cut(years, breaks=c(0,5,10,15,20), right=FALSE),
                                 extortions))
 for (i in 7:length(colnames(ext_years)))
   {
@@ -445,7 +433,7 @@ for (i in 7:length(colnames(ext_years)))
   }
 ext_years <- ext_years[,1:6]
 colnames(ext_years)[6] <- "5+"
-rownames(ext_years) <- c("0-4", "5-9", "10-14", "15-19", "20+")
+rownames(ext_years) <- c("0-4", "5-9", "10-14", "15+")
 ```
 
 ```{r, results='asis'}
@@ -574,7 +562,6 @@ ggplot(esi_df, aes(x=Events, y=clog(Freq), fill=Size)) +
   ggtitle("Extortion events by Size")
 ```
 
-
 #### Area level influences
 Repeat victimisation may vary by state, and by state level influences. 
 
@@ -586,14 +573,15 @@ state_hom <- homicidios[,c(1,4,5,6)]
 
 state_inc <- t(t(state_ext)*as.integer(colnames(state_ext)))
 
-
 state_summ1 <- data.frame(data.frame(margin.table(state_ext[,2:15],1))/
                             data.frame(margin.table(state_ext[,1:15],1))*1000)
 
 state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_inc,1))[,2]/
                        data.frame(margin.table(state_ext[,1:15],1))*1000)
 
-colnames(state_summ1) <- c("Prevalence", "Incidence")
+state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_ext,1))[,2])
+
+colnames(state_summ1) <- c("Prevalence", "Incidence", "Obs")
 
 state_summ1 <- cbind(state_summ1, 
                      Concentration=state_summ1$Incidence/state_summ1$Prevalence)
@@ -601,6 +589,9 @@ state_summ1 <- cbind(state_summ1,
 state_summ1 <- cbind(state_summ1, CVE_ENT= as.integer(rownames(state_summ1)))
 
 state_summ1 <- merge(state_summ1, state_hom, by="CVE_ENT")
+
+state_summ1 <- state_summ1[,c(1,7,8,4,2,3,5,6)]
+
 ```
 
 ```{r, echo=FALSE}
@@ -612,7 +603,7 @@ mex_states
 ```
 
 ```{r, results='asis'}
-print(xtable(state_summ1), type="html")
+print(xtable(state_summ1[,c(2,4:8)]), type="html")
 
 ```
 
@@ -626,19 +617,23 @@ mex_con
 
 ##### Area prevalence and concentration
 
+Extortion concentration and prevalence calculated as a rate per 1000 inhabitants.
+
 plots
 ```{r}
 
 ggplot(state_summ1, aes(x=Prevalence, y=Incidence)) + geom_point() + 
-  geom_smooth(method="lm")
+  geom_smooth(method="lm") + ggtitle("Prevalence vs. Incidence")
 with(state_summ1, cor.test(Incidence, Prevalence))
 
 ggplot(state_summ1, aes(x=Prevalence, y=Concentration)) +
-  geom_point() + geom_smooth(method="lm")
+  geom_point() + geom_smooth(method="lm") + ggtitle("Prevalence vs. Concentration")
 with(state_summ1, cor.test(Concentration, Prevalence))
 ```
 
 ##### Area level murder rates and extortion
+
+Murder rate per 100,000 inhabitants.
 
 ```{r}
 mex_murd
@@ -646,26 +641,72 @@ mex_murd
 
 ```{r}
 ggplot(state_summ1, aes(x=tasahom, y=Incidence)) +
-  geom_point() + geom_smooth(method="lm")
+  geom_point() + geom_smooth(method="lm") + 
+  ggtitle("Extortion incidence vs Murder rate") +
+  xlab("Murder rate")
 with(state_summ1, cor.test(Incidence, tasahom))
 
 ggplot(state_summ1, aes(x=tasahom, y=Prevalence)) +
-  geom_point() + geom_smooth(method="lm")
+  geom_point() + geom_smooth(method="lm") + 
+  ggtitle("Extortion prevalence vs Murder rate") +
+  xlab("Murder rate")
 with(state_summ1, cor.test(Prevalence, tasahom))
 
 ggplot(state_summ1, aes(x=tasahom, y=Concentration)) +
-  geom_point() + geom_smooth(method="lm")
+  geom_point() + geom_smooth(method="lm") +
+  ggtitle("Extortion concentration vs Murder rate") +
+  xlab("Murder rate")
 with(state_summ1, cor.test(Concentration, tasahom))
 ```
 
 ## Modelling
 
-### Mixed model (area prevalence, tasa hom, fixed effect)
+```{r}
+load(file="~/R Workspace/ENVE/Rdata/fittedmodels.Rdata")
+```
 
-### Poisson Model
+### Poisson
+```{r}
+print(summary(mm.poi), correlation=FALSE)
+```
 
-### Negative Binomial
 
-### Comparison between models
+### Negative binomial
+```{r}
+print(summary(mm.nbii), correlation=FALSE)
+```
+
+
+#### Brief analysis
+
+The variance ($\sigma^2$) in the intercept is the risk heterogeneity between groups, $\alpha$ is the risk heterogeneity between individuals (the measure of $\alpha$ is the  measurement of overdispersion of the residuals.). The intra-state correlation is the measure of heterogeneity between units of the same group (state) is  $p=\sigma^2_{u0}/(\sigma^2_{u0}+\alpha)$. 
+
+**I have still not been able to figure out how to obtain the alpha parameter from the glmer object. In other NB regressions in R, a value of Theta is produced, which is $\theta = 1/\alpha$.**
+
+**There is a value of theta estimated in the model, but accroding to the documentation theta here is "random-effects parameter estimates: these are parameterized as the rela-
+tive Cholesky factors of each random effect term"** 
+
+**Apparently the dispersion parameter appears next to the family**
+
+```{r}
+
+## Variance of the intercepts
+var.i <- summary(mm.nbii)$varcor$state[1]
+var.i
+
+# Over dispersion parameter alpha
+alph <- 1/0.0048
+alph
+
+
+# Intra-state correlation
+
+p <- var.i/(var.i+alph)
+p <- as.numeric(p)
+p
+
+```
+
+
 
 
