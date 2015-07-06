@@ -59,7 +59,9 @@ ext_dist <- data.frame(table(enve_test$extortions))
 
 colnames(ext_dist) <- c("Events", "Prevalence")
 
-ext_dist$Incidence <- as.integer(as.character(ext_dist$Events)) * ext_dist$Prevalence
+ext_dist$Events<- as.integer(as.character(ext_dist$Events))
+
+ext_dist$Incidence <- ext_dist$Events * ext_dist$Prevalence
 
 ext_dist$preval_per <- prop.table(ext_dist$Prevalence)*100
 
@@ -73,8 +75,20 @@ save(ext_dist, file=paste(dir_name, "ext_dist.Rdata", sep=""))
 
 # Testing for Poisson distribution
 
-# Create DF of obs v expected for counts
+# Create DF to fit obs v expected for counts
 
-obsexp <- data.frame(Num=0:ext_dist[length(ext_dist$Events),1], Obs=0, Exp=0)
+obsexp <- data.frame(Events=0:ext_dist[length(ext_dist$Events),1])
 
-obsexp <- merge(obsexp, ext_dist, by.x="Num", by.y="Events", all.x=TRUE)
+obsexp <- merge(obsexp, ext_dist, by="Events", all.x=TRUE)
+
+obsexp <- obsexp[,c("Events", "Prevalence")]
+
+colnames(obsexp) <- c("Events", "Obs")
+
+obsexp$Obs[is.na(obsexp$Obs)] <- 0
+
+obsexp
+
+# analysing the mean variance relationship
+
+mean_ext <- mean(enve_test$extortions)
