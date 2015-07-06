@@ -25,7 +25,7 @@ homicidios <- merge(homicidios, cat_entidades, by="CVE_ENT")
 
 # Prepare data for analysis
 
-# Selecting oly the relevant variables
+# Selecting only the relevant variables
 
 enve_test <- data.frame(extortions=integer(), bribes=integer(), CVE_ENT=integer(),
                           size=factor(), sector=factor(), susbector=factor(),
@@ -103,7 +103,9 @@ obsexp$Obs[is.na(obsexp$Obs)] <- 0
 
 obsexp
 
-obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext)
+# Generate Poisson expected frequencies
+
+obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext) * length(enve_test$extortions)
 
 ## Function to print table with obs and exp and chi-sq test
 
@@ -140,3 +142,46 @@ obs_exp_test_log <- function(dataframe, exp, par)
   pval <- 1-pchisq(chisq_t, df)
   return(list(Table=ofef_table, Chisq=chisq_t, DF=df, PValue=pval))
   }
+
+# Poisson test
+
+po_chisq <- obs_exp_test(obsexp, obsexp$exp_po, 1)
+
+po_chisq
+
+po_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_po, 1)
+
+po_chisq_log
+
+save(po_chisq_log, po_chisq file=paste(dir_name, "po_chisq.Rdata", sep=""))
+
+# Testing for Negative Binomial distribution
+
+# loading MASS package
+
+Package_install(MASS)
+
+# Obtaining the parameters for negbin
+
+nb_estimates <- fitdistr(enve_test$extortions)
+
+nb_estimates
+
+# Generating the neg bin expected frequencies
+
+obsexp$exp_nb <- dnbinom(0:(length(obsexp$Events)-1), size=nb_estimates$estimate[1], mu=nb_estimates$estimate[2]) *
+                          length(b_test$extortions)
+
+# NB Tests
+
+nb_chisq <- obs_exp_test(obsexp, obsexp$exp_nb, 2)
+
+nb_chisq
+
+nb_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_nb, 2)
+
+nb_chisq_log
+
+save(nb_estimates, nb_chisq_log, nb_chisq, file=paste(dir_name, "nb_chisq.Rdata", sep=""))
+
+save(obsexp, file=paste(dir_name, "obsexp.Rdata"))
