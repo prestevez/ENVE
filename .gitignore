@@ -32,7 +32,6 @@ models_sample.do
 models_test_script.R
 models_test_v_Stata.R
 stata_models.tex
-stata_v_r.Rmd
 stata_v_r.pdf
 stata_v_r.tex
 stata_v_r_2.pdf
