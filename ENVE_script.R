@@ -184,4 +184,46 @@ nb_chisq_log
 
 save(nb_estimates, nb_chisq_log, nb_chisq, file=paste(dir_name, "nb_chisq.Rdata", sep=""))
 
-save(obsexp, file=paste(dir_name, "obsexp.Rdata"))
+save(obsexp, file=paste(dir_name, "obsexp.Rdata", sep=""))
+
+## Plots of this
+
+# Plot the observed distribution
+
+Package_install(ggplot2)
+Package_install(Cairo)
+
+plot.obs <- ggplot(obsexp, aes=(x=Events, y=Obs)) + geom_bar(stat=identity) + ylab("Frequency")
+
+plot.log.obs <- ggplot(obsexp, aes=(x=Events, y=clog(Obs))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
+
+plot.exp_po <- ggplot(obsexp, aes=(x=Events, y=exp_po)) + geom_bar(stat=identity) + ylab("Frequency")
+
+plot.log.exp_po <- ggplot(obsexp, aes=(x=Events, y=clog(exp_po))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
+
+plot.exp_nb <- ggplot(obsexp, aes=(x=Events, y=exp_nb)) + geom_bar(stat=identity) + ylab("Frequency")
+
+plot.log.exp_nb <- ggplot(obsexp, aes=(x=Events, y=clog(exp_nb))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
+
+# Save ggplot objects
+
+dist.plots <- list(plot.obs=plot.obs, plot.log.obs=plot.log.obs, plot.exp_po=plot.exp_po,
+  plot.log.exp_po=plot.log.exp_po, plot.exp_nb=plot.exp_nb, plot.log.exp_nb=plot.log.exp_nb)
+
+save(dist.plots file=paste(dir_name, sep=""))
+
+# Save ggplots as images
+
+for (i in 1:length(dist.plots))
+{
+  ggfile <- paste(dir_name, names(dist.plots[i]), ".pdf", sep="")
+  ggsave(dist.plots[[i]], file=ggfile, width=5, height=4)
+}
+
+for (i in 1:length(dist.plots))
+{
+  ggfile <- paste(dir_name, names(dist.plots[i]), ".png", sep="")
+  ggsave(dist.plots[[i]], file=ggfile, width=5, height=4, type="cairo-png")
+}
+
+# Independent Variables 
