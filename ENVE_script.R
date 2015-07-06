@@ -48,6 +48,9 @@ enve_test$years <- 2013 - as.numeric(as.character(enve_all$P3))
 
 enve_test <- merge(enve_test, homicidios, by="CVE_ENT", all.x=TRUE)
 
+enve_test$extortions[is.na(enve_test$extortions)] <- 0
+enve_test$bribes[is.na(enve_test$bribes)] <- 0
+
 # EDA
 
 # Distribution of extortion victimisations
@@ -65,3 +68,13 @@ ext_dist$victim_per[2:length(ext_dist$Events)] <- prop.table(ext_dist[2:length(e
 ext_dist$incid_per <- prop.table(ext_dist$Incidence)*100
 
 ext_dist
+
+save(ext_dist, file=paste(dir_name, "ext_dist.Rdata", sep=""))
+
+# Testing for Poisson distribution
+
+# Create DF of obs v expected for counts
+
+obsexp <- data.frame(Num=0:ext_dist[length(ext_dist$Events),1], Obs=0, Exp=0)
+
+obsexp <- merge(obsexp, ext_dist, by.x="Num", by.y="Events", all.x=TRUE)
