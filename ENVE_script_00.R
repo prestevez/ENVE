@@ -7,7 +7,7 @@ if (dir.exists("Output/") == FALSE)
 }
 
 # Create directories to save results outputs
-dir_name <- paste("Output/",Sys.time(), "_results", sep="")
+dir_name <- paste("Output/",Sys.time(), "_results/", sep="")
 
 dir.create(dir_name)
 
