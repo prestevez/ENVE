@@ -47,3 +47,21 @@ enve_test$years <- 2013 - as.numeric(as.character(enve_all$P3))
 # Still considering whether I should add one for 2013 businesses
 
 enve_test <- merge(enve_test, homicidios, by="CVE_ENT", all.x=TRUE)
+
+# EDA
+
+# Distribution of extortion victimisations
+
+ext_dist <- data.frame(table(enve_test$extortions))
+
+colnames(ext_dist) <- c("Events", "Prevalence")
+
+ext_dist$Incidence <- as.integer(as.character(ext_dist$Events)) * ext_dist$Prevalence
+
+ext_dist$preval_per <- prop.table(ext_dist$Prevalence)*100
+
+ext_dist$victim_per[2:length(ext_dist$Events)] <- prop.table(ext_dist[2:length(ext_dist$Events),2])*100
+
+ext_dist$incid_per <- prop.table(ext_dist$Incidence)*100
+
+ext_dist
