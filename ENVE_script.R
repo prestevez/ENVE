@@ -348,10 +348,47 @@ plot.bribes <- ggplot(bribes, aes(x=Events, y=Freq)) + geom_bar(stat="identity")
 
 plot.log_bribes <- ggplot(bribes, aes(x=Events, y=clog(Freq))) + geom_bar(stat="identity") + ylab("log(Frequency + 1)")
 
-save(plot.bribes, plot.log_bribes, file=paste(dir_name, "plots_bribes.Rdata", sep=""))
+plot.ext_bribes <- ggplot(enve_test, aes(x=bribes, y=extortions)) + geom_jitter() + geom_smooth(method="lm") +
+                  scale_x_continuous(breaks=0:max(enve_test$bribes)) + ylab("Extortion events") + xlab("Bribes")
+
+save(plot.bribes, plot.log_bribes, plot.ext_bribes, file=paste(dir_name, "plots_bribes.Rdata", sep=""))
 
 ggsave(plot.bribes, file=paste(dir_name, "plot_bribes.pdf", sep=""), width=5, height=4)
 ggsave(plot.log_bribes, file=paste(dir_name, "plot_log_bribes.pdf", sep=""), width=5, height=4)
+ggsave(plot.ext_bribes, file=paste(dir_name, "plot_ext_bribes.pdf", sep=""), width=5, height=4)
 
 ggsave(plot.bribes, file=paste(dir_name, "plot_bribes.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.log_bribes, file=paste(dir_name, "plot_log_bribes.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ext_bribes, file=paste(dir_name, "plot_ext_bribes.png", sep=""), width=5, height=4, type="cairo-png")
+
+# Examine the relationship between bribes and extortions
+
+temp_ext <- as.factor(enve_test$extortions)
+levels(temp_ext)[6:length(levels(temp_ext))] <- "5+"
+temp_bribes <- as.factor(enve_test$bribes)
+levels(temp_bribes)[6:length(levels(temp_bribes))] <- "5+"
+
+ext_bribes <- ftable(temp_bribes, temp_ext)
+
+ext_bribes
+
+xext_bribes <- xtable(ext_bribes, caption="The distribution of extortions and bribery victimisations",
+                        labels="T_ext_bribes")
+
+print(xext_bribes, include.rownames=FALSE)
+
+chisq.ext_bribes <- chisq.test(ext_bribes)
+
+chisq.ext_bribes
+
+cor.ext_bribes <- cor.test(enve_test$bribes, y=enve_test$extortions, method="pearson")
+
+cor.ext_bribes
+
+save(ext_bribes, xext_bribes, chisq.ext_bribes, cor.ext_bribes, file=paste(dir_name, "ext_bribes.Rdata", sep=""))
+
+## Years variable
+
+temp_years <- cut(enve_test$years, 4)
+
+ext_years <- ftable(temp_years, temp_ext)
