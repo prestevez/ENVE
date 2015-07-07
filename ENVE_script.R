@@ -408,4 +408,33 @@ cor.ext_years
 
 save(ext_years, xext_years, chisq.ext_years, cor.ext_years, file=paste(dir_name, "ext_years.Rdata", sep=""))
 
+# Plots of ext_years relationship
+
 ey_df <- data.frame(ext_years)
+
+plot.ey <- ggplot(ey_df, aes(x=temp_ext, y=Freq, fill=temp_years)) +
+                    geom_bar(stat="identity") +
+                    facet_grid(temp_years~., scale="free") +
+                    ylab("Frequency") + xlab("Events")
+
+plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog(Freq), fill=temp_years)) +
+                    geom_bar(stat="identity") +
+                    facet_grid(temp_years~., scale="free") +
+                    ylab("log(Frequency + 1)") + xlab("Events")
+
+plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() + geom_smooth(method="lm") +
+                          xlab=("years") + ylab("Extortions")
+
+# Save ggplot objects
+save(plot.ey, plot.log_ey, plot.ext_years, file=paste(dir_name, "plots_ey.Rdata", sep=""))
+
+# Save ggplots as images
+ggsave(plot.ey, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
+ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.ey, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
+
+## Sector
