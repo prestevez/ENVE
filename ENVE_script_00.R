@@ -1,5 +1,16 @@
 ## 00 Master script
 
+# Load the necessary packages
+library(foreign)
+library(ggplot2)
+library(Cairo)
+library(xtable)
+library(texreg)
+library(lmtest)
+library(MASS)
+library(lme4)
+
+
 # Create directories where results and log will be written.
 if (dir.exists("Output/") == FALSE)
 {
