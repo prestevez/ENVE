@@ -2,21 +2,21 @@
 
 # Package checker function
 
-Package_install <- function(package)
-{
-  if (as.character(package) %in% library()$results[,"Package"])
-  {
-  library(package)
-  }
-  else
-  {
-    install.packages(as.character(package), repos="http://cran.itam.mx/")
-  }
-}
-
-# Load foreign package and load data
-
-Package_install(foreign)
+### Package_install <- function(package)
+### {
+###   if (as.character(package) %in% library()$results[,"Package"])
+###   {
+###   library(package)
+###   }
+###   else
+###   {
+###     install.packages(as.character(package), repos="http://cran.itam.mx/")
+###   }
+### }
+###
+### # Load foreign package and load data
+###
+### Package_install(foreign)
 
 enve_all <- read.dbf("TR_ENVE_CUES_2014.dbf")
 cat_entidades <- read.csv("cat_entidades.csv", head=TRUE)
@@ -71,7 +71,7 @@ ext_dist$incid_per <- prop.table(ext_dist$Incidence)*100
 
 ext_dist
 
-Package_install(xtable)
+### Package_install(xtable)
 
 xext_dist <- xtable(ext_dist, digits=c(0,0,0,0,3,3,3), caption="The distribution of extortion victimisations",
                       label="T_dist")
@@ -184,7 +184,7 @@ save(po_chisq_log, po_chisq, xpo_chisq, xpo_chisq_log, file=paste(dir_name, "po_
 
 # loading MASS package
 
-Package_install(MASS)
+### Package_install(MASS)
 
 # Obtaining the parameters for negbin
 
@@ -230,8 +230,8 @@ save(obsexp, xobsexp, file=paste(dir_name, "obsexp.Rdata", sep=""))
 
 # Plot the observed distribution
 
-Package_install(ggplot2)
-Package_install(Cairo)
+### Package_install(ggplot2)
+### Package_install(Cairo)
 
 plot.obs <- ggplot(obsexp, aes=(x=Events, y=Obs)) + geom_bar(stat=identity) + ylab("Frequency")
 
