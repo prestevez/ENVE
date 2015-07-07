@@ -636,15 +636,21 @@ plot.mur_inc <- ggplot(state_summ1, aes(x=tasahom, y=Incidence)) +
 
 cor.mur_inc <- with(state_summ1, cor.test(Incidence, tasahom))
 
+cor.mur_inc
+
 plot.mur_preval <- ggplot(state_summ1, aes(x=tasahom, y=Prevalence)) +
                           geom_point() + geom_smooth(method="lm") + xlab("Murder rate")
 
 cor.mur_preval <- with(state_summ1, cor.test(Prevalence, tasahom))
 
+cor.mur_preval
+
 plot.mur_con <- ggplot(state_summ1, aes(x=tasahom, y=Concentration)) +
                             geom_point() + geom_smooth(method="lm") + xlab("Murder rate")
 
 cor.mur_con <- with(state_summ1, cor.test(Concentration, tasahom))
+
+cor.mur_con
 
 # Save murder rate related objects
 
@@ -661,3 +667,32 @@ ggsave(plot.mur_preval file=paste(dir_name, "plot_mur_preval.png", sep=""), widt
 ggsave(plot.mur_con file=paste(dir_name, "plot_mur_con.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Modelling
+# Make sure we are using the correct lme4 version
+
+packageVersion("lme4")
+
+# First round, all models using sector, from poisson to different types of me-NB
+
+# 1. Poisson GLM
+m1 <- glm(extortions ~ bribes + tasahom + years + sector + size, data=enve_test,
+          family="poisson")
+
+summary(m1)
+
+xm1 <- xtable(m1, caption="Poisson GLM", label="T_m1")
+
+print(xm1)
+
+# 2. NB GLM
+
+m2 <- glm.nb(extortions ~ bribes + state_hom + years + sector + size, data=enve_test)
+
+sumary(m2)
+
+xm2 <- xtable(m2, caption="Negative Binomial GLM", label="T_m2")
+
+print(xm2)
+
+tx.m1_m2 <- texreg(list(m1, m2), caption="Comparison of Poisson and NB GLMs", label="T_m1m2", booktabs=TRUE)
+
+tx.m1_m2
