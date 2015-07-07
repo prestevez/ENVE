@@ -693,6 +693,17 @@ xm2 <- xtable(m2, caption="Negative Binomial GLM", label="T_m2")
 
 print(xm2)
 
+# Compare NB and Poisson
 tx.m1_m2 <- texreg(list(m1, m2), caption="Comparison of Poisson and NB GLMs", label="T_m1m2", booktabs=TRUE)
 
 tx.m1_m2
+
+lr.m1_m2 <- lrtest(m1, m2)
+
+lr.m1_m2
+
+xlr.m1_m2 <- xtable(lr.m1_m2, caption="Likelihood ratio test between Poisson and NB GLMs", label="T_lrm1m2")
+
+print(xlr.m1_m2)
+
+save(m1, m2, xm1, xm2, tx.m1_m2, lr.m1_m2, xlr.m1_m2, file=paste(dir_name, "glms.Rdata", sep=""))
