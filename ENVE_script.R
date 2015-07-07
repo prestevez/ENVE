@@ -335,7 +335,7 @@ bribes[is.na(bribes[,2]),2] <- 0
 
 bribes
 
-xbribes <- xtable(bribes, caption="Distribution of corruption victimisations (bribery)",
+xbribes <- xtable(format(bribes), caption="Distribution of corruption victimisations (bribery)",
                     label="T_bribes")
 
 print(xbribes, include.rownames=FALSE)
@@ -372,7 +372,7 @@ ext_bribes <- ftable(temp_bribes, temp_ext)
 
 ext_bribes
 
-xext_bribes <- xtable(ext_bribes, caption="The distribution of extortions and bribery victimisations",
+xext_bribes <- xtable(format(ext_bribes), caption="The distribution of extortions and bribery victimisations",
                         labels="T_ext_bribes")
 
 print(xext_bribes, include.rownames=FALSE)
@@ -395,7 +395,7 @@ ext_years <- ftable(temp_years, temp_ext)
 
 ext_years
 
-xext_years <- xtable(ext_years, caption="The distribution of extortion victimisations per year ranges",
+xext_years <- xtable(format(ext_years), caption="The distribution of extortion victimisations per year ranges",
                         lab="t_ext_years")
 
 print(xext_years, include.rownames=FALSE)
@@ -443,7 +443,7 @@ ext_sector <- ftable(enve_test$sector, temp_ext)
 
 ext_sector
 
-xext_sector <- xtable(ext_sector, caption="Exortion victimisations by sector", label="T_ext_sector")
+xext_sector <- xtable(format(ext_sector), caption="Exortion victimisations by sector", label="T_ext_sector")
 
 print(xext_sector, include.rownames=FALSE)
 
@@ -477,3 +477,50 @@ ggsave(plot.es, file=paste(dir_name, "plot_es.png", sep=""), width=5, height=4, 
 ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Subsector
+
+sec_subsec <- with(enve_test, ftable(subsector, sector))
+
+sec_subsec
+
+xsec_subsec <- xtable(format(sec_subsec), caption="Subsectors within sectors", label="T_sec_subsec")
+
+print(xsec_subsec, include.rownames=FALSE)
+
+ext_subsector <- ftable(enve_test$subsector, temp_ext)
+
+ext_subsector
+
+xext_subsector <- xtable(format(ext_subsector), caption="Exortion victimisations by subsector", label="T_ext_subsector")
+
+print(xext_subsector, include.rownames=FALSE)
+
+chisq.ext_subsector <- chisq.test(ext_subsector)
+
+chisq.ext_subsector
+
+save(ext_subsector, xext_subsector, chisq.ext_subsector, sec_subsec, file=paste(dir_name, "ext_subsector.Rdata", sep=""))
+
+# Plots by sector
+
+ess_df <- data.frame(ext_subsector)
+
+plot.ess <- ggplot(ess_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Var1~., scale="free") +
+                  ylab("Frequency") + xlab("Events")
+
+plot.log_ess <- ggplot(ess_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Var1~., scale="free") +
+                  ylab("log(Frequency + 1)") + xlab("Events")
+
+# save ggplot objects
+save(plot.ess, plot.log_ess, file=paste(dir_name, "plots_ext_subsector.Rdata", sep=""))
+
+ggsave(plot.ess, file=paste(dir_name, "plot_ess.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ess, file=paste(dir_name, "plot_log_ess.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.ess, file=paste(dir_name, "plot_ess.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ess, file=paste(dir_name, "plot_log_ess.png", sep=""), width=5, height=4, type="cairo-png")
+
+## Size
