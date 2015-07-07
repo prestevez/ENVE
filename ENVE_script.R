@@ -438,3 +438,42 @@ ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, he
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Sector
+
+ext_sector <- ftable(enve_test$sector, temp_ext)
+
+ext_sector
+
+xext_sector <- xtable(ext_sector, caption="Exortion victimisations by sector", label="T_ext_sector")
+
+print(xext_sector, include.rownames=FALSE)
+
+chisq.ext_sector <- chisq.test(ext_sector)
+
+chisq.ext_sector
+
+save(ext_sector, xext_sector, chisq.ext_sector, file=paste(dir_name, "ext_sector.Rdata", sep=""))
+
+# Plots by sector
+
+es_df <- data.frame(ext_sector)
+
+plot.es <- ggplot(es_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Var1~., scale="free") +
+                  ylab("Frequency") + xlab("Events")
+
+plot.log_es <- ggplot(es_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Var1~., scale="free") +
+                  ylab("log(Frequency + 1)") + xlab("Events")
+
+# save ggplot objects
+save(plot.es, plot.log_es, file=paste(dir_name, "plots_ext_sector.Rdata", sep=""))
+
+ggsave(plot.es, file=paste(dir_name, "plot_es.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.es, file=paste(dir_name, "plot_es.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.png", sep=""), width=5, height=4, type="cairo-png")
+
+## Subsector
