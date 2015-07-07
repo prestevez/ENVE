@@ -71,7 +71,14 @@ ext_dist$incid_per <- prop.table(ext_dist$Incidence)*100
 
 ext_dist
 
-save(ext_dist, file=paste(dir_name, "ext_dist.Rdata", sep=""))
+Package_install(xtable)
+
+xext_dist <- xtable(ext_dist, digits=c(0,0,0,0,3,3,3), caption="The distribution of extortion victimisations",
+                      label="T_dist")
+
+print(xext_dist, include.rownames=FALSE)
+
+save(ext_dist, xext_dist, file=paste(dir_name, "ext_dist.Rdata", sep=""))
 
 # Testing for Poisson distribution
 
@@ -87,7 +94,16 @@ var_mean_ratio <- var_ext/mean_ext
 
 var_mean_ratio
 
-save(mean_ext, var_mean_ratio, var_ext, file=paste(dir_name, "var_mean.Rdata", sep=""))
+vmr_df <- data.frame(Mean=mean_ext, Variance=var_ext, Ratio=var_mean_ratio)
+
+vmr_df
+
+xvmr_df <- xtable(vmr_df, digits=4, caption="If the variance-mean ratio is larger than one, there is over-disperison",
+                    label="T_vmr")
+
+print(xvmr_df, include.rownames=FALSE)
+
+save(mean_ext, var_mean_ratio, var_ext, vmr_df, xvmr_df, file=paste(dir_name, "var_mean.Rdata", sep=""))
 
 # Create DF to fit obs v expected for counts
 
@@ -149,11 +165,20 @@ po_chisq <- obs_exp_test(obsexp, obsexp$exp_po, 1)
 
 po_chisq
 
+xpo_chisq <- xtable(po_chisq[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Poisson)", label="T_po_chisq")
+
+print(xpo_chisq, include.rownames=FALSE)
+
 po_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_po, 1)
 
 po_chisq_log
 
-save(po_chisq_log, po_chisq file=paste(dir_name, "po_chisq.Rdata", sep=""))
+xpo_chisq_log <- xtable(po_chisq_log[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Poisson, log-scale)",
+                          label="T_po_chisq_log")
+
+print(xpo_chisq_log, include.rownames=FALSE)
+
+save(po_chisq_log, po_chisq, xpo_chisq, xpo_chisq_log, file=paste(dir_name, "po_chisq.Rdata", sep=""))
 
 # Testing for Negative Binomial distribution
 
@@ -178,13 +203,28 @@ nb_chisq <- obs_exp_test(obsexp, obsexp$exp_nb, 2)
 
 nb_chisq
 
+xnb_chisq <- xtable(nb_chisq[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Negatve Binomial)", label="T_nb_chisq")
+
+print(xnb_chisq, include.rownames=FALSE)
+
 nb_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_nb, 2)
 
 nb_chisq_log
 
-save(nb_estimates, nb_chisq_log, nb_chisq, file=paste(dir_name, "nb_chisq.Rdata", sep=""))
+xnb_chisq_log <- xtable(nb_chisq_log[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Negative Binomial, log-scale)",
+                          label="T_nb_chisq_log")
 
-save(obsexp, file=paste(dir_name, "obsexp.Rdata", sep=""))
+print(xnb_chisq_log, include.rownames=FALSE)
+
+save(nb_estimates, nb_chisq_log, nb_chisq, xnb_chisq, xnb_chisq_log, file=paste(dir_name, "nb_chisq.Rdata", sep=""))
+
+xobsexp <- xtable(obsexp, digits=c(0,0,0,3,3),
+                  caption="Observed and expected frequencies under Poisson and Negative Binomial distributions",
+                  label="T_obsexp")
+
+print(xobsexp, include.rownames=FALSE)
+
+save(obsexp, xobsexp, file=paste(dir_name, "obsexp.Rdata", sep=""))
 
 ## Plots of this
 
