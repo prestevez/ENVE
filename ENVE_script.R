@@ -562,4 +562,71 @@ ggsave(plot.log_ez, file=paste(dir_name, "plot_log_ez.pdf", sep=""), width=5, he
 ggsave(plot.ez, file=paste(dir_name, "plot_ez.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.log_ez, file=paste(dir_name, "plot_log_ez.png", sep=""), width=5, height=4, type="cairo-png")
 
-#
+## Area level influences
+state_ext_dist <- ftable(enve_test$NOM_ENT, temp_ext))
+
+state_ext_dist
+
+xstate_ext_dist <- xtable(state_ext_dist, caption="Distribution of extortions by state.", label="T_s_ext_dist")
+
+print(xstate_ext_dist, include.rownames=FALSE)
+
+state_ext <- with(enve_test, table(CVE_ENT, extortions))
+
+state_hom <- homicidios[,c(1,4,5,6)]
+
+state_inc <- t(t(state_ext)*as.integer(colnames(state_ext)))
+
+state_summ1 <- data.frame(data.frame(margin.table(state_ext[,2:ncol(state_ext),1))/
+                            data.frame(margin.table(state_ext[,1:ncol(state_ext),1))*1000)
+
+state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_inc,1))[,2]/
+                       data.frame(margin.table(state_ext[,1:ncol(state_ext)],1))*1000)
+
+state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_ext,1))[,2])
+
+colnames(state_summ1) <- c("Prevalence", "Incidence", "N")
+
+state_summ1 <- cbind(state_summ1,
+                     Concentration=state_summ1$Incidence/state_summ1$Prevalence)
+
+state_summ1 <- cbind(state_summ1, CVE_ENT= as.integer(rownames(state_summ1)))
+
+state_summ1 <- merge(state_summ1, state_hom, by="CVE_ENT")
+
+state_summ1 <- state_summ1[,c(1,7,8,4,2,3,5,6)]
+
+state_summ1
+
+xstate_summ1 <- xtable(state_summ1[,c(2,4:8)], caption="Key indicators of extortion victimisation by state",
+                          labels="T_state_summ")
+
+print(xstate_summ1, include.rownames=FALSE)
+
+save(state_ext_dist, xstate_ext_dist, state_summ1, xstate_summ1, file=paste(dir_name, "states.Rdata", sep=""))
+
+# Area prevalence and concentration
+
+plot.inc_preval <- ggplot(state_summ1, aes(x=Prevalence, y=Incidence)) + geom_point() + geom_smooth(method="lm")
+
+cor.inc_preval <- with(state_summ1, cor.test(Incidence, Prevalence))
+
+cor.inc_preval
+
+plot.con_preval <- ggplot(state_summ1, aes(x=Prevalence, y=Concentration)) + geom_point() + geom_smooth(method="lm")
+
+cor.con_preval <- with(state_summ1, cor.test(Concentration, Prevalence))
+
+cor.con_preval
+
+# save these last objects
+save(plot.inc_preval, cor.inc_preval, plot.con_preval, cor.con_preval, file=paste(dir_name, "preval_con.Rdata", sep=""))
+
+# save these last ggplots as images
+ggsave(plot.inc_preval file=paste(dir_name, "plot_inc_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.con_preval file=paste(dir_name, "plot_con_preval.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.inc_preval file=paste(dir_name, "plot_inc_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.con_preval file=paste(dir_name, "plot_con_preval.png", sep=""), width=5, height=4, type="cairo-png")
+
+# Area-level influences: murder rate
