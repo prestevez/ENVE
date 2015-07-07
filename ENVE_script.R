@@ -250,7 +250,7 @@ plot.log.exp_nb <- ggplot(obsexp, aes=(x=Events, y=clog(exp_nb))) + geom_bar(sta
 dist.plots <- list(plot.obs=plot.obs, plot.log.obs=plot.log.obs, plot.exp_po=plot.exp_po,
   plot.log.exp_po=plot.log.exp_po, plot.exp_nb=plot.exp_nb, plot.log.exp_nb=plot.log.exp_nb)
 
-save(dist.plots file=paste(dir_name, sep=""))
+save(dist.plots file=paste(dir_name, "plots_dist_ext.Rdata" sep=""))
 
 # Save ggplots as images
 
@@ -323,3 +323,35 @@ xsumm_table <- xtable(summ_table, digits=c(0,0,0,0,0,3,3,0,0), caption="Descript
 print(xsumm_table, include.rownames=FALSE)
 
 save(summ_table, xsumm_table, file=paste(dir_name, "summ_table.Rdata", sep=""))
+
+# Bribes variable
+bribes_tab <- data.frame(table(enve_test$bribes))
+bribes <- data.frame(Events=bribes_tab$Var1, Freq=bribes_tab$Freq)
+colnames(bribes)[1] <- "Events"
+bribes$Events <- as.integer(as.character(bribes$Events))
+obs_b <- data.frame(Events=0:max(bribes$Events))
+bribes <- merge(bribes, obs_b, by="Events", all.y=TRUE)
+bribes[is.na(bribes[,2]),2] <- 0
+
+bribes
+
+xbribes <- xtable(bribes, caption="Distribution of corruption victimisations (bribery)",
+                    label="T_bribes")
+
+print(xbribes, include.rownames=FALSE)
+
+save(bribes, xbribes, file=paste(dir_name, "bribes.Rdata", sep=""))
+
+# Plot the distribution of bribes
+
+plot.bribes <- ggplot(bribes, aes(x=Events, y=Freq)) + geom_bar(stat="identity") + ylab("Frequency")
+
+plot.log_bribes <- ggplot(bribes, aes(x=Events, y=clog(Freq))) + geom_bar(stat="identity") + ylab("log(Frequency + 1)")
+
+save(plot.bribes, plot.log_bribes, file=paste(dir_name, "plots_bribes.Rdata", sep=""))
+
+ggsave(plot.bribes, file=paste(dir_name, "plot_bribes.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_bribes, file=paste(dir_name, "plot_log_bribes.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.bribes, file=paste(dir_name, "plot_bribes.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_bribes, file=paste(dir_name, "plot_log_bribes.png", sep=""), width=5, height=4, type="cairo-png")
