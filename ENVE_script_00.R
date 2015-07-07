@@ -23,7 +23,7 @@ sink(logfile, append=TRUE, type=c("output", "messsage"))
 
 # Run the scripts
 
-source("ENVE_script", echo=TRUE, max.deparse.length=10000)
+source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
 
 # End sink
 
