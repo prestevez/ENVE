@@ -381,7 +381,7 @@ chisq.ext_bribes <- chisq.test(ext_bribes)
 
 chisq.ext_bribes
 
-cor.ext_bribes <- cor.test(enve_test$bribes, y=enve_test$extortions, method="pearson")
+cor.ext_bribes <- with(enve_test, cor.test(bribes, extortions, method="pearson"))
 
 cor.ext_bribes
 
@@ -392,3 +392,20 @@ save(ext_bribes, xext_bribes, chisq.ext_bribes, cor.ext_bribes, file=paste(dir_n
 temp_years <- cut(enve_test$years, 4)
 
 ext_years <- ftable(temp_years, temp_ext)
+
+ext_years
+
+xext_years <- xtable(ext_years, caption="The distribution of extortion victimisations per year ranges",
+                        lab="t_ext_years")
+
+print(xext_years, include.rownames=FALSE)
+
+chisq.ext_years <- chisq.test(ext_years)
+chisq.ext_years
+
+cor.ext_years <- with(enve_test, cor.test(extortions, years, method="pearson"))
+cor.ext_years
+
+save(ext_years, xext_years, chisq.ext_years, cor.ext_years, file=paste(dir_name, "ext_years.Rdata", sep=""))
+
+ey_df <- data.frame(ext_years)
