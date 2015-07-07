@@ -539,25 +539,27 @@ chisq.ext_size
 
 save(ext_size, xext_size, chisq.ext_size, file=paste(dir_name, "ext_size.Rdata", sep=""))
 
-# Plots by sector
+# Plots by size
 
-es_df <- data.frame(ext_sector)
+ez_df <- data.frame(ext_size)
 
-plot.es <- ggplot(es_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
+plot.ez <- ggplot(ez_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
                   geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("Frequency") + xlab("Events")
 
-plot.log_es <- ggplot(es_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
+plot.log_ez <- ggplot(ez_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
                   geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("log(Frequency + 1)") + xlab("Events")
 
 # save ggplot objects
-save(plot.es, plot.log_es, file=paste(dir_name, "plots_ext_sector.Rdata", sep=""))
+save(plot.ez, plot.log_ez, file=paste(dir_name, "plots_ext_size.Rdata", sep=""))
 
-ggsave(plot.es, file=paste(dir_name, "plot_es.pdf", sep=""), width=5, height=4)
-ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.pdf", sep=""), width=5, height=4)
+ggsave(plot.ez, file=paste(dir_name, "plot_ez.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ez, file=paste(dir_name, "plot_log_ez.pdf", sep=""), width=5, height=4)
 
-ggsave(plot.es, file=paste(dir_name, "plot_es.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ez, file=paste(dir_name, "plot_ez.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ez, file=paste(dir_name, "plot_log_ez.png", sep=""), width=5, height=4, type="cairo-png")
+
+#
