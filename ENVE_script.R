@@ -170,7 +170,7 @@ nb_estimates
 # Generating the neg bin expected frequencies
 
 obsexp$exp_nb <- dnbinom(0:(length(obsexp$Events)-1), size=nb_estimates$estimate[1], mu=nb_estimates$estimate[2]) *
-                          length(b_test$extortions)
+                          length(enve_test$extortions)
 
 # NB Tests
 
@@ -226,4 +226,54 @@ for (i in 1:length(dist.plots))
   ggsave(dist.plots[[i]], file=ggfile, width=5, height=4, type="cairo-png")
 }
 
-# Independent Variables 
+# Independent Variables
+summ_table <- data.frame(variable=0, N=0, prevalence=0, incidence=0, mean=0, sd=0, min=0, max=0)
+
+ind <- 1
+for (i in 1:length(enve_test))
+  {
+  if (colnames(enve_test)[i] %in% c("extortions", "bribes"))
+    {
+    summ_table[ind,1] <- colnames(enve_test)[i]
+    summ_table[ind,2] <- length(enve_test[,i])
+    summ_table[ind,3] <- length(enve_test[enve_test[,i] != 0,i])
+    summ_table[ind,4] <- sum(enve_test[,i])
+    summ_table[ind,5] <- mean(enve_test[,i])
+    summ_table[ind,6] <- sd(enve_test[,i])
+    summ_table[ind,7] <- min(enve_test[,i])
+    summ_table[ind,8] <- max(enve_test[,i])
+    }
+
+  else if (colnames(enve_test)[i] == "years")
+    {
+    summ_table[ind,1] <- colnames(enve_test)[i]
+    summ_table[ind,2] <- length(enve_test[,i])
+    summ_table[ind,5] <- mean(enve_test[,i])
+    summ_table[ind,6] <- sd(enve_test[,i])
+    summ_table[ind,7] <- min(enve_test[,i])
+    summ_table[ind,8] <- max(enve_test[,i])
+    }
+
+  else if (colnames(enve_test)[i] %in% c("sector", "size", "subsector"))
+    {
+    for (a in 1:length(levels(enve_test[,i])))
+      {
+      summ_table[ind,1] <- levels(enve_test[,i])[a]
+      summ_table[ind,2] <- length(enve_test[enve_test[,i] == levels(enve_test[,i])[a],i])
+      summ_table[ind,5] <- summ_table[ind,2]/length(enve_test[,1])
+      ind <- ind + 1
+      }
+    }
+  ind <- ind + 1
+  }
+
+
+summ_table <- summ_table[!is.na(summ_table[,1]),]
+
+summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"tasahom"]), NA, NA
+                      mean(homicidios[,"tasahom"]), sd(homicidios[,"tasahom"]),
+                      min(homicidios[,"tasahom"]), max(homicidios[,"tasahom"]))
+
+summ_table[,5:6] <- round(summ_table[,5:6],3)
+
+summ_table[length(summ_table[,1]),1] <- "state murder rt"
