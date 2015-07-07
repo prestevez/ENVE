@@ -18,7 +18,7 @@ Package_install <- function(package)
 
 Package_install(foreign)
 
-enve_all <- read.dbf("XXXXXX")
+enve_all <- read.dbf("TR_ENVE_CUES_2014.dbf")
 cat_entidades <- read.csv("cat_entidades.csv", head=TRUE)
 homicidios <- read.csv("homicidios_tasas_2013_b.csv", header=TRUE)
 homicidios <- merge(homicidios, cat_entidades, by="CVE_ENT")
@@ -500,7 +500,7 @@ chisq.ext_subsector
 
 save(ext_subsector, xext_subsector, chisq.ext_subsector, sec_subsec, file=paste(dir_name, "ext_subsector.Rdata", sep=""))
 
-# Plots by sector
+# Plots by subsector
 
 ess_df <- data.frame(ext_subsector)
 
@@ -524,3 +524,40 @@ ggsave(plot.ess, file=paste(dir_name, "plot_ess.png", sep=""), width=5, height=4
 ggsave(plot.log_ess, file=paste(dir_name, "plot_log_ess.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Size
+
+ext_size <- ftable(enve_test$size, temp_ext)
+
+ext_size
+
+xext_size <- xtable(format(ext_size), caption="Exortion victimisations by size", label="T_ext_size")
+
+print(xext_size, include.rownames=FALSE)
+
+chisq.ext_size <- chisq.test(ext_size)
+
+chisq.ext_size
+
+save(ext_size, xext_size, chisq.ext_size, file=paste(dir_name, "ext_size.Rdata", sep=""))
+
+# Plots by sector
+
+es_df <- data.frame(ext_sector)
+
+plot.es <- ggplot(es_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Var1~., scale="free") +
+                  ylab("Frequency") + xlab("Events")
+
+plot.log_es <- ggplot(es_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Var1~., scale="free") +
+                  ylab("log(Frequency + 1)") + xlab("Events")
+
+# save ggplot objects
+save(plot.es, plot.log_es, file=paste(dir_name, "plots_ext_sector.Rdata", sep=""))
+
+ggsave(plot.es, file=paste(dir_name, "plot_es.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.es, file=paste(dir_name, "plot_es.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_es, file=paste(dir_name, "plot_log_es.png", sep=""), width=5, height=4, type="cairo-png")
