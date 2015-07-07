@@ -630,3 +630,34 @@ ggsave(plot.inc_preval file=paste(dir_name, "plot_inc_preval.png", sep=""), widt
 ggsave(plot.con_preval file=paste(dir_name, "plot_con_preval.png", sep=""), width=5, height=4, type="cairo-png")
 
 # Area-level influences: murder rate
+
+plot.mur_inc <- ggplot(state_summ1, aes(x=tasahom, y=Incidence)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murder rate")
+
+cor.mur_inc <- with(state_summ1, cor.test(Incidence, tasahom))
+
+plot.mur_preval <- ggplot(state_summ1, aes(x=tasahom, y=Prevalence)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Murder rate")
+
+cor.mur_preval <- with(state_summ1, cor.test(Prevalence, tasahom))
+
+plot.mur_con <- ggplot(state_summ1, aes(x=tasahom, y=Concentration)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Murder rate")
+
+cor.mur_con <- with(state_summ1, cor.test(Concentration, tasahom))
+
+# Save murder rate related objects
+
+save(plot.mur_inc, cor.mur_inc, plot.mur_preval, cor.mur_preval, plot.mur_con, cor.mur_con,
+        file=paste(dir_name, "mur_ext.Rdata", sep=""))
+
+# Save the ggplot objects as images
+ggsave(plot.mur_inc file=paste(dir_name, "plot_mur_inc.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_preval file=paste(dir_name, "plot_mur_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_con file=paste(dir_name, "plot_mur_con.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.mur_inc file=paste(dir_name, "plot_mur_inc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_preval file=paste(dir_name, "plot_mur_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_con file=paste(dir_name, "plot_mur_con.png", sep=""), width=5, height=4, type="cairo-png")
+
+## Modelling
