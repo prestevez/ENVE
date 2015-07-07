@@ -274,6 +274,12 @@ summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"tasahom"]), N
                       mean(homicidios[,"tasahom"]), sd(homicidios[,"tasahom"]),
                       min(homicidios[,"tasahom"]), max(homicidios[,"tasahom"]))
 
-summ_table[,5:6] <- round(summ_table[,5:6],3)
-
 summ_table[length(summ_table[,1]),1] <- "state murder rt"
+
+summ_table
+
+xsumm_table <- xtable(summ_table, digits=c(0,0,0,0,0,3,3,0,0), caption="Descriptive Statistics", label="T_summ")
+
+print(xsumm_table, include.rownames=FALSE)
+
+save(summ_table, xsumm_table, file=paste(dir_name, "summ_table.Rdata", sep=""))
