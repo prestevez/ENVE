@@ -26,7 +26,7 @@ dir.create(dir_name)
 
 logfile_name <- paste(Sys.time(), "log.txt", sep="_")
 
-logfile <- file(paste("Output/", logfile_name, sep=""))
+logfile <- file(paste(dir_name, logfile_name, sep=""))
 
 # Initiate sink to store console output to log file
 
