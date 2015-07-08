@@ -184,7 +184,7 @@ save(po_chisq_log, po_chisq, xpo_chisq, xpo_chisq_log, file=paste(dir_name, "po_
 
 # Obtaining the parameters for negbin
 
-nb_estimates <- fitdistr(enve_test$extortions)
+nb_estimates <- fitdistr(enve_test$extortions, "Negative Binomial")
 
 nb_estimates
 
