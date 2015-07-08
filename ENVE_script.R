@@ -865,7 +865,7 @@ tx.n4.x <- texreg(list(n4.0, n4.1, n4.2, n4.3, n4.4, n4.null), caption="Comparis
 
 tx.n4.x
 
-anova.n4.x <- anova(n4.null, n4.4, n.3, n4.2, n4.1, n4.0, test="Chisq")
+anova.n4.x <- anova(n4.null, n4.4, n4.3, n4.2, n4.1, n4.0, test="Chisq")
 
 anova.n4.x
 
