@@ -21,7 +21,7 @@
 enve_all <- read.dbf("TR_ENVE_CUES_2014.dbf")
 cat_entidades <- read.csv("cat_entidades.csv", head=TRUE)
 homicidios <- read.csv("homicidios_tasas_2013_b.csv", header=TRUE)
-homicidios <- merge(homicidios, cat_entidades, by="CVE_ENT")
+homicidios <- merge(homicidios, cat_entidades, by="CVE_ENT", all.x=TRUE)
 
 # Prepare data for analysis
 
@@ -35,7 +35,7 @@ enve_test$CVE_ENT <- as.integer(enve_all$cve_ent)
 
 enve_test$size <- enve_all$id_estrato
 
-enve_test$sector <- enve_all$Sector_final
+enve_test$sector <- enve_all$Sector_fin
 
 enve_test$subsector <- enve_all$P1_1B
 
