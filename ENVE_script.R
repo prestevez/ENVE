@@ -340,9 +340,9 @@ save(bribes, xbribes, file=paste(dir_name, "bribes.Rdata", sep=""))
 
 # Plot the distribution of bribes
 
-plot.bribes <- ggplot(bribes, aes(x=Events, y=Freq)) + geom_bar(stat=""identity"") + ylab("Frequency")
+plot.bribes <- ggplot(bribes, aes(x=Events, y=Freq)) + geom_bar(stat="identity") + ylab("Frequency")
 
-plot.log_bribes <- ggplot(bribes, aes(x=Events, y=clog(Freq))) + geom_bar(stat=""identity"") + ylab("log(Frequency + 1)")
+plot.log_bribes <- ggplot(bribes, aes(x=Events, y=clog(Freq))) + geom_bar(stat="identity") + ylab("log(Frequency + 1)")
 
 plot.ext_bribes <- ggplot(enve_test, aes(x=bribes, y=extortions)) + geom_jitter() + geom_smooth(method="lm") +
                   scale_x_continuous(breaks=0:max(enve_test$bribes)) + ylab("Extortion events") + xlab("Bribes")
@@ -409,12 +409,12 @@ save(ext_years, xext_years, chisq.ext_years, cor.ext_years, file=paste(dir_name,
 ey_df <- data.frame(ext_years)
 
 plot.ey <- ggplot(ey_df, aes(x=temp_ext, y=Freq, fill=temp_years)) +
-                    geom_bar(stat=""identity"") +
+                    geom_bar(stat="identity") +
                     facet_grid(temp_years~., scale="free") +
                     ylab("Frequency") + xlab("Events")
 
 plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog(Freq), fill=temp_years)) +
-                    geom_bar(stat=""identity"") +
+                    geom_bar(stat="identity") +
                     facet_grid(temp_years~., scale="free") +
                     ylab("log(Frequency + 1)") + xlab("Events")
 
@@ -454,12 +454,12 @@ save(ext_sector, xext_sector, chisq.ext_sector, file=paste(dir_name, "ext_sector
 es_df <- data.frame(ext_sector)
 
 plot.es <- ggplot(es_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
-                  geom_bar(stat=""identity"") +
+                  geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("Frequency") + xlab("Events")
 
 plot.log_es <- ggplot(es_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
-                  geom_bar(stat=""identity"") +
+                  geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("log(Frequency + 1)") + xlab("Events")
 
@@ -501,12 +501,12 @@ save(ext_subsector, xext_subsector, chisq.ext_subsector, sec_subsec, file=paste(
 ess_df <- data.frame(ext_subsector)
 
 plot.ess <- ggplot(ess_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
-                  geom_bar(stat=""identity"") +
+                  geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("Frequency") + xlab("Events")
 
 plot.log_ess <- ggplot(ess_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
-                  geom_bar(stat=""identity"") +
+                  geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("log(Frequency + 1)") + xlab("Events")
 
@@ -540,12 +540,12 @@ save(ext_size, xext_size, chisq.ext_size, file=paste(dir_name, "ext_size.Rdata",
 ez_df <- data.frame(ext_size)
 
 plot.ez <- ggplot(ez_df, aes(x=temp_ext, y=Freq, fill=Var1)) +
-                  geom_bar(stat=""identity"") +
+                  geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("Frequency") + xlab("Events")
 
 plot.log_ez <- ggplot(ez_df, aes(x=temp_ext, y=clog(Freq), fill=Var1)) +
-                  geom_bar(stat=""identity"") +
+                  geom_bar(stat="identity") +
                   facet_grid(Var1~., scale="free") +
                   ylab("log(Frequency + 1)") + xlab("Events")
 
