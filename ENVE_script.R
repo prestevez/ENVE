@@ -719,3 +719,50 @@ xm3 <- xtable(m3, caption="Poisson Mixed Model", label="T_m3")
 print(xm2)
 
 # 4. Negative Binomial GLMM
+
+m4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + sector + size + (1 | state), data=enve_test)
+
+summary(m4.0)
+
+xm4.0 <- xtable(m4.0, caption="Negative Binomial Mixed Model", label="T_m4.0")
+
+print(xm4.0)
+
+anova.m4.0 <- anova(m4.0, test="Chisq")
+
+anova.m4.0
+
+xam4.0 <- xtable(anova.m4.0, caption="Analysis of deviance of Negative Binomial Mixed Model", label="T_am4.0")
+
+print(xam4.0)
+
+# Comparison between Poisson and NB GLMMs
+
+tx.m3_m4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4", booktabs=TRUE)
+
+tx.m3_m4
+
+lr.m3_m4 <- lrtest(m3, m4)
+
+lr.m3_m4
+
+xlr.m3_m4 <- xtable(lr.m3_m4, caption="Likelihood ratio test between Poisson and NB Mixed Models", label="T_lrm3m4")
+
+print(xlr.m3_m4)
+
+# 4.x Investigating different variables in the NB GLMMs
+
+m4.1 <- glmer.nb(extortions ~ bribes + state_hom + years + sector +
+                    (1 | state), data=enve_test)
+
+m4.2 <- glmer.nb(extortions ~ bribes + state_hom + years +
+                   (1 | state), data=enve_test)
+
+m4.3 <- glmer.nb(extortions ~ bribes + state_hom +
+                   (1 | state), data=enve_test)
+
+m4.4 <- glmer.nb(extortions ~ bribes +
+                   (1 | state), data=enve_test)
+
+m4.null <- glmer.nb(extortions ~ 1 +
+                   (1 | state), data=enve_test)
