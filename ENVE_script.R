@@ -706,7 +706,7 @@ save(m1, m2, xm1, xm2, tx.m1_m2, lr.m1_m2, xlr.m1_m2, file=paste(dir_name, "glms
 
 # 3. Poisson GLMM
 
-m3 <- glmer(extortions ~ bribes +  tasahom + years + sector + size + (1 | state), data=enve_test, family="poisson")
+m3 <- glmer(extortions ~ bribes +  tasahom + years + sector + size + (1 | NOM_ABR), data=enve_test, family="poisson")
 
 summary(m3)
 
@@ -716,7 +716,7 @@ print(xm2)
 
 # 4. Negative Binomial GLMM
 
-m4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + sector + size + (1 | state), data=enve_test)
+m4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + sector + size + (1 | NOM_ABR), data=enve_test)
 
 summary(m4.0)
 
@@ -749,19 +749,19 @@ print(xlr.m3_m4)
 # 4.x Investigating different variables in the NB GLMMs
 
 m4.1 <- glmer.nb(extortions ~ bribes + tasahom + years + sector +
-                    (1 | state), data=enve_test)
+                    (1 | NOM_ABR), data=enve_test)
 
 m4.2 <- glmer.nb(extortions ~ bribes + tasahom + years +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 m4.3 <- glmer.nb(extortions ~ bribes + tasahom +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 m4.4 <- glmer.nb(extortions ~ bribes +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 m4.null <- glmer.nb(extortions ~ 1 +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 # Compare all NB GLMMs
 tx.m4.x <- texreg(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null, caption="Comparison of all NB mixed models",
@@ -818,7 +818,7 @@ save(n1, n2, xn1, xn2, tx.n1_n2, lr.n1_n2, xlr.n1_n2, file=paste(dir_name, "glms
 
 # 3. Poisson GLMM
 
-n3 <- glmer(extortions ~ bribes +  tasahom + years + subsector + size + (1 | state), data=enve_test, family="poisson")
+n3 <- glmer(extortions ~ bribes +  tasahom + years + subsector + size + (1 | NOM_ABR), data=enve_test, family="poisson")
 
 summary(n3)
 
@@ -828,7 +828,7 @@ print(xn2)
 
 # 4. Negative Binomial GLMM
 
-n4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + subsector + size + (1 | state), data=enve_test)
+n4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + subsector + size + (1 | NOM_ABR), data=enve_test)
 
 summary(n4.0)
 
@@ -861,19 +861,19 @@ print(xlr.n3_n4)
 # 4.x Investigating different variables in the NB GLMMs
 
 n4.1 <- glmer.nb(extortions ~ bribes + tasahom + years + subsector +
-                    (1 | state), data=enve_test)
+                    (1 | NOM_ABR), data=enve_test)
 
 n4.2 <- glmer.nb(extortions ~ bribes + tasahom + years +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 n4.3 <- glmer.nb(extortions ~ bribes + tasahom +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 n4.4 <- glmer.nb(extortions ~ bribes +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 n4.null <- glmer.nb(extortions ~ 1 +
-                   (1 | state), data=enve_test)
+                   (1 | NOM_ABR), data=enve_test)
 
 # Compare all NB GLMMs
 tx.n4.x <- texreg(n4.0, n4.1, n4.2, n4.3, n4.4, n4.null, caption="Comparison of all NB mixed models",
