@@ -730,7 +730,7 @@ tx.m3_m4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed M
 
 tx.m3_m4
 
-lr.m3_m4 <- lrtest(m3, m4)
+lr.m3_m4 <- lrtest(m3, m4.0)
 
 lr.m3_m4
 
@@ -830,11 +830,11 @@ print(xan4.0)
 
 # Comparison between Poisson and NB GLMMs
 
-tx.n3_n4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_n3n4", booktabs=TRUE)
+tx.n3_n4 <- texreg(list(n3, n4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_n3n4", booktabs=TRUE)
 
 tx.n3_n4
 
-lr.n3_n4 <- lrtest(m3, m4)
+lr.n3_n4 <- lrtest(n3, n4.0)
 
 lr.n3_n4
 
