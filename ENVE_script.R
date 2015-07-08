@@ -710,19 +710,11 @@ m3 <- glmer(extortions ~ bribes +  tasahom + years + sector + size + (1 | NOM_AB
 
 summary(m3)
 
-xm3 <- xtable(m3, caption="Poisson Mixed Model", label="T_m3")
-
-print(xm2)
-
 # 4. Negative Binomial GLMM
 
 m4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + sector + size + (1 | NOM_ABR), data=enve_test)
 
 summary(m4.0)
-
-xm4.0 <- xtable(m4.0, caption="Negative Binomial Mixed Model", label="T_m4.0")
-
-print(xm4.0)
 
 anova.m4.0 <- anova(m4.0, test="Chisq")
 
@@ -775,7 +767,7 @@ anova.m4.x
 
 xam4.x <- xtable(anova.m4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
 
-save(m3, xm3, m4.0, xm4.0, anova.m4.0, xam4.0, tx.m3_m4, lr.m3_m4, xlr.m3_m4,
+save(m3, m4.0, anova.m4.0, xam4.0, tx.m3_m4, lr.m3_m4, xlr.m3_m4,
         m4.1, m4.2, m4.3, m4.4, m4.null, tx.m4.x, anova.m4.x, xam4.x,
         file=paste(dir_name, "mixed_models1.Rdata", sep=""))
 
@@ -822,19 +814,11 @@ n3 <- glmer(extortions ~ bribes +  tasahom + years + subsector + size + (1 | NOM
 
 summary(n3)
 
-xn3 <- xtable(n3, caption="Poisson Mixed Model", label="T_n3")
-
-print(xn2)
-
 # 4. Negative Binomial GLMM
 
 n4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + subsector + size + (1 | NOM_ABR), data=enve_test)
 
 summary(n4.0)
-
-xn4.0 <- xtable(n4.0, caption="Negative Binomial Mixed Model", label="T_n4.0")
-
-print(xn4.0)
 
 anova.n4.0 <- anova(n4.0, test="Chisq")
 
@@ -887,7 +871,7 @@ anova.n4.x
 
 xan4.x <- xtable(anova.n4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xan4x")
 
-save(n3, xn3, n4.0, xn4.0, anova.n4.0, xan4.0, tx.n3_n4, lr.n3_n4, xlr.n3_n4,
+save(n3, n4.0, anova.n4.0, xan4.0, tx.n3_n4, lr.n3_n4, xlr.n3_n4,
         n4.1, n4.2, n4.3, n4.4, n4.null, tx.n4.x, anova.n4.x, xan4.x,
         file=paste(dir_name, "mixed_models2.Rdata", sep=""))
 
