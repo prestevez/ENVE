@@ -563,7 +563,7 @@ state_ext_dist <- ftable(enve_test$NOM_ENT, temp_ext)
 
 state_ext_dist
 
-xstate_ext_dist <- xtable(state_ext_dist, caption="Distribution of extortions by state.", label="T_s_ext_dist")
+xstate_ext_dist <- xtable(format(state_ext_dist), caption="Distribution of extortions by state.", label="T_s_ext_dist")
 
 print(xstate_ext_dist, include.rownames=FALSE)
 
