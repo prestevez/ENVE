@@ -419,7 +419,7 @@ plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog(Freq), fill=temp_years)) +
                     ylab("log(Frequency + 1)") + xlab("Events")
 
 plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() + geom_smooth(method="lm") +
-                          xlab=("years") + ylab("Extortions")
+                          xlab("years") + ylab("Extortions")
 
 # Save ggplot objects
 save(plot.ey, plot.log_ey, plot.ext_years, file=paste(dir_name, "plots_ey.Rdata", sep=""))
