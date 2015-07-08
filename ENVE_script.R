@@ -685,7 +685,7 @@ print(xm1)
 
 # 2. NB GLM
 
-m2 <- glm.nb(extortions ~ bribes + state_hom + years + sector + size, data=enve_test)
+m2 <- glm.nb(extortions ~ bribes + tasahom + years + sector + size, data=enve_test)
 
 sumary(m2)
 
@@ -707,3 +707,15 @@ xlr.m1_m2 <- xtable(lr.m1_m2, caption="Likelihood ratio test between Poisson and
 print(xlr.m1_m2)
 
 save(m1, m2, xm1, xm2, tx.m1_m2, lr.m1_m2, xlr.m1_m2, file=paste(dir_name, "glms.Rdata", sep=""))
+
+# 3. Poisson GLMM
+
+m3 <- glmer(extortions ~ bribes +  tasahom + years + sector + size + (1 | state), data=enve_test, family="poisson")
+
+summary(m3)
+
+xm3 <- xtable(m3, caption="Poisson Mixed Model", label="T_m3")
+
+print(xm2)
+
+# 4. Negative Binomial GLMM
