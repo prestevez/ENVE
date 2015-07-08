@@ -233,17 +233,17 @@ save(obsexp, xobsexp, file=paste(dir_name, "obsexp.Rdata", sep=""))
 ### Package_install(ggplot2)
 ### Package_install(Cairo)
 
-plot.obs <- ggplot(obsexp, aes=(x=Events, y=Obs)) + geom_bar(stat=identity) + ylab("Frequency")
+plot.obs <- ggplot(obsexp, aes(x=Events, y=Obs)) + geom_bar(stat=identity) + ylab("Frequency")
 
-plot.log.obs <- ggplot(obsexp, aes=(x=Events, y=clog(Obs))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
+plot.log.obs <- ggplot(obsexp, aes(x=Events, y=clog(Obs))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
 
-plot.exp_po <- ggplot(obsexp, aes=(x=Events, y=exp_po)) + geom_bar(stat=identity) + ylab("Frequency")
+plot.exp_po <- ggplot(obsexp, aes(x=Events, y=exp_po)) + geom_bar(stat=identity) + ylab("Frequency")
 
-plot.log.exp_po <- ggplot(obsexp, aes=(x=Events, y=clog(exp_po))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
+plot.log.exp_po <- ggplot(obsexp, aes(x=Events, y=clog(exp_po))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
 
-plot.exp_nb <- ggplot(obsexp, aes=(x=Events, y=exp_nb)) + geom_bar(stat=identity) + ylab("Frequency")
+plot.exp_nb <- ggplot(obsexp, aes(x=Events, y=exp_nb)) + geom_bar(stat=identity) + ylab("Frequency")
 
-plot.log.exp_nb <- ggplot(obsexp, aes=(x=Events, y=clog(exp_nb))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
+plot.log.exp_nb <- ggplot(obsexp, aes(x=Events, y=clog(exp_nb))) + geom_bar(stat=identity) + ylab("log(Frequency + 1)")
 
 # Save ggplot objects
 
