@@ -756,7 +756,7 @@ m4.null <- glmer.nb(extortions ~ 1 +
                    (1 | NOM_ABR), data=enve_test)
 
 # Compare all NB GLMMs
-tx.m4.x <- texreg(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null, caption="Comparison of all NB mixed models",
+tx.m4.x <- texreg(list(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null), caption="Comparison of all NB mixed models",
                   label="T_tx_m4x", booktabs=TRUE)
 
 tx.m4.x
@@ -860,12 +860,12 @@ n4.null <- glmer.nb(extortions ~ 1 +
                    (1 | NOM_ABR), data=enve_test)
 
 # Compare all NB GLMMs
-tx.n4.x <- texreg(n4.0, n4.1, n4.2, n4.3, n4.4, n4.null, caption="Comparison of all NB mixed models",
+tx.n4.x <- texreg(list(n4.0, n4.1, n4.2, n4.3, n4.4, n4.null), caption="Comparison of all NB mixed models",
                   label="T_tx_n4x", booktabs=TRUE)
 
 tx.n4.x
 
-anova.n4.x <- anova(n4.null, n4.4, mn.3, n4.2, n4.1, n4.0, test="Chisq")
+anova.n4.x <- anova(n4.null, n4.4, n.3, n4.2, n4.1, n4.0, test="Chisq")
 
 anova.n4.x
 
