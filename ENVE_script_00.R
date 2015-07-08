@@ -38,6 +38,6 @@ source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
 
 # End sink
 
-sink(type=c("message","output"))
+sink()
 
 ## End of ENVE_script_00.R

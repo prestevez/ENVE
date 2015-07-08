@@ -878,7 +878,7 @@ save(n3, n4.0, anova.n4.0, xan4.0, tx.n3_n4, lr.n3_n4, xlr.n3_n4,
 # Comparison between  round one and round two
 
 tx.m4_n4 <- texreg(list(m4.0, n4.0), caption="NB Mixed Models using sector and subsector covariates", label="T_m4n4")
-
+ 
 tx.m4_n4
 
 anova.m4_n4 <- anova(m4.0, n4.0, test="Chisq")
