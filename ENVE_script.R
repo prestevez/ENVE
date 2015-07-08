@@ -250,7 +250,7 @@ plot.log.exp_nb <- ggplot(obsexp, aes(x=Events, y=clog(exp_nb))) + geom_bar(stat
 dist.plots <- list(plot.obs=plot.obs, plot.log.obs=plot.log.obs, plot.exp_po=plot.exp_po,
   plot.log.exp_po=plot.log.exp_po, plot.exp_nb=plot.exp_nb, plot.log.exp_nb=plot.log.exp_nb)
 
-save(dist.plots, file=paste(dir_name, "plots_dist_ext.Rdata" sep=""))
+save(dist.plots, file=paste(dir_name, "plots_dist_ext.Rdata", sep=""))
 
 # Save ggplots as images
 
@@ -310,7 +310,7 @@ for (i in 1:length(enve_test))
 
 summ_table <- summ_table[!is.na(summ_table[,1]),]
 
-summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"tasahom"]), NA, NA
+summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"tasahom"]), NA, NA,
                       mean(homicidios[,"tasahom"]), sd(homicidios[,"tasahom"]),
                       min(homicidios[,"tasahom"]), max(homicidios[,"tasahom"]))
 
@@ -563,7 +563,7 @@ ggsave(plot.ez, file=paste(dir_name, "plot_ez.png", sep=""), width=5, height=4, 
 ggsave(plot.log_ez, file=paste(dir_name, "plot_log_ez.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Area level influences
-state_ext_dist <- ftable(enve_test$NOM_ENT, temp_ext))
+state_ext_dist <- ftable(enve_test$NOM_ENT, temp_ext)
 
 state_ext_dist
 
@@ -577,8 +577,8 @@ state_hom <- homicidios[,c(1,4,5,6)]
 
 state_inc <- t(t(state_ext)*as.integer(colnames(state_ext)))
 
-state_summ1 <- data.frame(data.frame(margin.table(state_ext[,2:ncol(state_ext),1))/
-                            data.frame(margin.table(state_ext[,1:ncol(state_ext),1))*1000)
+state_summ1 <- data.frame(data.frame(margin.table(state_ext[,2:ncol(state_ext)],1))/
+                            data.frame(margin.table(state_ext[,1:ncol(state_ext)],1))*1000)
 
 state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_inc,1))[,2]/
                        data.frame(margin.table(state_ext[,1:ncol(state_ext)],1))*1000)
@@ -623,11 +623,11 @@ cor.con_preval
 save(plot.inc_preval, cor.inc_preval, plot.con_preval, cor.con_preval, file=paste(dir_name, "preval_con.Rdata", sep=""))
 
 # save these last ggplots as images
-ggsave(plot.inc_preval file=paste(dir_name, "plot_inc_preval.pdf", sep=""), width=5, height=4)
-ggsave(plot.con_preval file=paste(dir_name, "plot_con_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.inc_preval, file=paste(dir_name, "plot_inc_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.con_preval, file=paste(dir_name, "plot_con_preval.pdf", sep=""), width=5, height=4)
 
-ggsave(plot.inc_preval file=paste(dir_name, "plot_inc_preval.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.con_preval file=paste(dir_name, "plot_con_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.inc_preval, file=paste(dir_name, "plot_inc_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.con_preval, file=paste(dir_name, "plot_con_preval.png", sep=""), width=5, height=4, type="cairo-png")
 
 # Area-level influences: murder rate
 
@@ -658,13 +658,13 @@ save(plot.mur_inc, cor.mur_inc, plot.mur_preval, cor.mur_preval, plot.mur_con, c
         file=paste(dir_name, "mur_ext.Rdata", sep=""))
 
 # Save the ggplot objects as images
-ggsave(plot.mur_inc file=paste(dir_name, "plot_mur_inc.pdf", sep=""), width=5, height=4)
-ggsave(plot.mur_preval file=paste(dir_name, "plot_mur_preval.pdf", sep=""), width=5, height=4)
-ggsave(plot.mur_con file=paste(dir_name, "plot_mur_con.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_inc, file=paste(dir_name, "plot_mur_inc.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_preval, file=paste(dir_name, "plot_mur_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_con, file=paste(dir_name, "plot_mur_con.pdf", sep=""), width=5, height=4)
 
-ggsave(plot.mur_inc file=paste(dir_name, "plot_mur_inc.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.mur_preval file=paste(dir_name, "plot_mur_preval.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.mur_con file=paste(dir_name, "plot_mur_con.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_inc, file=paste(dir_name, "plot_mur_inc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_preval, file=paste(dir_name, "plot_mur_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_con, file=paste(dir_name, "plot_mur_con.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Modelling
 # Make sure we are using the correct lme4 version
@@ -881,7 +881,7 @@ n4.null <- glmer.nb(extortions ~ 1 +
 
 # Compare all NB GLMMs
 tx.n4.x <- texreg(n4.0, n4.1, n4.2, n4.3, n4.4, n4.null, caption="Comparison of all NB mixed models",
-                  label="T_tx_n4x", booktabs=TRUE))
+                  label="T_tx_n4x", booktabs=TRUE)
 
 tx.n4.x
 
