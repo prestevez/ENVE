@@ -250,7 +250,7 @@ plot.log.exp_nb <- ggplot(obsexp, aes(x=Events, y=clog(exp_nb))) + geom_bar(stat
 dist.plots <- list(plot.obs=plot.obs, plot.log.obs=plot.log.obs, plot.exp_po=plot.exp_po,
   plot.log.exp_po=plot.log.exp_po, plot.exp_nb=plot.exp_nb, plot.log.exp_nb=plot.log.exp_nb)
 
-save(dist.plots file=paste(dir_name, "plots_dist_ext.Rdata" sep=""))
+save(dist.plots, file=paste(dir_name, "plots_dist_ext.Rdata" sep=""))
 
 # Save ggplots as images
 
