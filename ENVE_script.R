@@ -896,3 +896,19 @@ save(n3, xn3, n4.0, xn4.0, anova.n4.0, xan4.0, tx.n3_n4, lr.n3_n4, xlr.n3_n4,
         file=paste(dir_name, "mixed_models2.Rdata", sep=""))
 
 # Comparison between round one and round two
+
+tx.m4_n4 <- texreg(m4.0, n4.0, caption="NB Mixed Models using sector and subsector covariates", label="T_m4n4")
+
+tx.m4_n4
+
+anova.m4_n4 <- anova(m4.0, n4.0, test="Chisq")
+
+anova.m4_n4
+
+xam4n4 <- xtable(anova.m4_n4, caption="ANOVA between the NB mixed models using sector and subsector", label="T_xanm4n4")
+
+print(xam4n4)
+
+save(tx.m4_n4, anova.m4_n4, xam4n4, file=paste(dir_name, "nbmodels12.Rdata", sep=""))
+
+###### END OF FILE #######
