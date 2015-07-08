@@ -27,11 +27,7 @@ homicidios <- merge(homicidios, cat_entidades, by="CVE_ENT")
 
 # Selecting only the relevant variables
 
-enve_test <- data.frame(extortions=integer(), bribes=integer(), CVE_ENT=integer(),
-                          size=factor(), sector=factor(), susbector=factor(),
-                          years=integer())
-
-enve_test$extortions <- as.integer(as.character(enve_all$P26_10))
+enve_test <- data.frame(extortions=as.integer(as.character(enve_all$P26_10)))
 
 enve_test$bribes <- as.integer(as.character(enve_all$P33))
 
