@@ -683,7 +683,7 @@ print(xm1)
 
 m2 <- glm.nb(extortions ~ bribes + tasahom + years + sector + size, data=enve_test)
 
-sumary(m2)
+summary(m2)
 
 xm2 <- xtable(m2, caption="Negative Binomial GLM", label="T_m2")
 
@@ -795,7 +795,7 @@ print(xn1)
 
 n2 <- glm.nb(extortions ~ bribes + tasahom + years + subsector + size, data=enve_test)
 
-sumary(n2)
+summary(n2)
 
 xn2 <- xtable(n2, caption="Negative Binomial GLM", label="T_n2")
 
