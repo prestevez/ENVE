@@ -161,7 +161,7 @@ po_chisq <- obs_exp_test(obsexp, obsexp$exp_po, 1)
 
 po_chisq
 
-xpo_chisq <- xtable(po_chisq[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Poisson)", label="T_po_chisq")
+xpo_chisq <- xtable(po_chisq[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Poisson)", label="T_po_chisq")
 
 print(xpo_chisq, include.rownames=FALSE)
 
@@ -169,7 +169,7 @@ po_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_po, 1)
 
 po_chisq_log
 
-xpo_chisq_log <- xtable(po_chisq_log[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Poisson, log-scale)",
+xpo_chisq_log <- xtable(po_chisq_log[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Poisson, log-scale)",
                           label="T_po_chisq_log")
 
 print(xpo_chisq_log, include.rownames=FALSE)
@@ -199,7 +199,7 @@ nb_chisq <- obs_exp_test(obsexp, obsexp$exp_nb, 2)
 
 nb_chisq
 
-xnb_chisq <- xtable(nb_chisq[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Negatve Binomial)", label="T_nb_chisq")
+xnb_chisq <- xtable(nb_chisq[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Negatve Binomial)", label="T_nb_chisq")
 
 print(xnb_chisq, include.rownames=FALSE)
 
@@ -207,7 +207,7 @@ nb_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_nb, 2)
 
 nb_chisq_log
 
-xnb_chisq_log <- xtable(nb_chisq_log[[1]], digits=c(0,0,3), caption="Observed vs. Expected (Negative Binomial, log-scale)",
+xnb_chisq_log <- xtable(nb_chisq_log[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Negative Binomial, log-scale)",
                           label="T_nb_chisq_log")
 
 print(xnb_chisq_log, include.rownames=FALSE)
