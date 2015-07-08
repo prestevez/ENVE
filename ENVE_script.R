@@ -304,13 +304,13 @@ for (i in 1:length(enve_test))
   }
 
 
-summ_table <- summ_table[!is.na(summ_table[,1]),]
-
 summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"tasahom"]), NA, NA,
-                      mean(homicidios[,"tasahom"]), sd(homicidios[,"tasahom"]),
-                      min(homicidios[,"tasahom"]), max(homicidios[,"tasahom"]))
+                                           mean(homicidios[,"tasahom"]), sd(homicidios[,"tasahom"]),
+                                           min(homicidios[,"tasahom"]), max(homicidios[,"tasahom"]))
 
 summ_table[length(summ_table[,1]),1] <- "state murder rt"
+
+summ_table <- summ_table[!is.na(summ_table[,1]),]
 
 summ_table
 
