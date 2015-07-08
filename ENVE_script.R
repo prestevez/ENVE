@@ -752,13 +752,13 @@ print(xlr.m3_m4)
 
 # 4.x Investigating different variables in the NB GLMMs
 
-m4.1 <- glmer.nb(extortions ~ bribes + state_hom + years + sector +
+m4.1 <- glmer.nb(extortions ~ bribes + tasahom + years + sector +
                     (1 | state), data=enve_test)
 
-m4.2 <- glmer.nb(extortions ~ bribes + state_hom + years +
+m4.2 <- glmer.nb(extortions ~ bribes + tasahom + years +
                    (1 | state), data=enve_test)
 
-m4.3 <- glmer.nb(extortions ~ bribes + state_hom +
+m4.3 <- glmer.nb(extortions ~ bribes + tasahom +
                    (1 | state), data=enve_test)
 
 m4.4 <- glmer.nb(extortions ~ bribes +
@@ -766,3 +766,20 @@ m4.4 <- glmer.nb(extortions ~ bribes +
 
 m4.null <- glmer.nb(extortions ~ 1 +
                    (1 | state), data=enve_test)
+
+# Compare all NB GLMMs
+tx.m4.x <- texreg(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null)
+
+tx.m4.x
+
+anova.m4.x <- anova(m4.null, m4.4, m4.3, m4.2, m4.1, m4.0, test="Chisq")
+
+anova.m4.x
+
+xam4.x <- xtable(anova.m4.x)
+
+save(m3, xm3, m4.0, xm4.0, anova.m4.0, xam4.0, tx.m3_m4, lr.m3_m4, xlr.m3_m4,
+        m4.1, m4.2, m4.3, m4.4, m4.null, tx.m4.x, anova.m4.x, xam4.x,
+        file=paste(dir_name, "mixed_models1.Rdata", sep=""))
+
+# Second round using subsector
