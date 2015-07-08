@@ -129,7 +129,7 @@ obs_exp_test <- function(dataframe, exp, par)
   {
   cs<-factor(0:(length(dataframe[,1])-1))
   index <- max(which(exp >= 4))
-  levels(cs)[index:length(dataframe[,1]] <- paste(as.character(index-1), "+", sep="")
+  levels(cs)[index:length(dataframe[,1])] <- paste(as.character(index-1), "+", sep="")
   ef<-as.vector(tapply(exp,cs,sum))
   of<-as.vector(tapply(dataframe[,2],cs,sum))
   ofef_table <- data.frame(Events=0:(index-1), Obs=of, Exp=ef)
