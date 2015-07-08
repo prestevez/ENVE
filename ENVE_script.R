@@ -768,7 +768,8 @@ m4.null <- glmer.nb(extortions ~ 1 +
                    (1 | state), data=enve_test)
 
 # Compare all NB GLMMs
-tx.m4.x <- texreg(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null)
+tx.m4.x <- texreg(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null, caption="Comparison of all NB mixed models",
+                  label="T_tx_m4x", booktabs=TRUE)
 
 tx.m4.x
 
@@ -776,10 +777,122 @@ anova.m4.x <- anova(m4.null, m4.4, m4.3, m4.2, m4.1, m4.0, test="Chisq")
 
 anova.m4.x
 
-xam4.x <- xtable(anova.m4.x)
+xam4.x <- xtable(anova.m4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
 
 save(m3, xm3, m4.0, xm4.0, anova.m4.0, xam4.0, tx.m3_m4, lr.m3_m4, xlr.m3_m4,
         m4.1, m4.2, m4.3, m4.4, m4.null, tx.m4.x, anova.m4.x, xam4.x,
         file=paste(dir_name, "mixed_models1.Rdata", sep=""))
 
 # Second round using subsector
+
+# 1. Poisson GLM
+n1 <- glm(extortions ~ bribes + tasahom + years + subsector + size, data=enve_test,
+          family="poisson")
+
+summary(n1)
+
+xn1 <- xtable(n1, caption="Poisson GLM", label="T_n1")
+
+print(xn1)
+
+# 2. NB GLM
+
+n2 <- glm.nb(extortions ~ bribes + tasahom + years + subsector + size, data=enve_test)
+
+sumary(n2)
+
+xn2 <- xtable(n2, caption="Negative Binomial GLM", label="T_n2")
+
+print(xn2)
+
+# Compare NB and Poisson
+tx.n1_n2 <- texreg(list(n1, n2), caption="Comparison of Poisson and NB GLMs", label="T_n1n2", booktabs=TRUE)
+
+tx.n1_n2
+
+lr.n1_n2 <- lrtest(n1, n2)
+
+lr.n1_n2
+
+xlr.n1_n2 <- xtable(lr.n1_n2, caption="Likelihood ratio test between Poisson and NB GLMs", label="T_lrn1n2")
+
+print(xlr.n1_n2)
+
+save(n1, n2, xn1, xn2, tx.n1_n2, lr.n1_n2, xlr.n1_n2, file=paste(dir_name, "glms_nver.Rdata", sep=""))
+
+# 3. Poisson GLMM
+
+n3 <- glmer(extortions ~ bribes +  tasahom + years + subsector + size + (1 | state), data=enve_test, family="poisson")
+
+summary(n3)
+
+xn3 <- xtable(n3, caption="Poisson Mixed Model", label="T_n3")
+
+print(xn2)
+
+# 4. Negative Binomial GLMM
+
+n4.0 <- glmer.nb(extortions ~ bribes + tasahom + years + subsector + size + (1 | state), data=enve_test)
+
+summary(n4.0)
+
+xn4.0 <- xtable(n4.0, caption="Negative Binomial Mixed Model", label="T_n4.0")
+
+print(xn4.0)
+
+anova.n4.0 <- anova(n4.0, test="Chisq")
+
+anova.n4.0
+
+xan4.0 <- xtable(anova.n4.0, caption="Analysis of deviance of Negative Binomial Mixed Model", label="T_an4.0")
+
+print(xan4.0)
+
+# Comparison between Poisson and NB GLMMs
+
+tx.n3_n4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_n3n4", booktabs=TRUE)
+
+tx.n3_n4
+
+lr.n3_n4 <- lrtest(m3, m4)
+
+lr.n3_n4
+
+xlr.n3_n4 <- xtable(lr.n3_n4, caption="Likelihood ratio test between Poisson and NB Mixed Models", label="T_lrn3n4")
+
+print(xlr.n3_n4)
+
+# 4.x Investigating different variables in the NB GLMMs
+
+n4.1 <- glmer.nb(extortions ~ bribes + tasahom + years + subsector +
+                    (1 | state), data=enve_test)
+
+n4.2 <- glmer.nb(extortions ~ bribes + tasahom + years +
+                   (1 | state), data=enve_test)
+
+n4.3 <- glmer.nb(extortions ~ bribes + tasahom +
+                   (1 | state), data=enve_test)
+
+n4.4 <- glmer.nb(extortions ~ bribes +
+                   (1 | state), data=enve_test)
+
+n4.null <- glmer.nb(extortions ~ 1 +
+                   (1 | state), data=enve_test)
+
+# Compare all NB GLMMs
+tx.n4.x <- texreg(n4.0, n4.1, n4.2, n4.3, n4.4, n4.null, caption="Comparison of all NB mixed models",
+                  label="T_tx_n4x", booktabs=TRUE))
+
+tx.n4.x
+
+anova.n4.x <- anova(n4.null, n4.4, mn.3, n4.2, n4.1, n4.0, test="Chisq")
+
+anova.n4.x
+
+xan4.x <- xtable(anova.n4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xan4x")
+
+save(n3, xn3, n4.0, xn4.0, anova.n4.0, xan4.0, tx.n3_n4, lr.n3_n4, xlr.n3_n4,
+        n4.1, n4.2, n4.3, n4.4, n4.null, tx.n4.x, anova.n4.x, xan4.x,
+        file=paste(dir_name, "mixed_models2.Rdata", sep=""))
+
+# Comparison between round one and round two
