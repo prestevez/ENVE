@@ -11,20 +11,20 @@ library(MASS)
 library(lme4)
 
 
-# Create directories where results and log will be written.
-if (dir.exists("Output/") == FALSE)
-{
-  dir.create("Output/")
-}
+## Create directories where results and log will be written.
+#if (dir.exists("Output/") == FALSE)
+#{
+#  dir.create("Output/")
+#}
 
 # Create directories to save results outputs
-dir_name <- paste("Output/",Sys.time(), "_results/", sep="")
+dir_name <- paste("Output/",as.integer(Sys.time()), "_results/", sep="")
 
 dir.create(dir_name)
 
 # Create logfile object
 
-logfile_name <- paste(Sys.time(), "log.txt", sep="_")
+logfile_name <- paste(as.integer(Sys.time()), "_log.txt", sep="")
 
 logfile <- file(paste(dir_name, logfile_name, sep=""))
 
