@@ -1,4 +1,8 @@
+# Instrucciones de scripts para el análisis de ENVE 2014 en R
+*Patricio R. Estévez Soto*  
+Email: [patricio.estevez.14@ucl.ac.uk](mailto:patricio.estevez.14@ucl.ac.uk)  
 
+## Introducción
 
 
 
@@ -19,10 +23,12 @@ El paquete **lme4** es esencial para este proyecto. Sin embargo, la versión má
 
 ```
 install.packages("lme4")
-install.packages("C:/R/ENVE_EstevezSoto/lme4_1.1-7.tar.gz", repos=NULL, type="source")
+
+# Se debe de especificar la dirección al archivo correcta
+install.packages("C:/R/ENVE_EstevezSoto/lme4_1.1-7.tar.gz", repos=NULL, type="source") 
 ```
 
-**La siguientes instrucciones están pensadas para un sistema Windows, y probablemente pueden omitirse en un sistema Mac o Linux**
+**La siguientes instrucciones están pensadas para un sistema Windows.**
 
 Si la instalación reporta **tERROR: compilation failed for package "lme4"**, será necesario instalar Rtools en la computadora.
 
@@ -42,3 +48,6 @@ packageVersion("lme4")
 ```
 
 El último comando debe de regresar la versión **1.1.7**.
+
+## Ejecución del script
+
