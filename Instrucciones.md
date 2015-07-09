@@ -49,5 +49,7 @@ packageVersion("lme4")
 
 El último comando debe de regresar la versión **1.1.7**.
 
+Finalmente, el script de análisis carga los paquetes, por lo que no es estrictamente necesario cargarlos de antemano.
+
 ## Ejecución del script
 
