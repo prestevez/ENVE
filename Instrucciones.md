@@ -53,3 +53,54 @@ Finalmente, el script de análisis carga los paquetes, por lo que no es estricta
 
 ## Ejecución del script
 
+El proyecto está diseñado para requerir la menos intervención posible para su ejecución. Una vez puesto en marcha, el script generará los reportes y outputs relevantes en una carpeta para su posterior revisión y envío.
+
+Además de la instalación de los paquetes necesarios, descrita en la sección anterior, la única intervención necesaria es colocar el archivo .dbf que contiene los datos de la ENVE en el folder del proyecto y asignar el *working directory* en R al folder del proyecto.
+
+### Archivo .dbf ENVE 2014
+
+Copie el archivo **"TR_ENVE_CUES_2014.dbf"** al folder de este proyecto.
+
+### Establecer working directory en R
+
+Establezca el *working directory* en R para que apunte al folder del proyecto.
+
+Por ejemplo:
+```
+getwd() # Devuelve cuál es el working directory actual.
+
+setwd("C:/R/ENVE_EstevezSoto") # Establece el working directory en el folder del proyecto
+```
+Sólo se requiere que el *path* al folder del proyecto sea especificado.
+
+### Ejecutar el script
+
+El proyecto está contenido en dos scripts: **ENVE_script_00.R** y **ENVE_script.R**.
+
+**Sólo es necesario correr ENVE_script_00.R**, pues este script contiene las instrucciones para correr el segundo script.
+
+Para ejecutarlo, escriba el siguiente comando en la consola de R y ejecute:
+
+```
+source(file="ENVE_script_00.R", echo=TRUE)
+```
+La ejecución tarda cerca de media hora, es normal que parezca que no hace nada.
+
+Cuando termine de ejecutarse, la consola probablemente avisará que se generaron un número (cerca de 30) warnings. Pueden ignorarse.
+
+### Resultados 
+
+El script automáticamente realizará los análisis requeridos y guardará los resultados en una subcarpeta dentro del directorio **Output/** del folder del proyecto. El nombre de la subcarpeta se compone de un número grande (que representa la versión en *integer* de la fecha y hora en la que se ejecutó el script). 
+
+Dentro de esta subcarpeta se encontrarán los siguientes archivos:
+- Archivo de texto [número]_log.txt: Contiene los comandos y resultados del script en texto.
+- Archivos .pdf y .png: Contienen imágenes con gráficas de los análisis realizados.
+- Archivos .Rdata: contienen los objetos de análisis (modelos), reporte (tablas y xtables) y gráficas (ggplots) en formato R.
+
+### Errores
+
+Los scripts han sido probados con un archivo .dbf del mismo nombre (pero datos falsos) que el archivo .dbf de la ENVE 2014. Ha sido probado en plataformas Mac y Windows y ha corrido sin errores.
+
+Si se produce algún error, agradecería me enviaran el texto que arroja la consola, así como el contenido (por lo menos las últimas líneas) del archivo **[número]_log.txt**, pues ello me ayudará a identificar precisamente dónde ocurrió el error.
+
+Puedo ser contactado vía email, o vía Whatsapp para cuestiones urgentes (mi número de celular lo tiene la Dirección de Acceso a Microdatos).
