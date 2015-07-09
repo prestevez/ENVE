@@ -4,10 +4,29 @@ Email: [patricio.estevez.14@ucl.ac.uk](mailto:patricio.estevez.14@ucl.ac.uk)
 
 ## Introducción
 
+Estas instrucciones detallan brevemente el procedimiento necesario para correr exitosamente los scripts diseñados para el análisis de la ENVE 2014 en R.
 
+De antemano muchas gracias por su apoyo en la realización de este proyecto.
 
+Cualquier duda, comentario, o error que se genere al correr este proyecto, agradezco me contacte a la brevedad posible.
+
+La ejecución consta principalmente de dos partes, la **Instalación de paquetes requeridos**, y la **Ejecución del script**.
+
+La instalación de paquetes solo se requiere realizar una vez. La ejecución del script puede realizarse las veces que sean necesarias si se encuentran errores.
 
 ## Instalación de paquetes requeridos
+
+Los paquetes requeridos por este proyecto son los siguientes:
+- **foreign**: Importa archivos .dbf a R
+- **ggplot2**: Genera gráficos más atractivos que R básico
+- **Cairo**: Permite guardar los gráficos como archivos png
+- **xtable**: Genera tablas sencillas en formato LaTeX
+- **texreg**: Genera tablas complejas en formato LaTeX
+- **lmtest**: Realiza pruebas de hipótesis al comparar modelos
+- **MASS**: Permite generar modelos estadísticos utilizando la distribución binomial negativa.
+- **lme4 Version 1.1.7**: Permite generar modelos estadísticos de efectos mixtos.
+
+Algunos de estos paquetes pueden ya estar instalados en nuestra computadora. Aquellos que no estén instalados pueden instalarse mediante los siguientes comandos:
 
 ```
 install.packages("foreign")
@@ -19,7 +38,7 @@ install.packages("lmtest")
 install.packages("MASS")
 ```
 
-El paquete **lme4** es esencial para este proyecto. Sin embargo, la versión más actual (1.1.8) disponible en CRAN genera resultados inconsistentes. Por tanto, se requiere instalar la versión anterior **1.1.7** para asegurar que los resultados generados sean correctos. Para instalar dicha versión, primero se requiere instalar la versión 1.1.8 para asegurarnos de que se cuenta con todas las dependencias necesarias. Segundo, se instala la versión 1.1.7 desde el archivo *source* incluido en la carpeta del proyecto (Es requerido especificar el *path* al archivo).
+El paquete **lme4** es esencial para este proyecto. Sin embargo, la versión más actual (1.1.8) disponible en CRAN genera resultados inconsistentes. Por tanto, se requiere instalar la versión anterior **1.1.7** para asegurar que los resultados generados sean correctos. Para instalar dicha versión, primero se requiere instalar la versión 1.1.8 para asegurarnos de que se cuenta con todas las dependencias necesarias. Segundo, se instala la versión 1.1.7 desde el archivo *source* incluido en la carpeta del proyecto (es requerido especificar el *path* al archivo).
 
 ```
 install.packages("lme4")
@@ -28,9 +47,9 @@ install.packages("lme4")
 install.packages("C:/R/ENVE_EstevezSoto/lme4_1.1-7.tar.gz", repos=NULL, type="source") 
 ```
 
-**La siguientes instrucciones están pensadas para un sistema Windows.**
+**La siguientes instrucciones están pensadas para un sistema Windows**.
 
-Si la instalación reporta **tERROR: compilation failed for package "lme4"**, será necesario instalar Rtools en la computadora.
+Si la instalación reporta **tERROR: compilation failed for package "lme4"**, o similar, será necesario instalar Rtools en la computadora.
 
 Rtools permite la instalación de paquetes en R desde el código fuente (*source*). Para instalar Rtools navegamos a la página de [Rtools](http://cran.r-project.org/bin/windows/Rtools/), y descargamos el archivo ejecutable acorde a nuestra versión de R. Corremos el instalador seleccionando la opción default: "Package authoring installation".
 
@@ -71,6 +90,7 @@ getwd() # Devuelve cuál es el working directory actual.
 
 setwd("C:/R/ENVE_EstevezSoto") # Establece el working directory en el folder del proyecto
 ```
+
 Sólo se requiere que el *path* al folder del proyecto sea especificado.
 
 ### Ejecutar el script
@@ -86,20 +106,20 @@ source(file="ENVE_script_00.R", echo=TRUE)
 ```
 La ejecución tarda cerca de media hora, es normal que parezca que no hace nada.
 
-Cuando termine de ejecutarse, la consola probablemente avisará que se generaron un número (cerca de 30) warnings. Pueden ignorarse.
+Cuando termine de ejecutarse, la consola probablemente avisará que se generaron un número (cerca de 30) *warnings*. Pueden ignorarse.
 
-### Resultados 
+## Resultados 
 
-El script automáticamente realizará los análisis requeridos y guardará los resultados en una subcarpeta dentro del directorio **Output/** del folder del proyecto. El nombre de la subcarpeta se compone de un número grande (que representa la versión en *integer* de la fecha y hora en la que se ejecutó el script). 
+El script automáticamente realizará los análisis requeridos y guardará los resultados en una subcarpeta dentro del directorio **Output/** del folder del proyecto. El nombre de la subcarpeta se compone de un número grande (que representa la versión en *integer* de la fecha y hora en la que se ejecutó el script) y **_results**. 
 
 Dentro de esta subcarpeta se encontrarán los siguientes archivos:
-- Archivo de texto [número]_log.txt: Contiene los comandos y resultados del script en texto.
-- Archivos .pdf y .png: Contienen imágenes con gráficas de los análisis realizados.
-- Archivos .Rdata: contienen los objetos de análisis (modelos), reporte (tablas y xtables) y gráficas (ggplots) en formato R.
+- Archivo de texto **[número]_log.txt**: Contiene los comandos y resultados del script en texto.
+- Archivos **.pdf** y **.png**: Contienen imágenes con gráficas de los análisis realizados.
+- Archivos **.Rdata**: contienen los objetos de análisis (modelos), reporte (tablas y xtables) y gráficas (ggplots) en formato R.
 
-### Errores
+## Errores
 
-Los scripts han sido probados con un archivo .dbf del mismo nombre (pero datos falsos) que el archivo .dbf de la ENVE 2014. Ha sido probado en plataformas Mac y Windows y ha corrido sin errores.
+Los scripts han sido probados con un archivo .dbf del mismo nombre y estructura (pero datos falsos) que el archivo .dbf de la ENVE 2014. Ha sido probado en plataformas Mac y Windows y ha corrido sin errores.
 
 Si se produce algún error, agradecería me enviaran el texto que arroja la consola, así como el contenido (por lo menos las últimas líneas) del archivo **[número]_log.txt**, pues ello me ayudará a identificar precisamente dónde ocurrió el error.
 
