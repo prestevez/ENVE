@@ -1076,7 +1076,7 @@ xan4.x <- xtable(anova.n4.x, caption="ANOVA test between variables of the NB mix
 # 4. Negative Binomial GLMM_ADMB
 
 ADn4.0 <- glmmadmb(extortions ~ bribes + tasahom + years + subsector + size + (1 | NOM_ABR), data=enve_test,
-                  family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+                  family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
 
 summary(ADn4.0)
 
