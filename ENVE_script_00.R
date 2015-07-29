@@ -10,6 +10,7 @@ library(lmtest)
 library(MASS)
 library(lme4)
 library(glmmADMB)
+library(evaluate)
 
 
 ## Create directories where results and log will be written.
@@ -37,19 +38,11 @@ sink(logfile, append=TRUE, type=c("output","message"))
 
 sessionInfo()
 
-ll <- parse(file = "ENVE_script.R")
+#source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
 
-source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
+results <- evaluate(file("ENVE_script.R"), new_device=FALSE)
 
-
-## Run with trycatch
-
-#ll <- parse(file = "ENVE_script.R")
-
-#for (i in seq_along(ll))
-#{
-#  tryCatch(eval(ll[[i]]), error = function(e) message("Error!", as.character(e)))
-#}
+replay(results)
 
 # End sink
 
