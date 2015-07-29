@@ -22,6 +22,9 @@ enve_all <- read.dbf("TR_ENVE_CUES_2014.dbf")
 cat_entidades <- read.csv("cat_entidades.csv", head=TRUE)
 homicidios <- read.csv("homicidios_tasas_2013_b.csv", header=TRUE)
 homicidios <- merge(homicidios, cat_entidades, by="CVE_ENT", all.x=TRUE)
+scode <- read.csv("secode.csv", head=TRUE)
+scode$Code <- scode$Code*10000
+
 
 # Prepare data for analysis
 
@@ -31,21 +34,27 @@ enve_test <- data.frame(extortions=as.integer(as.character(enve_all$P26_10)))
 
 enve_test$bribes <- as.integer(as.character(enve_all$P33))
 
-enve_test$CVE_ENT <- as.integer(enve_all$cve_ent)
+enve_test$CVE_ENT <- as.integer(as.character(enve_all$CVE_ENT))
 
-enve_test$size <- enve_all$id_estrato
+enve_test$size <- enve_all$ID_ESTRATO
+levels(enve_test$size) <- c("Large", "Medium", "Small", "Micro")
 
-enve_test$sector <- enve_all$Sector_fin
+enve_test$sector <- enve_all$SECTOR_FIN
 
-enve_test$subsector <- enve_all$P1_1B
+enve_test$tempsub <- as.integer(as.character(enve_all$P1_1B))
+enve_test$subsector <- cut(enve_test$tempsub, scode$Code, right=FALSE)
+levels(enve_test$subsector) <- scode$Sector
 
 enve_test$years <- 2013 - as.numeric(as.character(enve_all$P3))
-# Still considering whether I should add one for 2013 businesses
 
 enve_test <- merge(enve_test, homicidios, by="CVE_ENT", all.x=TRUE)
 
 enve_test$extortions[is.na(enve_test$extortions)] <- 0
 enve_test$bribes[is.na(enve_test$bribes)] <- 0
+
+head(enve_test, 50)
+
+tail(enve_test, 50)
 
 # EDA
 
@@ -385,7 +394,7 @@ save(ext_bribes, xext_bribes, chisq.ext_bribes, cor.ext_bribes, file=paste(dir_n
 
 ## Years variable
 
-temp_years <- cut(enve_test$years, 4)
+temp_years <- cut(enve_test$years, c(0,2,11,31,51,Inf), right=FALSE)
 
 ext_years <- ftable(temp_years, temp_ext)
 
@@ -689,6 +698,67 @@ xm2 <- xtable(m2, caption="Negative Binomial GLM", label="T_m2")
 
 print(xm2)
 
+m2.1 <- glm.nb(extortions ~ bribes + tasahom + years + sector, data=enve_test)
+
+summary(m2.1)
+
+xm2.1 <- xtable(m2.1, caption="Negative Binomial GLM", label="T_m2.1")
+
+print(xm2.1)
+
+m2.2 <- glm.nb(extortions ~ bribes + tasahom + years, data=enve_test)
+
+summary(m2.2)
+
+xm2.2 <- xtable(m2.2, caption="Negative Binomial GLM", label="T_m2.2")
+
+print(xm2.2)
+
+m2.3 <- glm.nb(extortions ~ bribes + tasahom, data=enve_test)
+
+summary(m2.3)
+
+xm2.3 <- xtable(m2.3, caption="Negative Binomial GLM", label="T_m2.3")
+
+print(xm2.3)
+
+m2.4 <- glm.nb(extortions ~ bribes, data=enve_test)
+
+summary(m2.4)
+
+xm2.4 <- xtable(m2.4, caption="Negative Binomial GLM", label="T_m2.4")
+
+print(xm2.4)
+
+m2.null <- glm.nb(extortions ~ 1, data=enve_test)
+
+summary(m2.null)
+
+xm2.null <- xtable(m2.null, caption="Negative Binomial GLM", label="T_m2.null")
+
+print(xm2.null)
+
+## Compare different glm.nb
+
+anova.m2 <- anova(m2, test="Chisq")
+
+anova.m2
+
+xam2 <- xtable(anova.m2, caption="Analysis of deviance of Negative Binomial Model", label="T_am2")
+
+print(xam2)
+
+tx.m2.x <- texreg(list(m2.null, m2.4, m2.3, m2.2, m2.1, m2), caption="Comparison of all NB models",
+                  label="T_tx_m2x", booktabs=TRUE)
+
+tx.m2.x
+
+anova.m2.x <- anova(m2.null, m2.4, m2.3, m2.2, m2.1, m2.0, test="Chisq")
+
+anova.m2.x
+
+xam2.x <- xtable(anova.m2.x, caption="ANOVA test between variables of the NB models", label="T_xam2x")
+
 # Compare NB and Poisson
 tx.m1_m2 <- texreg(list(m1, m2), caption="Comparison of Poisson and NB GLMs", label="T_m1m2", booktabs=TRUE)
 
@@ -702,7 +772,8 @@ xlr.m1_m2 <- xtable(lr.m1_m2, caption="Likelihood ratio test between Poisson and
 
 print(xlr.m1_m2)
 
-save(m1, m2, xm1, xm2, tx.m1_m2, lr.m1_m2, xlr.m1_m2, file=paste(dir_name, "glms.Rdata", sep=""))
+save(m1, m2, m2.1, m2.2, m2.3, m2.4, m2.null, anova.m2, xam2, tx.m2.x, anova.m2.x, xam2.x,
+  xm1, xm2, tx.m1_m2, lr.m1_m2, xlr.m1_m2, file=paste(dir_name, "glms.Rdata", sep=""))
 
 # 3. Poisson GLMM
 
@@ -767,8 +838,75 @@ anova.m4.x
 
 xam4.x <- xtable(anova.m4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
 
+## Using glmmADMB
+# 4. Negative Binomial GLMM_ADMB
+
+ADm4.0 <- glmmadmb(extortions ~ bribes + tasahom + years + sector + size + (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
+
+summary(ADm4.0)
+
+anova.ADm4.0 <- anova(ADm4.0, test="Chisq")
+
+anova.ADm4.0
+
+xaADm4.0 <- xtable(anova.ADm4.0, caption="Analysis of deviance of Negative Binomial Mixed Model", label="T_aADm4.0")
+
+print(xaADm4.0)
+
+# Comparison between Poisson and NB GLMMs
+
+tx.m3_ADm4 <- texreg(list(m3, ADm4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3ADm4", booktabs=TRUE)
+
+tx.m3_ADm4
+
+lr.m3_ADm4 <- lrtest(m3, ADm4.0)
+
+lr.m3_ADm4
+
+xlr.m3_ADm4 <- xtable(lr.m3_ADm4, caption="Likelihood ratio test between Poisson and NB Mixed Models", label="T_lrm3ADm4")
+
+print(xlr.m3_ADm4)
+
+# 4.x Investigating different variables in the NB GLMMs_ADMB
+
+ADm4.1 <- glmmadmb(extortions ~ bribes + tasahom + years + sector +
+                    (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
+
+ADm4.2 <- glmmadmb(extortions ~ bribes + tasahom + years +
+                   (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
+
+ADm4.3 <- glmmadmb(extortions ~ bribes + tasahom +
+                   (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
+
+ADm4.4 <- glmmadmb(extortions ~ bribes +
+                   (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
+
+ADm4.null <- glmmadmb(extortions ~ 1 +
+                   (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
+
+# Compare all NB GLMMs_ADMB
+tx.ADm4.x <- texreg(list(ADm4.0, ADm4.1, ADm4.2, ADm4.3, ADm4.4, ADm4.null), caption="Comparison of all NB mixed models",
+                  label="T_tx_ADm4x", booktabs=TRUE)
+
+tx.ADm4.x
+
+anova.ADm4.x <- anova(ADm4.null, ADm4.4, ADm4.3, ADm4.2, ADm4.1, ADm4.0, test="Chisq")
+
+anova.ADm4.x
+
+xaADm4.x <- xtable(anova.ADm4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xaADm4x")
+
+
 save(m3, m4.0, anova.m4.0, xam4.0, tx.m3_m4, lr.m3_m4, xlr.m3_m4,
         m4.1, m4.2, m4.3, m4.4, m4.null, tx.m4.x, anova.m4.x, xam4.x,
+        ADm4.0, anova.ADm4.0, xaADm4.0, tx.m3_ADm4, lr.m3_ADm4, xlr.m3_ADm4,
+        ADm4.1, ADm4.2, ADm4.3, ADm4.4, ADm4.null, tx.ADm4.x, anova.ADm4.x, xaADm4.x,
         file=paste(dir_name, "mixed_models1.Rdata", sep=""))
 
 # Second round using subsector
@@ -793,6 +931,67 @@ xn2 <- xtable(n2, caption="Negative Binomial GLM", label="T_n2")
 
 print(xn2)
 
+n2.1 <- glm.nb(extortions ~ bribes + tasahom + years +subsector, data=enve_test)
+
+summary(n2.1)
+
+xn2.1 <- xtable(n2.1, caption="Negative Binomial GLM", label="T_n2.1")
+
+print(xn2.1)
+
+n2.2 <- glm.nb(extortions ~ bribes + tasahom + years, data=enve_test)
+
+summary(n2.2)
+
+xn2.2 <- xtable(n2.2, caption="Negative Binomial GLM", label="T_n2.2")
+
+print(xn2.2)
+
+n2.3 <- glm.nb(extortions ~ bribes + tasahom, data=enve_test)
+
+summary(n2.3)
+
+xn2.3 <- xtable(n2.3, caption="Negative Binomial GLM", label="T_n2.3")
+
+print(xn2.3)
+
+n2.4 <- glm.nb(extortions ~ bribes, data=enve_test)
+
+summary(n2.4)
+
+xn2.4 <- xtable(n2.4, caption="Negative Binomial GLM", label="T_n2.4")
+
+print(xn2.4)
+
+n2.null <- glm.nb(extortions ~ 1, data=enve_test)
+
+summary(n2.null)
+
+xn2.null <- xtable(n2.null, caption="Negative Binomial GLM", label="T_n2.null")
+
+print(xn2.null)
+
+## Compare different glm.nb
+
+anova.n2 <- anova(n2, test="Chisq")
+
+anova.n2
+
+xan2 <- xtable(anova.n2, caption="Analysis of deviance of Negative Binomial Model", label="T_an2")
+
+print(xan2)
+
+tx.n2.x <- texreg(list(n2.null, n2.4, n2.3, n2.2, n2.1, n2), caption="Comparison of all NB models",
+                  label="T_tx_n2x", booktabs=TRUE)
+
+tx.n2.x
+
+anova.n2.x <- anova(n2.null, n2.4, n2.3, n2.2, n2.1, n2.0, test="Chisq")
+
+anova.n2.x
+
+xan2.x <- xtable(anova.n2.x, caption="ANOVA test between variables of the NB models", label="T_xan2x")
+
 # Compare NB and Poisson
 tx.n1_n2 <- texreg(list(n1, n2), caption="Comparison of Poisson and NB GLMs", label="T_n1n2", booktabs=TRUE)
 
@@ -806,7 +1005,8 @@ xlr.n1_n2 <- xtable(lr.n1_n2, caption="Likelihood ratio test between Poisson and
 
 print(xlr.n1_n2)
 
-save(n1, n2, xn1, xn2, tx.n1_n2, lr.n1_n2, xlr.n1_n2, file=paste(dir_name, "glms_nver.Rdata", sep=""))
+save(n1, n2, n2.1, n2.2, n2.3, n2.4, n2.null, anova.n2, xan2, tx.n2.x, anova.n2.x, xan2.x,
+   xn1, xn2, tx.n1_n2, lr.n1_n2, xlr.n1_n2, file=paste(dir_name, "glms_nver.Rdata", sep=""))
 
 # 3. Poisson GLMM
 
@@ -871,14 +1071,89 @@ anova.n4.x
 
 xan4.x <- xtable(anova.n4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xan4x")
 
+
+#### Using glmmADMB
+# 4. Negative Binomial GLMM_ADMB
+
+ADn4.0 <- glmmadmb(extortions ~ bribes + tasahom + years + subsector + size + (1 | NOM_ABR), data=enve_test,
+                  family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+
+summary(ADn4.0)
+
+anova.ADn4.0 <- anova(ADn4.0, test="Chisq")
+
+anova.ADn4.0
+
+xaADn4.0 <- xtable(anova.ADn4.0, caption="Analysis of deviance of Negative Binomial Mixed Model", label="T_aADn4.0")
+
+print(xaADn4.0)
+
+# Comparison between Poisson and NB GLMMs
+
+tx.n3_ADn4 <- texreg(list(n3, ADn4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_n3ADn4", booktabs=TRUE)
+
+tx.n3_ADn4
+
+lr.n3_ADn4 <- lrtest(n3, ADn4.0)
+
+lr.n3_ADn4
+
+xlr.n3_ADn4 <- xtable(lr.n3_ADn4, caption="Likelihood ratio test between Poisson and NB Mixed Models", label="T_lrn3ADn4")
+
+print(xlr.n3_ADn4)
+
+# 4.x Investigating different variables in the NB GLMMs
+
+ADn4.1 <- glmmadmb(extortions ~ bribes + tasahom + years + subsector +
+                    (1 | NOM_ABR), data=enve_test)
+
+ADn4.2 <- glmmadmb(extortions ~ bribes + tasahom + years +
+                   (1 | NOM_ABR), data=enve_test)
+
+ADn4.3 <- glmmadmb(extortions ~ bribes + tasahom +
+                   (1 | NOM_ABR), data=enve_test)
+
+ADn4.4 <- glmmadmb(extortions ~ bribes +
+                   (1 | NOM_ABR), data=enve_test)
+
+ADn4.null <- glmmadmb(extortions ~ 1 +
+                   (1 | NOM_ABR), data=enve_test)
+
+# Compare all NB GLMMs
+tx.ADn4.x <- texreg(list(ADn4.0, ADn4.1, ADn4.2, ADn4.3, ADn4.4, ADn4.null), caption="Comparison of all NB mixed models",
+                  label="T_tx_ADn4x", booktabs=TRUE)
+
+tx.ADn4.x
+
+anova.ADn4.x <- anova(ADn4.null, ADn4.4, ADn4.3, ADn4.2, ADn4.1, ADn4.0, test="Chisq")
+
+anova.ADn4.x
+
+xaADn4.x <- xtable(anova.ADn4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xaADn4x")
+
 save(n3, n4.0, anova.n4.0, xan4.0, tx.n3_n4, lr.n3_n4, xlr.n3_n4,
         n4.1, n4.2, n4.3, n4.4, n4.null, tx.n4.x, anova.n4.x, xan4.x,
+        ADn4.0, anova.ADn4.0, xaADn4.0, tx.n3_ADn4, lr.n3_ADn4, xlr.n3_ADn4,
+        ADn4.1, ADn4.2, ADn4.3, ADn4.4, ADn4.null, tx.ADn4.x, anova.ADn4.x, xaADn4.x,
         file=paste(dir_name, "mixed_models2.Rdata", sep=""))
 
 # Comparison between  round one and round two
+# GLM
+tx.m2_n2 <- texreg(list(m2, n2), caption="NB Models using sector and subsector covariates", label="T_m2n2")
 
+tx.m2_n2
+
+anova.m2_n2 <- anova(m2, n2, test="Chisq")
+
+anova.m2_n2
+
+xam2n2 <- xtable(anova.m2_n2, caption="ANOVA between the NB models using sector and subsector", label="T_xanm2n2")
+
+print(xam2n2)
+
+# GLMM
 tx.m4_n4 <- texreg(list(m4.0, n4.0), caption="NB Mixed Models using sector and subsector covariates", label="T_m4n4")
- 
+
 tx.m4_n4
 
 anova.m4_n4 <- anova(m4.0, n4.0, test="Chisq")
@@ -889,6 +1164,21 @@ xam4n4 <- xtable(anova.m4_n4, caption="ANOVA between the NB mixed models using s
 
 print(xam4n4)
 
-save(tx.m4_n4, anova.m4_n4, xam4n4, file=paste(dir_name, "nbmodels12.Rdata", sep=""))
+# GLMM_ADMB
+tx.ADm4_ADn4 <- texreg(list(ADm4.0, ADn4.0), caption="NB Mixed Models using sector and subsector covariates", label="T_ADm4ADn4")
+
+tx.ADm4_ADn4
+
+anova.ADm4_ADn4 <- anova(ADm4.0, ADn4.0, test="Chisq")
+
+anova.ADm4_ADn4
+
+xaADm4ADn4 <- xtable(anova.ADm4_ADn4, caption="ANOVA between the NB mixed models using sector and subsector", label="T_xanADm4ADn4")
+
+print(xaADm4ADn4)
+
+save(tx.m2_n2, anova.m2_n2, xam2n2,
+      tx.m4_n4, anova.m4_n4, xam4n4,
+      tx.ADm4_ADn4, anova.ADm4_ADn4, xaADm4ADn4, file=paste(dir_name, "nbmodels12.Rdata", sep=""))
 
 ###### END OF FILE #######
