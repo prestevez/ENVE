@@ -21,6 +21,7 @@ Además, se corrigieron errores identificados por INEGI en los nombres de alguna
 ### Acciones requeridas Versión 0.2
 Además de los paquetes previamente requeridos, esta nueva versión requiere de los siguientes paquetes:
 - **evaluate**: Permite correr el script entero ignorando errores.
+- **coda**: Requerido por `glmmADMB`
 - **glmmADMB**: Implementación alternativa de modelos GLMMNB (fuera de CRAN, requiere instalación desde código fuente).
 
 El paquete `evaluate` puede ya estar instalado en la computadora, pero si hay que instalarlo, puede hacerlo con el comando:
@@ -29,7 +30,13 @@ El paquete `evaluate` puede ya estar instalado en la computadora, pero si hay qu
 install.packages("evaluate")
 ```
 
-El paquete **glmmADMB** no se encuentra en los repositorios CRAN y debe de instalarse desde código fuente (para ello se requiere Rtools en un ambiente Windows; vea las instrucciones para instalar **lme4** en la sección de la V0.1). El paquete **glmmADMB** posiblemente requiera de la [**versión de R más nueva disponible en CRAN**](https://cran.r-project.org). De ser posible, asegúrese de contar con la versión más actualizada de R. De lo contrario, la instalación puede fallar.
+Antes de instalar el paquete **glmmADMB** debe instalar el paquete **coda**, pues es una dependencia requerida.
+
+```
+install.packages("coda")
+```
+
+El paquete **glmmADMB** no se encuentra en los repositorios CRAN y debe de instalarse desde código fuente (para ello se requiere Rtools en un ambiente Windows; vea las instrucciones para instalar **lme4** en la sección de la V0.1). El paquete **glmmADMB** posiblemente requiera de la [**versión más nueva de R disponible en CRAN**](https://cran.r-project.org). De ser posible, asegúrese de contar con la versión más actualizada de R. De lo contrario, la instalación puede fallar.
 
 Para instalar **glmmADMB**, pruebe con los siguientes códigos:
 
