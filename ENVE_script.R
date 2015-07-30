@@ -1186,4 +1186,51 @@ save(tx.m2_n2, anova.m2_n2, xam2n2,
       tx.m4_n4, anova.m4_n4, xam4n4,
       tx.ADm4_ADn4, anova.ADm4_ADn4, xaADm4ADn4, file=paste(dir_name, "nbmodels12.Rdata", sep=""))
 
+# Compare NB GLM to NB GLMM
+
+tx.m2_m4_ADm4.0 <- texreg(list(m2, m4.0, ADm4.0), caption="Comparison of NB GLM to Mixed Models", label="T_m2m4ADm4", booktabs=TRUE)
+
+tx.m2_m4_ADm4.0
+
+lr.m2_m4 <- lrtest(m2, m4.0)
+
+lr.m2_m4
+
+xlr.m2_m4 <- xtable(lr.m2_m4, caption="Likelihood ratio test between NB GLM and Mixed Models", label="T_lrm2_m4")
+
+print(xlr.m2_m4)
+
+lr.m2_ADm4 <- lrtest(m2, ADm4.0)
+
+lr.m2_ADm4
+
+xlr.m2_ADm4 <- xtable(lr.m2_ADm4, caption="Likelihood ratio test between NB GLM and Mixed Models", label="T_lrm2_ADm4")
+
+print(xlr.m2_ADm4)
+
+## from round 2
+
+tx.n2_n4_ADn4.0 <- texreg(list(n2, n4.0, ADn4.0), caption="Comparison of NB GLM to Mixed Models", label="T_n2n4ADn4", booktabs=TRUE)
+
+tx.n2_n4_ADn4.0
+
+lr.n2_n4 <- lrtest(n2, n4.0)
+
+lr.n2_n4
+
+xlr.n2_n4 <- xtable(lr.n2_n4, caption="Likelihood ratio test between NB GLM and Mixed Models", label="T_lrn2_n4")
+
+print(xlr.n2_n4)
+
+lr.n2_ADn4 <- lrtest(n2, ADn4.0)
+
+lr.n2_ADn4
+
+xlr.n2_ADn4 <- xtable(lr.n2_ADn4, caption="Likelihood ratio test between NB GLM and Mixed Models", label="T_lrn2_ADn4")
+
+print(xlr.n2_ADn4)
+
+save(tx.m2_m4_ADm4.0, lr.m2_m4, xlr.m2_m4, tx.n2_n4_ADn4.0, lr.n2_n4, xlr.n2_n4,
+      lr.n2_ADn4, xlr.n2_ADn4, file=paste(dir_name, "nbGLMvGLMM.Rdata", sep=""))
+
 ###### END OF FILE #######
