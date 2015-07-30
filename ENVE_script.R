@@ -1109,23 +1109,23 @@ print(xlr.n3_ADn4)
 
 ADn4.1 <- glmmadmb(extortions ~ bribes + tasahom + years + subsector +
                     (1 | NOM_ABR), data=enve_test,
-                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
 
 ADn4.2 <- glmmadmb(extortions ~ bribes + tasahom + years +
                    (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
 
 ADn4.3 <- glmmadmb(extortions ~ bribes + tasahom +
                    (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
 
 ADn4.4 <- glmmadmb(extortions ~ bribes +
                    (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
 
 ADn4.null <- glmmadmb(extortions ~ 1 +
                    (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000"))
+                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 40000")
 
 # Compare all NB GLMMs
 tx.ADn4.x <- texreg(list(ADn4.0, ADn4.1, ADn4.2, ADn4.3, ADn4.4, ADn4.null), caption="Comparison of all NB mixed models",
