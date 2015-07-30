@@ -38,7 +38,7 @@ sink(logfile, append=TRUE, type=c("output","message"))
 
 # Set seed for reproducibility
 
-setseed(42)
+set.seed(42)
 
 sessionInfo()
 
