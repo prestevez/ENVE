@@ -756,7 +756,7 @@ tx.m2.x <- texreg(list(m2.null, m2.4, m2.3, m2.2, m2.1, m2), caption="Comparison
 
 tx.m2.x
 
-anova.m2.x <- anova(m2.null, m2.4, m2.3, m2.2, m2.1, m2.0, test="Chisq")
+anova.m2.x <- anova(m2.null, m2.4, m2.3, m2.2, m2.1, m2, test="Chisq")
 
 anova.m2.x
 
@@ -989,7 +989,7 @@ tx.n2.x <- texreg(list(n2.null, n2.4, n2.3, n2.2, n2.1, n2), caption="Comparison
 
 tx.n2.x
 
-anova.n2.x <- anova(n2.null, n2.4, n2.3, n2.2, n2.1, n2.0, test="Chisq")
+anova.n2.x <- anova(n2.null, n2.4, n2.3, n2.2, n2.1, n2, test="Chisq")
 
 anova.n2.x
 
