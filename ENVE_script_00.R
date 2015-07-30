@@ -36,6 +36,10 @@ sink(logfile, append=TRUE, type=c("output","message"))
 
 # Run the scripts
 
+# Set seed for reproducibility
+
+setseed(42)
+
 sessionInfo()
 
 #source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
