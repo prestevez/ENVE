@@ -29,7 +29,7 @@ El paquete `evaluate` puede ya estar instalado en la computadora, pero si hay qu
 install.packages("evaluate")
 ```
 
-El paquete **glmmADMB** no se encuentra en los repositorios CRAN y debe de instalarse desde código fuente (para ello se requiere Rtools en un ambiente Windows; vea las instrucciones para instalar **lme4** en la sección de la V0.1). El paquete **glmmADMB** posiblemente requiera de la [**versión de R más nueva disponible en CRAN**](www.R.com). De ser posible, asegúrese de contar con la versión más actualizada de R. De lo contrario, la instalación puede fallar.
+El paquete **glmmADMB** no se encuentra en los repositorios CRAN y debe de instalarse desde código fuente (para ello se requiere Rtools en un ambiente Windows; vea las instrucciones para instalar **lme4** en la sección de la V0.1). El paquete **glmmADMB** posiblemente requiera de la [**versión de R más nueva disponible en CRAN**](https://cran.r-project.org). De ser posible, asegúrese de contar con la versión más actualizada de R. De lo contrario, la instalación puede fallar.
 
 Para instalar **glmmADMB**, pruebe con los siguientes códigos:
 
