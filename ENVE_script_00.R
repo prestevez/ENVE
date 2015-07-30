@@ -9,7 +9,7 @@ library(texreg)
 library(lmtest)
 library(MASS)
 library(lme4)
-library(glmmADMB)
+#library(glmmADMB)
 library(evaluate)
 
 

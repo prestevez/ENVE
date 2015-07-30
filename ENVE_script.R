@@ -1,5 +1,8 @@
 ## ENVE_script.R
 
+# Load glmmADMB
+library(glmmADMB)
+
 # Package checker function
 
 ### Package_install <- function(package)
