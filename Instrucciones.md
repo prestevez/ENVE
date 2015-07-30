@@ -23,7 +23,7 @@ Además de los paquetes previamente requeridos, esta nueva versión requiere de 
 - **evaluate**: Permite correr el script entero ignorando errores.
 - **glmmADMB**: Implementación alternativa de modelos GLMMNB (fuera de CRAN, requiere instalación desde código fuente).
 
-El paquete `evaluate` puede ya estar instalado en la computadora, pero sí hay que instalarlo, puede hacerlo con el comando:
+El paquete `evaluate` puede ya estar instalado en la computadora, pero si hay que instalarlo, puede hacerlo con el comando:
 
 ```
 install.packages("evaluate")
@@ -47,18 +47,22 @@ install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repo
 install.packages("glmmADMB", repos=c("http://www.hafro.is/~arnima/repos", getOption("repos")))
 ```
 
+Por favor **corra el script, aún si no logra instalar `glmmADMB`**. Esta versión corre el script entero aún cuando hay errores, por lo que aún sin el paquete `glmmADMB`, se generarán resultados indispensables.
+
 (Estas instrucciones para instalar glmmADMB se tomaron de la página principal del proyecto [glmmADMB](http://glmmadmb.r-forge.r-project.org))
 
 **Importante: Estas acciones asumen que la instalación de los paquetes requeridos por la Versión 0.1 ya se realizó, de lo contrario, siga las instrucciones de la sección *Introducción Versión 0.1*.** 
 
-Una vez realizada la instalación de los nuevos paquetes requeridos, el script se corre exactamente de la misma forma que la versión 0.2. Coloque el archivo **.dbf** en la carpeta del proyecto, apunte el **working directory** en R a la carpeta del proyecto, y ejecute:
+### Ejecución
+
+Una vez realizada la instalación de los nuevos paquetes requeridos, el script se corre exactamente de la misma forma que la versión 0.1. Coloque el archivo **.dbf** en la carpeta del proyecto, apunte el **working directory** en R a la carpeta del proyecto, y ejecute:
 
 ```
 source(file="ENVE_script_00.R", echo=TRUE)
 ```
 
 ### Otros cambios
-Se modificó la forma en que se ejecuta el script ``ENVE_script.R``. Ahora se ignoran los errores para asegurarse de ejecutar el script completo.
+Se modificó la forma en que se ejecuta el script ``ENVE_script.R``. Ahora se ignoran los errores para asegurarse de que el script completo se ejecute.
 
 Favor de enviar el archivo **número_log.txt**, y los archivos de **.png**, **.pdf**, y (de ser posible) **.Rdata**, tras correr esta versión, así como la lista de errores que posiblemente se generen.
 
