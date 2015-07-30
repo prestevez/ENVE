@@ -1,8 +1,68 @@
 # Instrucciones de scripts para el análisis de ENVE 2014 en R
 *Patricio R. Estévez Soto*  
-Email: [patricio.estevez.14@ucl.ac.uk](mailto:patricio.estevez.14@ucl.ac.uk)  
+Email: [patricio.estevez.14@ucl.ac.uk](mailto:patricio.estevez.14@ucl.ac.uk)
 
-## Introducción
+## Novedades Versión 0.2
+
+Se procura solventar el error reportado por INEGI tras correr el script V 0.1. El error reportado fue:
+
+```
+Error in eval(expr, envir, enclos) :
+
+  pwrssUpdate did not converge in (maxit) iterations
+```
+
+Quizá se deba a una inconsistencia del paquete `lme4` o a que los datos no pueden ser satisfactoriamente modelados con modelos mixtos basados en la distribución negative binomial (GLMMNB).
+
+Para intentar solventar este problema, se utilizará la implementación de GLMMNB en el paquete `glmmADMB`. 
+
+Además, se corrigieron errores identificados por INEGI en los nombres de algunas variables al cargar la tabla de la ENVE.
+
+### Acciones requeridas Versión 0.2
+Además de los paquetes previamente requeridos, esta nueva versión requiere de los siguientes paquetes:
+- **evaluate**: Permite correr el script entero ignorando errores.
+- **glmmADMB**: Implementación alternativa de modelos GLMMNB (fuera de CRAN, requiere instalación desde código fuente).
+
+El paquete `evaluate` puede ya estar instalado en la computadora, pero sí hay que instalarlo, puede hacerlo con el comando:
+
+```
+install.packages("evaluate")
+```
+
+El paquete **glmmADMB** no se encuentra en los repositorios CRAN y debe de instalarse desde código fuente (para ello se requiere Rtools en un ambiente Windows; vea las instrucciones para instalar **lme4** en la sección de la V0.1). El paquete **glmmADMB** posiblemente requiera de la [**versión de R más nueva disponible en CRAN**](www.R.com). De ser posible, asegúrese de contar con la versión más actualizada de R. De lo contrario, la instalación puede fallar.
+
+Para instalar **glmmADMB**, pruebe con los siguientes códigos:
+
+```
+# Opción 1
+install.packages("glmmADMB", repos="http://r-forge.r-project.org", type="source")
+
+# Opción 2
+install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repos", getOption("repos")),type="source")
+
+# Opción 3 
+install.packages("glmmADMB", repos=c("http://glmmadmb.r-forge.r-project.org/repos", getOption("repos")))
+
+# Opción 4
+install.packages("glmmADMB", repos=c("http://www.hafro.is/~arnima/repos", getOption("repos")))
+```
+
+(Estas instrucciones para instalar glmmADMB se tomaron de la página principal del proyecto [glmmADMB](http://glmmadmb.r-forge.r-project.org))
+
+**Importante: Estas acciones asumen que la instalación de los paquetes requeridos por la Versión 0.1 ya se realizó, de lo contrario, siga las instrucciones de la sección *Introducción Versión 0.1*.** 
+
+Una vez realizada la instalación de los nuevos paquetes requeridos, el script se corre exactamente de la misma forma que la versión 0.2. Coloque el archivo **.dbf** en la carpeta del proyecto, apunte el **working directory** en R a la carpeta del proyecto, y ejecute:
+
+```
+source(file="ENVE_script_00.R", echo=TRUE)
+```
+
+### Otros cambios
+Se modificó la forma en que se ejecuta el script ``ENVE_script.R``. Ahora se ignoran los errores para asegurarse de ejecutar el script completo.
+
+Favor de enviar el archivo **número_log.txt**, y los archivos de **.png**, **.pdf**, y (de ser posible) **.Rdata**, tras correr esta versión, así como la lista de errores que posiblemente se generen.
+
+## Introducción Versión 0.1
 
 Estas instrucciones detallan brevemente el procedimiento necesario para correr exitosamente los scripts diseñados para el análisis de la ENVE 2014 en R.
 
@@ -104,6 +164,7 @@ Para ejecutarlo, escriba el siguiente comando en la consola de R y ejecute:
 ```
 source(file="ENVE_script_00.R", echo=TRUE)
 ```
+
 La ejecución tarda cerca de media hora, es normal que parezca que no hace nada.
 
 Cuando termine de ejecutarse, la consola probablemente avisará que se generaron un número (cerca de 30) *warnings*. Pueden ignorarse.
