@@ -36,3 +36,5 @@ vmr
 print(xtable(vmr, digits=c(0,3,3,3,1), 
              caption="Extortion mean, variance and index of dispersion", 
              label="T_vmr"), include.rownames=FALSE)
+
+
