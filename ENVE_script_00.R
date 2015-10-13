@@ -8,7 +8,7 @@ library(xtable)
 library(texreg)
 library(lmtest)
 library(MASS)
-library(lme4)
+# library(lme4) # will run all models (one level and ml) using glmmADMB
 #library(glmmADMB)
 library(evaluate)
 
