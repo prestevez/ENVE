@@ -3,23 +3,7 @@
 # Load glmmADMB
 library(glmmADMB)
 
-# Package checker function
-
-### Package_install <- function(package)
-### {
-###   if (as.character(package) %in% library()$results[,"Package"])
-###   {
-###   library(package)
-###   }
-###   else
-###   {
-###     install.packages(as.character(package), repos="http://cran.itam.mx/")
-###   }
-### }
-###
-### # Load foreign package and load data
-###
-### Package_install(foreign)
+# Load data
 
 enve_all <- read.dbf("TR_ENVE_CUES_2014.dbf")
 cat_entidades <- read.csv("cat_entidades.csv", head=TRUE)
@@ -49,6 +33,8 @@ enve_test$subsector <- cut(enve_test$tempsub, scode$Code, right=FALSE)
 levels(enve_test$subsector) <- scode$Sector
 
 enve_test$years <- 2013 - as.numeric(as.character(enve_all$P3))
+
+## Recode years into categorical (as a new variable)
 
 enve_test <- merge(enve_test, homicidios, by="CVE_ENT", all.x=TRUE)
 
