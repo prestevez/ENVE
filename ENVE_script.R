@@ -15,6 +15,9 @@ scode$Code <- scode$Code*10000
 
 # Prepare data for analysis
 
+####### Should I subset only complete interviews?
+
+
 # Selecting only the relevant variables
 
 enve_test <- data.frame(extortions=as.integer(as.character(enve_all$P26_10)))
@@ -32,20 +35,34 @@ enve_test$tempsub <- as.integer(as.character(enve_all$P1_1B))
 enve_test$subsector <- cut(enve_test$tempsub, scode$Code, right=FALSE)
 levels(enve_test$subsector) <- scode$Sector
 
+enve_test$restbar <- enve_test$subsector
+levels(enve_test$restbar)[-6] <- "Other"
+
 enve_test$years <- 2013 - as.numeric(as.character(enve_all$P3))
 
-## Recode years into categorical (as a new variable)
+intyears <- classIntervals(enve_test$years, 5, style="quantile")
+intyears$brks
+
+enve_test$yearsquant <- cut(enve_test$years, intyears$brks, right=FALSE)
+
+intyears2 <- classIntervals(enve_test$years, 6, style="quantile")
+intyears2$brks
+
+enve_test$yearsquant2 <- cut(enve_test$years, intyears2$brks, right=FALSE)
+
 
 enve_test <- merge(enve_test, homicidios, by="CVE_ENT", all.x=TRUE)
 
 enve_test$extortions[is.na(enve_test$extortions)] <- 0
 enve_test$bribes[is.na(enve_test$bribes)] <- 0
 
-head(enve_test, 50)
+head(enve_test, 25)
 
-tail(enve_test, 50)
+tail(enve_test, 25)
 
 # EDA
+
+### Need to explore bivariate relationships between independent variables
 
 # Distribution of extortion victimisations
 
@@ -72,12 +89,15 @@ xext_dist <- xtable(ext_dist, digits=c(0,0,0,0,3,3,3), caption="The distribution
 
 print(xext_dist, include.rownames=FALSE)
 
-save(ext_dist, xext_dist, file=paste(dir_name, "ext_dist.Rdata", sep=""))
+# save(ext_dist, xext_dist, file=paste(dir_name, "ext_dist.Rdata", sep=""))
 
 # Testing for Poisson distribution
 
 # analysing the mean variance relationship
 
+## Add the index of overdispersion calculation
+
+n <- length(enve_test$extortions)
 mean_ext <- mean(enve_test$extortions)
 var_ext <- var(enve_test$extortions)
 
@@ -85,19 +105,24 @@ mean_ext
 var_ext
 
 var_mean_ratio <- var_ext/mean_ext
-
 var_mean_ratio
 
-vmr_df <- data.frame(Mean=mean_ext, Variance=var_ext, Ratio=var_mean_ratio)
+index_ext <- id.test(enve_test$extortions)
+index_ext
+
+vmr_df <- data.frame(Mean=mean_ext, Variance=var_ext, Ratio=var_mean_ratio,
+                      Index=unname(index_ext[1]), Pvalue=unname(index_ext[2]),
+                      DF=unname(index_ext[3]))
 
 vmr_df
+
 
 xvmr_df <- xtable(vmr_df, digits=4, caption="If the variance-mean ratio is larger than one, there is over-disperison",
                     label="T_vmr")
 
 print(xvmr_df, include.rownames=FALSE)
 
-save(mean_ext, var_mean_ratio, var_ext, vmr_df, xvmr_df, file=paste(dir_name, "var_mean.Rdata", sep=""))
+#save(mean_ext, var_mean_ratio, var_ext, vmr_df, xvmr_df, file=paste(dir_name, "var_mean.Rdata", sep=""))
 
 # Create DF to fit obs v expected for counts
 
@@ -117,41 +142,7 @@ obsexp
 
 obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext) * length(enve_test$extortions)
 
-## Function to print table with obs and exp and chi-sq test
-
-obs_exp_test <- function(dataframe, exp, par)
-  {
-  cs<-factor(0:(length(dataframe[,1])-1))
-  index <- max(which(exp >= 4))
-  levels(cs)[index:length(dataframe[,1])] <- paste(as.character(index-1), "+", sep="")
-  ef<-as.vector(tapply(exp,cs,sum))
-  of<-as.vector(tapply(dataframe[,2],cs,sum))
-  ofef_table <- data.frame(Events=0:(index-1), Obs=of, Exp=ef)
-  chisq_t <- sum((of-ef)^2/ef)
-  df <- length(of)-par-1
-  pval <- 1-pchisq(chisq_t, df)
-  return(list(Table=ofef_table, Chisq=chisq_t, DF=df, PValue=pval))
-  }
-
-## Convenience log function
-
-clog <- function(x) log(x + 1)
-
-## Same as above but on log scale
-
-obs_exp_test_log <- function(dataframe, exp, par)
-  {
-  cs<-factor(0:(length(dataframe[,1])-1))
-  index <- max(which(exp >= 4))
-  levels(cs)[index:length(dataframe[,1])] <- paste(as.character(index-1), "+", sep="")
-  ef<-as.vector(tapply(exp,cs,sum))
-  of<-as.vector(tapply(dataframe[,2],cs,sum))
-  ofef_table <- data.frame(Events=0:(index-1), log.Obs=clog(of), log.Exp=clog(ef))
-  chisq_t <- sum((clog(of)-clog(ef))^2/clog(ef))
-  df <- length(of)-par-1
-  pval <- 1-pchisq(chisq_t, df)
-  return(list(Table=ofef_table, Chisq=chisq_t, DF=df, PValue=pval))
-  }
+####### Add the KS tests
 
 # Poisson test
 
@@ -163,16 +154,6 @@ xpo_chisq <- xtable(po_chisq[[1]], digits=c(0,0,0,3), caption="Observed vs. Expe
 
 print(xpo_chisq, include.rownames=FALSE)
 
-po_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_po, 1)
-
-po_chisq_log
-
-xpo_chisq_log <- xtable(po_chisq_log[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Poisson, log-scale)",
-                          label="T_po_chisq_log")
-
-print(xpo_chisq_log, include.rownames=FALSE)
-
-save(po_chisq_log, po_chisq, xpo_chisq, xpo_chisq_log, file=paste(dir_name, "po_chisq.Rdata", sep=""))
 
 # Testing for Negative Binomial distribution
 
@@ -201,16 +182,6 @@ xnb_chisq <- xtable(nb_chisq[[1]], digits=c(0,0,0,3), caption="Observed vs. Expe
 
 print(xnb_chisq, include.rownames=FALSE)
 
-nb_chisq_log <- obs_exp_test_log(obsexp, obsexp$exp_nb, 2)
-
-nb_chisq_log
-
-xnb_chisq_log <- xtable(nb_chisq_log[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Negative Binomial, log-scale)",
-                          label="T_nb_chisq_log")
-
-print(xnb_chisq_log, include.rownames=FALSE)
-
-save(nb_estimates, nb_chisq_log, nb_chisq, xnb_chisq, xnb_chisq_log, file=paste(dir_name, "nb_chisq.Rdata", sep=""))
 
 xobsexp <- xtable(obsexp, digits=c(0,0,0,3,3),
                   caption="Observed and expected frequencies under Poisson and Negative Binomial distributions",
@@ -218,11 +189,11 @@ xobsexp <- xtable(obsexp, digits=c(0,0,0,3,3),
 
 print(xobsexp, include.rownames=FALSE)
 
-save(obsexp, xobsexp, file=paste(dir_name, "obsexp.Rdata", sep=""))
-
 ## Plots of this
 
 # Plot the observed distribution
+
+######## Generate the plots using the new aesthetic.
 
 ### Package_install(ggplot2)
 ### Package_install(Cairo)
@@ -662,6 +633,15 @@ ggsave(plot.mur_con, file=paste(dir_name, "plot_mur_con.png", sep=""), width=5, 
 
 ## Modelling
 # Make sure we are using the correct lme4 version
+## Stick to glmmADMB for all
+
+### Compute sandwich estimates for significance
+### compute confidence intervals
+
+### Improve comparison metrics and tests.. make sure to obtain de deviance not given by glmmADMB
+
+## Test for interactions
+
 
 packageVersion("lme4")
 
