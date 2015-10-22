@@ -11,6 +11,8 @@ library(MASS)
 # library(lme4) # will run all models (one level and ml) using glmmADMB
 #library(glmmADMB)
 library(evaluate)
+library(classInt)
+library(dgof)
 
 
 ## Create directories where results and log will be written.
@@ -43,6 +45,9 @@ set.seed(42)
 sessionInfo()
 
 #source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
+
+# Load functions
+source("functions.R", echo=TRUE, max.deparse.length=10000)
 
 results <- evaluate(file("ENVE_script.R"), new_device=FALSE)
 
