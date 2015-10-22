@@ -1,4 +1,14 @@
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 ## ENVE_script.R
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
 
 # Load glmmADMB
 library(glmmADMB)
@@ -14,9 +24,6 @@ scode$Code <- scode$Code*10000
 
 
 # Prepare data for analysis
-
-####### Should I subset only complete interviews?
-
 
 # Selecting only the relevant variables
 
@@ -60,9 +67,18 @@ head(enve_test, 25)
 
 tail(enve_test, 25)
 
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 # EDA
 
-### Need to explore bivariate relationships between independent variables
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
 
 # Distribution of extortion victimisations
 
@@ -76,7 +92,9 @@ ext_dist$Incidence <- ext_dist$Events * ext_dist$Prevalence
 
 ext_dist$preval_per <- prop.table(ext_dist$Prevalence)*100
 
-ext_dist$victim_per[2:length(ext_dist$Events)] <- prop.table(ext_dist[2:length(ext_dist$Events),2])*100
+ext_dist$victim_per[2:length(ext_dist$Events)] <- prop.table(
+                                                    ext_dist[2:length(
+                                                      ext_dist$Events),2])*100
 
 ext_dist$incid_per <- prop.table(ext_dist$Incidence)*100
 
@@ -84,7 +102,8 @@ ext_dist
 
 ### Package_install(xtable)
 
-xext_dist <- xtable(ext_dist, digits=c(0,0,0,0,3,3,3), caption="The distribution of extortion victimisations",
+xext_dist <- xtable(ext_dist, digits=c(0,0,0,0,3,3,3),
+                      caption="The distribution of extortion victimisations",
                       label="T_dist")
 
 print(xext_dist, include.rownames=FALSE)
@@ -117,12 +136,13 @@ vmr_df <- data.frame(Mean=mean_ext, Variance=var_ext, Ratio=var_mean_ratio,
 vmr_df
 
 
-xvmr_df <- xtable(vmr_df, digits=4, caption="If the variance-mean ratio is larger than one, there is over-disperison",
+xvmr_df <- xtable(vmr_df, digits=4,
+          caption="If the variance-mean ratio is larger than one, there is over-disperison",
                     label="T_vmr")
 
 print(xvmr_df, include.rownames=FALSE)
 
-#save(mean_ext, var_mean_ratio, var_ext, vmr_df, xvmr_df, file=paste(dir_name, "var_mean.Rdata", sep=""))
+
 
 # Create DF to fit obs v expected for counts
 
@@ -140,7 +160,8 @@ obsexp
 
 # Generate Poisson expected frequencies
 
-obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext) * length(enve_test$extortions)
+obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext)
+                            * length(enve_test$extortions)
 
 ####### Add the KS tests
 
@@ -150,10 +171,16 @@ po_chisq <- obs_exp_test(obsexp, obsexp$exp_po, 1)
 
 po_chisq
 
-xpo_chisq <- xtable(po_chisq[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Poisson)", label="T_po_chisq")
+xpo_chisq <- xtable(po_chisq[[1]], digits=c(0,0,0,3),
+              caption="Observed vs. Expected (Poisson)", label="T_po_chisq")
 
 print(xpo_chisq, include.rownames=FALSE)
 
+## KS Test, requires library(dgof)
+ks.ext.po <- ks.test(enve_test$extortions, ecdf(rpois(0:(n-1),
+                      lambda=mean_ext)),  alternative="two.sided")
+
+ks.ext.po
 
 # Testing for Negative Binomial distribution
 
@@ -169,8 +196,8 @@ nb_estimates
 
 # Generating the neg bin expected frequencies
 
-obsexp$exp_nb <- dnbinom(0:(length(obsexp$Events)-1), size=nb_estimates$estimate[1], mu=nb_estimates$estimate[2]) *
-                          length(enve_test$extortions)
+obsexp$exp_nb <- dnbinom(0:(length(obsexp$Events)-1), size=nb_estimates$estimate[1],
+                          mu=nb_estimates$estimate[2]) * length(enve_test$extortions)
 
 # NB Tests
 
@@ -178,18 +205,43 @@ nb_chisq <- obs_exp_test(obsexp, obsexp$exp_nb, 2)
 
 nb_chisq
 
-xnb_chisq <- xtable(nb_chisq[[1]], digits=c(0,0,0,3), caption="Observed vs. Expected (Negatve Binomial)", label="T_nb_chisq")
+xnb_chisq <- xtable(nb_chisq[[1]], digits=c(0,0,0,3),
+              caption="Observed vs. Expected (Negatve Binomial)", label="T_nb_chisq")
 
 print(xnb_chisq, include.rownames=FALSE)
 
 
+## KS Test, requires library(dgof)
+ks.ext.nb <- ks.test(enve_test$extortions, ecdf(rnbinom(0:(n-1),
+                                              size=nb_estimates$estimate[1],
+                                                mu=nb_estimates$estimate[2])),
+                                                 alternative="two.sided")
+
+ks.ext.nb
+
+# table with both
 xobsexp <- xtable(obsexp, digits=c(0,0,0,3,3),
-                  caption="Observed and expected frequencies under Poisson and Negative Binomial distributions",
+caption="Observed and expected frequencies under Poisson and Negative Binomial distributions",
                   label="T_obsexp")
 
 print(xobsexp, include.rownames=FALSE)
 
 ## Plots of this
+
+oe_dfpo <- data.frame(Events=rep(0:40, 2), Obs=c(obsexp$Obs, obsexp$exp_po),
+                    Class=c(rep("Observed",41), rep("Poisson", 41)))
+
+oe_dfpo[oe_dfpo[,2] < 1,2] <- 0
+
+oe_dfpo
+
+oe_df <- data.frame(Events=rep(0:40, 3), Obs=c(obsexp$Obs, obsexp$exp_po,
+                                               obsexp_true$exp_nb),
+                    Class=c(rep("Observed",41), rep("Poisson", 41), rep("NB", 41)))
+
+oe_df[oe_df[,2] < 1,2] <- 0
+
+oe_df
 
 # Plot the observed distribution
 
@@ -198,41 +250,70 @@ print(xobsexp, include.rownames=FALSE)
 ### Package_install(ggplot2)
 ### Package_install(Cairo)
 
-plot.obs <- ggplot(obsexp, aes(x=Events, y=Obs)) + geom_bar(stat="identity") + ylab("Frequency")
+plot.obs <- ggplot(obsexp, aes(x=Events, y=clog10(Obs))) + geom_bar(stat="identity") +
+              + ylab("Frequency (log10 scale)") +
+              scale_y_continuous(labels=c(0,10,100,1000,10000,100000)) + theme_bw()
 
-plot.log.obs <- ggplot(obsexp, aes(x=Events, y=clog(Obs))) + geom_bar(stat="identity") + ylab("log(Frequency + 1)")
+plot.exp_po <- ggplot(obsexp, aes(x=Events, y=clog10(exp_po))) + geom_bar(stat="identity") +
+              + ylab("Frequency (log10 scale)") +
+              scale_y_continuous(labels=c(0,10,100,1000,10000,100000)) + theme_bw()
 
-plot.exp_po <- ggplot(obsexp, aes(x=Events, y=exp_po)) + geom_bar(stat="identity") + ylab("Frequency")
+plot.exp_nb <- ggplot(obsexp, aes(x=Events, y=clog10(exp_nb))) + geom_bar(stat="identity") +
+              + ylab("Frequency (log10 scale)") +
+              scale_y_continuous(labels=c(0,10,100,1000,10000,100000)) + theme_bw()
 
-plot.log.exp_po <- ggplot(obsexp, aes(x=Events, y=clog(exp_po))) + geom_bar(stat="identity") + ylab("log(Frequency + 1)")
+plot.obspo <- ggplot(oe_dfpo, aes(x=Events, y=clog10(Obs), fill=Class)) +
+  geom_bar(stat="identity", position = "dodge") +
+  ylab("Frequency (log10 scale)") +
+  scale_y_continuous(labels=c(0,10,100,1000,10000,100000)) +
+  guides(fill=guide_legend(title=NULL)) +
+  scale_fill_grey() +
+  theme_bw() +
+  theme(legend.position="bottom")
 
-plot.exp_nb <- ggplot(obsexp, aes(x=Events, y=exp_nb)) + geom_bar(stat="identity") + ylab("Frequency")
-
-plot.log.exp_nb <- ggplot(obsexp, aes(x=Events, y=clog(exp_nb))) + geom_bar(stat="identity") + ylab("log(Frequency + 1)")
+plot.oe <- ggplot(oe_df, aes(x=Events, y=clog10(Obs), fill=Class)) +
+  geom_bar(stat="identity", position = "dodge") +
+  ylab("Frequency (log10 scale)") +
+  scale_y_continuous(labels=c(0,10,100,1000,10000,100000)) +
+  guides(fill=guide_legend(title=NULL)) +
+  scale_fill_grey() +
+  theme_bw() +
+  theme(legend.position="bottom")
 
 # Save ggplot objects
 
-dist.plots <- list(plot.obs=plot.obs, plot.log.obs=plot.log.obs, plot.exp_po=plot.exp_po,
-  plot.log.exp_po=plot.log.exp_po, plot.exp_nb=plot.exp_nb, plot.log.exp_nb=plot.log.exp_nb)
+dist.plots <- list(plot.obs=plot.obs, plot.exp_po=plot.exp_po, plot.exp_nb=plot.exp_nb,
+  plot.obspo=plot.obspo, plot.oe=plot.oe)
 
-save(dist.plots, file=paste(dir_name, "plots_dist_ext.Rdata", sep=""))
 
 # Save ggplots as images
 
 for (i in 1:length(dist.plots))
 {
   ggfile <- paste(dir_name, names(dist.plots[i]), ".pdf", sep="")
-  ggsave(dist.plots[[i]], file=ggfile, width=5, height=4)
+  ggsave(dist.plots[[i]], file=ggfile, width=6, height=2.7)
 }
 
 for (i in 1:length(dist.plots))
 {
   ggfile <- paste(dir_name, names(dist.plots[i]), ".png", sep="")
-  ggsave(dist.plots[[i]], file=ggfile, width=5, height=4, type="cairo-png")
+  ggsave(dist.plots[[i]], file=ggfile, width=6, height=2.7, type="cairo-png")
 }
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 # Independent Variables
-summ_table <- data.frame(variable=0, N=0, prevalence=0, incidence=0, mean=0, sd=0, min=0, max=0)
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+summ_table <- data.frame(variable=0, N=0, prevalence=0, incidence=0, mean=0,
+                          sd=0, min=0, max=0)
 
 ind <- 1
 for (i in 1:length(enve_test))
@@ -259,7 +340,8 @@ for (i in 1:length(enve_test))
     summ_table[ind,8] <- max(enve_test[,i])
     }
 
-  else if (colnames(enve_test)[i] %in% c("sector", "size", "subsector"))
+  else if (colnames(enve_test)[i] %in% c("sector", "size", "subsector",
+                                          "restbar", "yearsquant", "yearsquant2"))
     {
     for (a in 1:length(levels(enve_test[,i])))
       {
@@ -278,6 +360,20 @@ summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"tasahom"]), N
                                            min(homicidios[,"tasahom"]), max(homicidios[,"tasahom"]))
 
 summ_table[length(summ_table[,1]),1] <- "state murder rt"
+
+# homicido absoluto
+summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"denuncias_homs"]), NA, NA,
+                                           mean(homicidios[,"denuncias_homs"]), sd(homicidios[,"denuncias_homs"]),
+                                           min(homicidios[,"denuncias_homs"]), max(homicidios[,"denuncias_homs"]))
+
+summ_table[length(summ_table[,1]),1] <- "Murders"
+
+#population
+summ_table[length(summ_table[,1])+1,] <- c(NA, length(homicidios[,"poblacion"]), NA, NA,
+                                           mean(homicidios[,"poblacion"]), sd(homicidios[,"poblacion"]),
+                                           min(homicidios[,"poblacion"]), max(homicidios[,"poblacion"]))
+
+summ_table[length(summ_table[,1]),1] <- "Population"
 
 summ_table <- summ_table[!is.na(summ_table[,1]),]
 
