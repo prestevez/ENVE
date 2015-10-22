@@ -40,3 +40,22 @@ obs_exp_test <- function(dataframe, exp, par)
   pval <- 1-pchisq(chisq_t, df)
   return(list(Table=ofef_table, Chisq=chisq_t, DF=df, PValue=pval))
   }
+
+  # clog function for plotting
+
+  clog10 <- function(x)
+{
+  for(i in 1:length(x))
+  {
+    if (x[i] == 0)
+    {
+      x[i] <- x[i] + 1
+    }
+    else if (x[i] == 1)
+    {
+      x[i] <- x[i] + 0.3
+    }
+  }
+
+  return(log10(x))
+}
