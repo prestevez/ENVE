@@ -41,7 +41,7 @@ obs_exp_test <- function(dataframe, exp, par)
   return(list(Table=ofef_table, Chisq=chisq_t, DF=df, PValue=pval))
   }
 
-  # clog function for plotting
+# clog function for plotting
 
   clog10 <- function(x)
 {
@@ -58,4 +58,13 @@ obs_exp_test <- function(dataframe, exp, par)
   }
 
   return(log10(x))
+}
+
+# Cramer's V function
+
+cv.test = function(df) {
+  CV = sqrt(chisq.test(df, simulate.p.value = TRUE, B=9999)$statistic /
+              (sum(df) * (min(ncol(df),nrow(df)) - 1)))
+  print.noquote("Cramér V / Phi:")
+  return(as.numeric(CV))
 }
