@@ -457,36 +457,56 @@ xext_bribes <- xtable(format(ext_bribes), caption="The distribution of extortion
 
 print(xext_bribes, include.rownames=FALSE)
 
-chisq.ext_bribes <- chisq.test(ext_bribes)
-
+#Using simulated p-values
+chisq.ext_bribes <- chisq.test(ext_bribes, simulate.p.value = TRUE, B=9999)
 chisq.ext_bribes
 
-cor.ext_bribes <- with(enve_test, cor.test(bribes, extortions, method="pearson"))
+##Cramers V
+cv.ext_bribes <- cv.test(ext_bribes)
+cv.ext_bribes
 
+#Pearson's correlation
+cor.ext_bribes <- with(enve_test, cor.test(bribes, extortions, method="pearson"))
 cor.ext_bribes
 
-save(ext_bribes, xext_bribes, chisq.ext_bribes, cor.ext_bribes, file=paste(dir_name, "ext_bribes.Rdata", sep=""))
-
 ## Years variable
+## Analyse the quantile versions
 
-temp_years <- cut(enve_test$years, c(0,2,11,31,51,Inf), right=FALSE)
-
-ext_years <- ftable(temp_years, temp_ext)
+ext_years <- ftable(enve_test$yearsquant, temp_ext)
 
 ext_years
 
-xext_years <- xtable(format(ext_years), caption="The distribution of extortion victimisations per year ranges",
+xext_years <- xtable(format(ext_years), caption="The distribution of extortion victimisations per year quintiles",
                         lab="t_ext_years")
 
 print(xext_years, include.rownames=FALSE)
 
-chisq.ext_years <- chisq.test(ext_years)
+chisq.ext_years <- chisq.test(ext_years, simulate.p.value = TRUE, B=9999)
 chisq.ext_years
+
+cv.ext_years <- cv.test(ext_years)
+cv.ext_years
+
+## Quantile version 2
+ext_years2 <- ftable(enve_test$yearsquant2, temp_ext)
+
+ext_years2
+
+xext_years2 <- xtable(format(ext_years2), caption="The distribution of extortion victimisations per year quantiles",
+                        lab="t_ext_years2")
+
+print(xext_years2, include.rownames=FALSE)
+
+chisq.ext_years2 <- chisq.test(ext_years2, simulate.p.value = TRUE, B=9999)
+chisq.ext_years2
+
+cv.ext_years2 <- cv.test(ext_years2)
+cv.ext_years2
+
+### using the raw years variable
 
 cor.ext_years <- with(enve_test, cor.test(extortions, years, method="pearson"))
 cor.ext_years
-
-save(ext_years, xext_years, chisq.ext_years, cor.ext_years, file=paste(dir_name, "ext_years.Rdata", sep=""))
 
 # Plots of ext_years relationship
 
@@ -494,30 +514,49 @@ ey_df <- data.frame(ext_years)
 
 plot.ey <- ggplot(ey_df, aes(x=temp_ext, y=Freq, fill=temp_years)) +
                     geom_bar(stat="identity") +
-                    facet_grid(temp_years~., scale="free") +
-                    ylab("Frequency") + xlab("Events")
+                    facet_grid(temp_years~.) +
+                    ylab("Frequency") + xlab("Events") + theme_bw()
 
-plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog(Freq), fill=temp_years)) +
+plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog10(Freq), fill=temp_years)) +
                     geom_bar(stat="identity") +
-                    facet_grid(temp_years~., scale="free") +
-                    ylab("log(Frequency + 1)") + xlab("Events")
+                    facet_grid(Years~.) +
+                    ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() +
+                    scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
 
-plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() + geom_smooth(method="lm") +
-                          xlab("years") + ylab("Extortions")
+# For quantiles2
+ey_df2 <- data.frame(ext_years2)
 
-# Save ggplot objects
-save(plot.ey, plot.log_ey, plot.ext_years, file=paste(dir_name, "plots_ey.Rdata", sep=""))
+plot.ey2 <- ggplot(ey_df2, aes(x=temp_ext, y=Freq, fill=temp_years)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(temp_years~.) +
+                  ylab("Frequency") + xlab("Events") + theme_bw()
+
+plot.log_ey2 <- ggplot(ey_df2, aes(x=temp_ext, y=clog10(Freq), fill=temp_years)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Years~.) +
+                  ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() +
+                  scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
+
+# For raw years number
+plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() +
+                          geom_smooth(method="lm") +
+                          xlab("Years") + ylab("Extortions") + theme_bw()
 
 # Save ggplots as images
 ggsave(plot.ey, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
 ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.pdf", sep=""), width=5, height=4)
 
 ggsave(plot.ey, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
 
 ## Sector
+############# Aqui me quede
 
 ext_sector <- ftable(enve_test$sector, temp_ext)
 
