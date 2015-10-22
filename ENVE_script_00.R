@@ -49,7 +49,14 @@ sessionInfo()
 # Load functions
 source("functions.R", echo=TRUE, max.deparse.length=10000)
 
+
+starttime <- proc.time()
 results <- evaluate(file("ENVE_script.R"), new_device=FALSE)
+endtime <- proc.time()
+
+######### Processing time #########
+
+endtime - starttime
 
 replay(results)
 
