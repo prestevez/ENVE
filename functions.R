@@ -63,7 +63,7 @@ obs_exp_test <- function(dataframe, exp, par)
 # Cramer's V function
 
 cv.test = function(df) {
-  CV = sqrt(chisq.test(df, simulate.p.value = TRUE, B=9999)$statistic /
+  CV = sqrt(chisq.test(df)$statistic /
               (sum(df) * (min(ncol(df),nrow(df)) - 1)))
   print.noquote("Cramér V / Phi:")
   return(as.numeric(CV))
