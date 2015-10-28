@@ -41,9 +41,13 @@ enve_test$sector <- enve_all$SECTOR_FIN
 enve_test$tempsub <- as.integer(as.character(enve_all$P1_1B))
 enve_test$subsector <- cut(enve_test$tempsub, scode$Code, right=FALSE)
 levels(enve_test$subsector) <- scode$Sector
+enve_test$subsector <- relevel(enve_test$subsector, ref="Retail")
+levels(enve_test$subsector)
 
 enve_test$restbar <- enve_test$subsector
-levels(enve_test$restbar)[-6] <- "Other"
+hotindx <- which(levels(enve_test$restbar) == "HotelsRestBar")
+levels(enve_test$restbar)[-hotindx] <- "Other"
+levels(enve_test$restbar)
 
 enve_test$years <- 2013 - as.numeric(as.character(enve_all$P3))
 
@@ -469,8 +473,19 @@ cv.ext_bribes
 cor.ext_bribes <- with(enve_test, cor.test(bribes, extortions, method="pearson"))
 cor.ext_bribes
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 ## Years variable
-## Analyse the quantile versions
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+### Analyse interquantile means and other EDA
 
 ext_years <- ftable(enve_test$yearsquant, temp_ext)
 
