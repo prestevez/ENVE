@@ -483,7 +483,7 @@ cor.ext_bribes
 ##########################################################################
 ##########################################################################
 
-ext_years <- ftable(enve_test$yearsquant, temp_ext)
+ext_years <- ftable(Years=enve_test$yearsquant, temp_ext)
 
 ext_years
 
@@ -502,7 +502,7 @@ cv.ext_years <- cv.test(ext_years)
 cv.ext_years
 
 ## Quantile version 2
-ext_years2 <- ftable(enve_test$yearsquant2, temp_ext)
+ext_years2 <- ftable(Years=enve_test$yearsquant2, temp_ext)
 
 ext_years2
 
@@ -529,30 +529,30 @@ cor.ext_years
 
 ey_df <- data.frame(ext_years)
 
-plot.ey <- ggplot(ey_df, aes(x=temp_ext, y=Freq, fill=temp_years)) +
-                    geom_bar(stat="identity") +
-                    facet_grid(temp_years~.) +
-                    ylab("Frequency") + xlab("Events") + theme_bw()
-
-plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog10(Freq), fill=temp_years)) +
+plot.ey <- ggplot(ey_df, aes(x=temp_ext, y=Freq, fill=Years)) +
                     geom_bar(stat="identity") +
                     facet_grid(Years~.) +
-                    ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() +
-                    scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
+                    ylab("Frequency") + xlab("Events") + theme_bw()
+
+plot.log_ey <- ggplot(ey_df, aes(x=temp_ext, y=clog10(Freq), fill=Years)) +
+                    geom_bar(stat="identity") +
+                    facet_grid(Years~.) +
+                    ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() #+
+                    #scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
 
 # For quantiles2
 ey_df2 <- data.frame(ext_years2)
 
-plot.ey2 <- ggplot(ey_df2, aes(x=temp_ext, y=Freq, fill=temp_years)) +
-                  geom_bar(stat="identity") +
-                  facet_grid(temp_years~.) +
-                  ylab("Frequency") + xlab("Events") + theme_bw()
-
-plot.log_ey2 <- ggplot(ey_df2, aes(x=temp_ext, y=clog10(Freq), fill=temp_years)) +
+plot.ey2 <- ggplot(ey_df2, aes(x=temp_ext, y=Freq, fill=Years)) +
                   geom_bar(stat="identity") +
                   facet_grid(Years~.) +
-                  ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() +
-                  scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
+                  ylab("Frequency") + xlab("Events") + theme_bw()
+
+plot.log_ey2 <- ggplot(ey_df2, aes(x=temp_ext, y=clog10(Freq), fill=Years)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Years~.) +
+                  ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() #+
+                  #scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
 
 # For raw years number
 plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() +
@@ -980,19 +980,239 @@ ggsave(plot.logpop_preval, file=paste(dir_name, "plot_logpop_preval.png", sep=""
 ggsave(plot.logpop_con, file=paste(dir_name, "plot_logpop_con.png", sep=""), width=5, height=4, type="cairo-png")
 
 
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
+#### Add aereal exploration of bribery
 
-# Before modelling must explore relationships between IV
 
 ##########################################################################
 ##########################################################################
 ##########################################################################
 ##########################################################################
 
+# Before modelling must explore relationships between bribery and other IVs
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+## Years variable vs Bribes
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+bribes_years <- ftable(Years=enve_test$yearsquant, temp_bribes)
+
+bribes_years
+
+xbribes_years <- xtable(format(bribes_years), caption="The distribution of bribery victimisations per year quintiles",
+                        lab="t_bribes_years")
+
+print(xbribes_years, include.rownames=FALSE)
+
+chisq.bribes_years <- chisq.test(bibes_years)
+chisq.bribes_years
+
+chisq.bribes_years <- chisq.test(bribes_years, simulate.p.value = TRUE, B=9999)
+chisq.bribes_years
+
+cv.bribes_years <- cv.test(bribes_years)
+cv.bribes_years
+
+## Quantile version 2
+bribes_years2 <- ftable(Years=enve_test$yearsquant2, temp_bribes)
+
+bribes_years2
+
+xbribes_years2 <- xtable(format(bribes_years2), caption="The distribution of bribery victimisations per year quantiles",
+                        lab="t_bribes_years2")
+
+print(xbribes_years2, include.rownames=FALSE)
+
+chisq.bribes_years2 <- chisq.test(bribes_years2)
+chisq.bribes_years2
+
+chisq.bribes_years2 <- chisq.test(bribes_years2, simulate.p.value = TRUE, B=9999)
+chisq.bribes_years2
+
+cv.bribes_years2 <- cv.test(bribes_years2)
+cv.bribes_years2
+
+### using the raw years variable
+
+cor.bribes_years <- with(enve_test, cor.test(bribes, years, method="pearson"))
+cor.bribes_years
+
+# Plots of bribes_years relationship
+
+by_df <- data.frame(bribes_years)
+
+plot.by <- ggplot(by_df, aes(x=temp_bribes, y=Freq, fill=Years)) +
+                    geom_bar(stat="identity") +
+                    facet_grid(Years~.) +
+                    ylab("Frequency") + xlab("Events") + theme_bw()
+
+plot.log_by <- ggplot(by_df, aes(x=temp_bribes, y=clog10(Freq), fill=Years)) +
+                    geom_bar(stat="identity") +
+                    facet_grid(Years~.) +
+                    ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() #+
+                    #scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
+
+# For quantiles2
+by_df2 <- data.frame(bribes_years2)
+
+plot.by2 <- ggplot(by_df2, aes(x=temp_bribes, y=Freq, fill=Years)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Years~.) +
+                  ylab("Frequency") + xlab("Events") + theme_bw()
+
+plot.log_by2 <- ggplot(by_df2, aes(x=temp_bribes, y=clog10(Freq), fill=Years)) +
+                  geom_bar(stat="identity") +
+                  facet_grid(Years~.) +
+                  ylab("Frequency (log10 scale)") + xlab("Events") + theme_bw() #+
+                  #scale_y_continuous(labels=c(0,10,100,1000,10000,100000))
+
+# For raw years number
+plot.bribes_years <- ggplot(enve_test, aes(x=years, y=bribes)) + geom_jitter() +
+                          geom_smooth(method="lm") +
+                          xlab("Years") + ylab("Extortions") + theme_bw()
+
+# Save ggplots as images
+ggsave(plot.by, file=paste(dir_name, "plot_by.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_by, file=paste(dir_name, "plot_log_by.pdf", sep=""), width=5, height=4)
+ggsave(plot.by2, file=paste(dir_name, "plot_by.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by.pdf", sep=""), width=5, height=4)
+ggsave(plot.bribes_years, file=paste(dir_name, "plot_bribes_years.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.ey, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+## Sector
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+ext_sector <- ftable(enve_test$sector, temp_ext)
+
+ext_sector
+
+xext_sector <- xtable(format(ext_sector), caption="Exortion victimisations by sector", label="T_ext_sector")
+
+print(xext_sector, include.rownames=FALSE)
+
+chisq.ext_sector <- chisq.test(ext_sector)
+chisq.ext_sector
+
+cv.ext_sector <- cv.test(ext_sector)
+cv.ext_sector
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+## Subsector
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+sec_subsec <- with(enve_test, ftable(subsector, sector))
+
+sec_subsec
+
+xsec_subsec <- xtable(format(sec_subsec), caption="Subsectors within sectors", label="T_sec_subsec")
+
+print(xsec_subsec, include.rownames=FALSE)
+
+ext_subsector <- ftable(enve_test$subsector, temp_ext)
+
+ext_subsector
+
+xext_subsector <- xtable(format(ext_subsector), caption="Exortion victimisations by subsector", label="T_ext_subsector")
+
+print(xext_subsector, include.rownames=FALSE)
+
+chisq.ext_subsector <- chisq.test(ext_subsector)
+chisq.ext_subsector
+
+chisq.ext_subsector <- chisq.test(ext_subsector, simulate.p.value=TRUE, B=9999)
+chisq.ext_subsector
+
+cv.ext_subsector<- cv.test(ext_subsector)
+cv.ext_subsector
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+## restbar
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+ext_restbar <- ftable(enve_test$restbar, temp_ext)
+
+ext_restbar
+
+xext_restbar <- xtable(format(ext_restbar), caption="Exortion victimisations of rest bar vs collapsed subectors", label="T_ext_restbar")
+
+print(xext_restbar, include.rownames=FALSE)
+
+chisq.ext_restbar <- chisq.test(ext_restbar)
+chisq.ext_restbar
+
+chisq.ext_restbar <- chisq.test(ext_restbar, simulate.p.value=TRUE, B=9999)
+chisq.ext_restbar
+
+cv.ext_restbar<- cv.test(ext_restbar)
+cv.ext_restbar
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+## Size
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+ext_size <- ftable(enve_test$size, temp_ext)
+
+ext_size
+
+xext_size <- xtable(format(ext_size), caption="Exortion victimisations by size", label="T_ext_size")
+
+print(xext_size, include.rownames=FALSE)
+
+chisq.ext_size <- chisq.test(ext_size)
+chisq.ext_size
+
+cv.ext_size <- cv.test(ext_size)
+cv.ext_size
 
 
 
