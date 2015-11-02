@@ -690,8 +690,18 @@ chisq.ext_size
 cv.ext_size <- cv.test(ext_size)
 cv.ext_size
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
 
 ## Area level influences
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 state_ext_dist <- ftable(enve_test$NOM_ENT, temp_ext)
 
 state_ext_dist
@@ -702,7 +712,7 @@ print(xstate_ext_dist, include.rownames=FALSE)
 
 state_ext <- with(enve_test, table(CVE_ENT, extortions))
 
-state_hom <- homicidios[,c(1,4,5,6)]
+state_hom <- homicidios
 
 state_inc <- t(t(state_ext)*as.integer(colnames(state_ext)))
 
@@ -723,33 +733,36 @@ state_summ1 <- cbind(state_summ1, CVE_ENT= as.integer(rownames(state_summ1)))
 
 state_summ1 <- merge(state_summ1, state_hom, by="CVE_ENT")
 
-state_summ1 <- state_summ1[,c(1,7,8,4,2,3,5,6)]
-
 state_summ1
 
-xstate_summ1 <- xtable(state_summ1[,c(2,4:8)], caption="Key indicators of extortion victimisation by state",
+xstate_summ1 <- xtable(state_summ1, caption="Key indicators of extortion victimisation by state",
                           labels="T_state_summ")
 
 print(xstate_summ1, include.rownames=FALSE)
 
-save(state_ext_dist, xstate_ext_dist, state_summ1, xstate_summ1, file=paste(dir_name, "states.Rdata", sep=""))
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
 
 # Area prevalence and concentration
 
-plot.inc_preval <- ggplot(state_summ1, aes(x=Prevalence, y=Incidence)) + geom_point() + geom_smooth(method="lm")
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+plot.inc_preval <- ggplot(state_summ1, aes(x=Prevalence, y=Incidence)) + geom_point() + geom_smooth(method="lm") + theme_bw()
 
 cor.inc_preval <- with(state_summ1, cor.test(Incidence, Prevalence))
 
 cor.inc_preval
 
-plot.con_preval <- ggplot(state_summ1, aes(x=Prevalence, y=Concentration)) + geom_point() + geom_smooth(method="lm")
+plot.con_preval <- ggplot(state_summ1, aes(x=Prevalence, y=Concentration)) + geom_point() + geom_smooth(method="lm") + theme_bw()
 
 cor.con_preval <- with(state_summ1, cor.test(Concentration, Prevalence))
 
 cor.con_preval
-
-# save these last objects
-save(plot.inc_preval, cor.inc_preval, plot.con_preval, cor.con_preval, file=paste(dir_name, "preval_con.Rdata", sep=""))
 
 # save these last ggplots as images
 ggsave(plot.inc_preval, file=paste(dir_name, "plot_inc_preval.pdf", sep=""), width=5, height=4)
@@ -758,33 +771,41 @@ ggsave(plot.con_preval, file=paste(dir_name, "plot_con_preval.pdf", sep=""), wid
 ggsave(plot.inc_preval, file=paste(dir_name, "plot_inc_preval.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.con_preval, file=paste(dir_name, "plot_con_preval.png", sep=""), width=5, height=4, type="cairo-png")
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 # Area-level influences: murder rate
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 plot.mur_inc <- ggplot(state_summ1, aes(x=tasahom, y=Incidence)) +
-                          geom_point() + geom_smooth(method="lm")  + xlab("Murder rate")
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murder rate") +
+                          theme_bw()
 
 cor.mur_inc <- with(state_summ1, cor.test(Incidence, tasahom))
 
 cor.mur_inc
 
 plot.mur_preval <- ggplot(state_summ1, aes(x=tasahom, y=Prevalence)) +
-                          geom_point() + geom_smooth(method="lm") + xlab("Murder rate")
+                          geom_point() + geom_smooth(method="lm") + xlab("Murder rate") +
+                          theme_bw()
 
 cor.mur_preval <- with(state_summ1, cor.test(Prevalence, tasahom))
 
 cor.mur_preval
 
 plot.mur_con <- ggplot(state_summ1, aes(x=tasahom, y=Concentration)) +
-                            geom_point() + geom_smooth(method="lm") + xlab("Murder rate")
+                            geom_point() + geom_smooth(method="lm") + xlab("Murder rate") +
+                            theme_bw()
 
 cor.mur_con <- with(state_summ1, cor.test(Concentration, tasahom))
 
 cor.mur_con
-
-# Save murder rate related objects
-
-save(plot.mur_inc, cor.mur_inc, plot.mur_preval, cor.mur_preval, plot.mur_con, cor.mur_con,
-        file=paste(dir_name, "mur_ext.Rdata", sep=""))
 
 # Save the ggplot objects as images
 ggsave(plot.mur_inc, file=paste(dir_name, "plot_mur_inc.pdf", sep=""), width=5, height=4)
@@ -795,14 +816,211 @@ ggsave(plot.mur_inc, file=paste(dir_name, "plot_mur_inc.png", sep=""), width=5, 
 ggsave(plot.mur_preval, file=paste(dir_name, "plot_mur_preval.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.mur_con, file=paste(dir_name, "plot_mur_con.png", sep=""), width=5, height=4, type="cairo-png")
 
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+# Area-level influences: absolute murder raw and log transformed
+# denuncias_homs
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+plot.raw_inc <- ggplot(state_summ1, aes(x=denuncias_homs, y=Incidence)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murders (Abs.)") +
+                          theme_bw()
+
+cor.raw_inc <- with(state_summ1, cor.test(Incidence, denuncias_homs))
+
+cor.raw_inc
+
+plot.raw_preval <- ggplot(state_summ1, aes(x=denuncias_homs, y=Prevalence)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Murders (Abs.)") +
+                          theme_bw()
+
+cor.raw_preval <- with(state_summ1, cor.test(Prevalence, denuncias_homs))
+
+cor.raw_preval
+
+plot.raw_con <- ggplot(state_summ1, aes(x=denuncias_homs, y=Concentration)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Murders (Abs.)") +
+                            theme_bw()
+
+cor.raw_con <- with(state_summ1, cor.test(Concentration, denuncias_homs))
+
+cor.raw_con
+
+# Save the ggplot objects as images
+ggsave(plot.raw_inc, file=paste(dir_name, "plot_raw_inc.pdf", sep=""), width=5, height=4)
+ggsave(plot.raw_preval, file=paste(dir_name, "plot_raw_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.raw_con, file=paste(dir_name, "plot_raw_con.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.raw_inc, file=paste(dir_name, "plot_raw_inc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.raw_preval, file=paste(dir_name, "plot_raw_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.raw_con, file=paste(dir_name, "plot_raw_con.png", sep=""), width=5, height=4, type="cairo-png")
+
+## log transformed
+
+plot.lograw_inc <- ggplot(state_summ1, aes(x=log(denuncias_homs), y=Incidence)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murders (log)") +
+                          theme_bw()
+
+cor.lograw_inc <- with(state_summ1, cor.test(Incidence, log(denuncias_homs)))
+
+cor.lograw_inc
+
+plot.lograw_preval <- ggplot(state_summ1, aes(x=log(denuncias_homs), y=Prevalence)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Murders (log)") +
+                          theme_bw()
+
+cor.lograw_preval <- with(state_summ1, cor.test(Prevalence, log(denuncias_homs)))
+
+cor.lograw_preval
+
+plot.lograw_con <- ggplot(state_summ1, aes(x=log(denuncias_homs), y=Concentration)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Murders (log)") +
+                            theme_bw()
+
+cor.lograw_con <- with(state_summ1, cor.test(Concentration, log(denuncias_homs)))
+
+cor.lograw_con
+
+# Save the ggplot objects as images
+ggsave(plot.lograw_inc, file=paste(dir_name, "plot_lograw_inc.pdf", sep=""), width=5, height=4)
+ggsave(plot.lograw_preval, file=paste(dir_name, "plot_lograw_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.lograw_con, file=paste(dir_name, "plot_lograw_con.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.lograw_inc, file=paste(dir_name, "plot_lograw_inc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.lograw_preval, file=paste(dir_name, "plot_lograw_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.lograw_con, file=paste(dir_name, "plot_lograw_con.png", sep=""), width=5, height=4, type="cairo-png")
+
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+# Area-level influences: population raw and log transformed
+# poblacion
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+plot.pop_inc <- ggplot(state_summ1, aes(x=poblacion, y=Incidence)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Population") +
+                          theme_bw()
+
+cor.pop_inc <- with(state_summ1, cor.test(Incidence, poblacion))
+
+cor.pop_inc
+
+plot.pop_preval <- ggplot(state_summ1, aes(x=poblacion, y=Prevalence)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                          theme_bw()
+
+cor.pop_preval <- with(state_summ1, cor.test(Prevalence, poblacion))
+
+cor.pop_preval
+
+plot.pop_con <- ggplot(state_summ1, aes(x=poblacion, y=Concentration)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                            theme_bw()
+
+cor.pop_con <- with(state_summ1, cor.test(Concentration, poblacion))
+
+cor.pop_con
+
+# Save the ggplot objects as images
+ggsave(plot.pop_inc, file=paste(dir_name, "plot_pop_inc.pdf", sep=""), width=5, height=4)
+ggsave(plot.pop_preval, file=paste(dir_name, "plot_pop_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.pop_con, file=paste(dir_name, "plot_pop_con.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.pop_inc, file=paste(dir_name, "plot_pop_inc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.pop_preval, file=paste(dir_name, "plot_pop_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.pop_con, file=paste(dir_name, "plot_pop_con.png", sep=""), width=5, height=4, type="cairo-png")
+
+## log transformed
+
+plot.logpop_inc <- ggplot(state_summ1, aes(x=log(poblacion), y=Incidence)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Population") +
+                          theme_bw()
+
+cor.logpop_inc <- with(state_summ1, cor.test(Incidence, log(poblacion)))
+
+cor.logpop_inc
+
+plot.logpop_preval <- ggplot(state_summ1, aes(x=log(poblacion), y=Prevalence)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                          theme_bw()
+
+cor.logpop_preval <- with(state_summ1, cor.test(Prevalence, log(poblacion)))
+
+cor.logpop_preval
+
+plot.logpop_con <- ggplot(state_summ1, aes(x=log(poblacion), y=Concentration)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                            theme_bw()
+
+cor.logpop_con <- with(state_summ1, cor.test(Concentration, log(poblacion)))
+
+cor.logpop_con
+
+# Save the ggplot objects as images
+ggsave(plot.logpop_inc, file=paste(dir_name, "plot_logpop_inc.pdf", sep=""), width=5, height=4)
+ggsave(plot.logpop_preval, file=paste(dir_name, "plot_logpop_preval.pdf", sep=""), width=5, height=4)
+ggsave(plot.logpop_con, file=paste(dir_name, "plot_logpop_con.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.logpop_inc, file=paste(dir_name, "plot_logpop_inc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.logpop_preval, file=paste(dir_name, "plot_logpop_preval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.logpop_con, file=paste(dir_name, "plot_logpop_con.png", sep=""), width=5, height=4, type="cairo-png")
+
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+# Before modelling must explore relationships between IV
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+
+
+
+
+
+
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
 ## Modelling
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+
+
+
 # Make sure we are using the correct lme4 version
 ## Stick to glmmADMB for all
 
 ### Compute sandwich estimates for significance
 ### compute confidence intervals
 
-### Improve comparison metrics and tests.. make sure to obtain de deviance not given by glmmADMB
+### Improve comparison metrics and tests.. make sure to obtain the deviance not given by glmmADMB
 
 ## Test for interactions
 
