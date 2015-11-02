@@ -588,7 +588,7 @@ ext_sector <- ftable(enve_test$sector, temp_ext)
 
 ext_sector
 
-xext_sector <- xtable(format(ext_sector), caption="Exortion victimisations by sector", label="T_ext_sector")
+xext_sector <- xtable(format(ext_sector), caption="Bribery victimisations by sector", label="T_ext_sector")
 
 print(xext_sector, include.rownames=FALSE)
 
@@ -724,10 +724,25 @@ state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_inc,1))[,2]/
 
 state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_ext,1))[,2])
 
-colnames(state_summ1) <- c("Prevalence", "Incidence", "N")
+state_bribes <- with(enve_test, table(CVE_ENT, bribes))
+
+state_brinc <- t(t(state_bribes)*as.integer(colnames(state_bribes)))
+
+state_summ1 <- cbind(state_summ1,
+                          data.frame(margin.table(state_bribes[,2:ncol(state_bribes)],1))/
+                          data.frame(margin.table(state_bribes[,1:ncol(state_bribes)],1))*1000)
+
+state_summ1 <- cbind(state_summ1, data.frame(margin.table(state_brinc,1))[,2]/
+                       data.frame(margin.table(state_bribes[,1:ncol(state_bribes)],1))*1000)
+
+
+colnames(state_summ1) <- c("Prevalence", "Incidence", "N", "Bribes Preval.", "Bribes Inci.")
 
 state_summ1 <- cbind(state_summ1,
                      Concentration=state_summ1$Incidence/state_summ1$Prevalence)
+
+state_summ1 <- cbind(state_summ1,
+                      `Bribes Conc.`=state_summ1$`Bribes Inci.`/state_summ1$`Bribes Preval.`)
 
 state_summ1 <- cbind(state_summ1, CVE_ENT= as.integer(rownames(state_summ1)))
 
@@ -745,7 +760,7 @@ print(xstate_summ1, include.rownames=FALSE)
 ##########################################################################
 ##########################################################################
 
-# Area prevalence and concentration
+# Area prevalence and concentration ####### Aqui me quede, revisar bribery per state
 
 ##########################################################################
 ##########################################################################
@@ -1090,11 +1105,11 @@ ggsave(plot.by2, file=paste(dir_name, "plot_by.pdf", sep=""), width=5, height=4)
 ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by.pdf", sep=""), width=5, height=4)
 ggsave(plot.bribes_years, file=paste(dir_name, "plot_bribes_years.pdf", sep=""), width=5, height=4)
 
-ggsave(plot.ey, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.ey2, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.by, file=paste(dir_name, "plot_by.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_by, file=paste(dir_name, "plot_log_by.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.by2, file=paste(dir_name, "plot_by.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.bribes_years, file=paste(dir_name, "plot_bribes_years.png", sep=""), width=5, height=4, type="cairo-png")
 
 ##########################################################################
 ##########################################################################
@@ -1108,19 +1123,19 @@ ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width
 ##########################################################################
 ##########################################################################
 
-ext_sector <- ftable(enve_test$sector, temp_ext)
+bribes_sector <- ftable(enve_test$sector, temp_bribes)
 
-ext_sector
+bribes_sector
 
-xext_sector <- xtable(format(ext_sector), caption="Exortion victimisations by sector", label="T_ext_sector")
+xbribes_sector <- xtable(format(bribes_sector), caption="Bribery victimisations by sector", label="T_bribes_sector")
 
-print(xext_sector, include.rownames=FALSE)
+print(xbribes_sector, include.rownames=FALSE)
 
-chisq.ext_sector <- chisq.test(ext_sector)
-chisq.ext_sector
+chisq.bribes_sector <- chisq.test(bribes_sector)
+chisq.bribes_sector
 
-cv.ext_sector <- cv.test(ext_sector)
-cv.ext_sector
+cv.bribes_sector <- cv.test(bribes_sector)
+cv.bribes_sector
 
 ##########################################################################
 ##########################################################################
@@ -1134,30 +1149,22 @@ cv.ext_sector
 ##########################################################################
 ##########################################################################
 
-sec_subsec <- with(enve_test, ftable(subsector, sector))
+bribes_subsector <- ftable(enve_test$subsector, temp_bribes)
 
-sec_subsec
+bribes_subsector
 
-xsec_subsec <- xtable(format(sec_subsec), caption="Subsectors within sectors", label="T_sec_subsec")
+xbribes_subsector <- xtable(format(bribes_subsector), caption="Bribery victimisations by subsector", label="T_bribes_subsector")
 
-print(xsec_subsec, include.rownames=FALSE)
+print(xbribes_subsector, include.rownames=FALSE)
 
-ext_subsector <- ftable(enve_test$subsector, temp_ext)
+chisq.bribes_subsector <- chisq.test(bribes_subsector)
+chisq.bribes_subsector
 
-ext_subsector
+chisq.bribes_subsector <- chisq.test(bribes_subsector, simulate.p.value=TRUE, B=9999)
+chisq.bribes_subsector
 
-xext_subsector <- xtable(format(ext_subsector), caption="Exortion victimisations by subsector", label="T_ext_subsector")
-
-print(xext_subsector, include.rownames=FALSE)
-
-chisq.ext_subsector <- chisq.test(ext_subsector)
-chisq.ext_subsector
-
-chisq.ext_subsector <- chisq.test(ext_subsector, simulate.p.value=TRUE, B=9999)
-chisq.ext_subsector
-
-cv.ext_subsector<- cv.test(ext_subsector)
-cv.ext_subsector
+cv.bribes_subsector<- cv.test(bribes_subsector)
+cv.bribes_subsector
 
 ##########################################################################
 ##########################################################################
@@ -1171,22 +1178,22 @@ cv.ext_subsector
 ##########################################################################
 ##########################################################################
 
-ext_restbar <- ftable(enve_test$restbar, temp_ext)
+bribes_restbar <- ftable(enve_test$restbar, temp_bribes)
 
-ext_restbar
+bribes_restbar
 
-xext_restbar <- xtable(format(ext_restbar), caption="Exortion victimisations of rest bar vs collapsed subectors", label="T_ext_restbar")
+xbribes_restbar <- xtable(format(bribes_restbar), caption="Bribery victimisations of rest bar vs collapsed subectors", label="T_bribes_restbar")
 
-print(xext_restbar, include.rownames=FALSE)
+print(xbribes_restbar, include.rownames=FALSE)
 
-chisq.ext_restbar <- chisq.test(ext_restbar)
-chisq.ext_restbar
+chisq.bribes_restbar <- chisq.test(bribes_restbar)
+chisq.bribes_restbar
 
-chisq.ext_restbar <- chisq.test(ext_restbar, simulate.p.value=TRUE, B=9999)
-chisq.ext_restbar
+chisq.bribes_restbar <- chisq.test(bribes_restbar, simulate.p.value=TRUE, B=9999)
+chisq.bribes_restbar
 
-cv.ext_restbar<- cv.test(ext_restbar)
-cv.ext_restbar
+cv.bribes_restbar<- cv.test(bribes_restbar)
+cv.bribes_restbar
 
 ##########################################################################
 ##########################################################################
@@ -1200,23 +1207,19 @@ cv.ext_restbar
 ##########################################################################
 ##########################################################################
 
-ext_size <- ftable(enve_test$size, temp_ext)
+bribes_size <- ftable(enve_test$size, temp_bribes)
 
-ext_size
+bribes_size
 
-xext_size <- xtable(format(ext_size), caption="Exortion victimisations by size", label="T_ext_size")
+xbribes_size <- xtable(format(bribes_size), caption="Bribery victimisations by size", label="T_bribes_size")
 
-print(xext_size, include.rownames=FALSE)
+print(xbribes_size, include.rownames=FALSE)
 
-chisq.ext_size <- chisq.test(ext_size)
-chisq.ext_size
+chisq.bribes_size <- chisq.test(bribes_size)
+chisq.bribes_size
 
-cv.ext_size <- cv.test(ext_size)
-cv.ext_size
-
-
-
-
+cv.bribes_size <- cv.test(bribes_size)
+cv.bribes_size
 
 
 ##########################################################################
