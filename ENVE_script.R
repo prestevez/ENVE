@@ -163,8 +163,7 @@ obsexp
 
 # Generate Poisson expected frequencies
 
-obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext)
-                            * length(enve_test$extortions)
+obsexp$exp_po <- dpois(0:(length(obsexp$Events)-1), lambda=mean_ext)  * length(enve_test$extortions)
 
 ####### Add the KS tests
 
@@ -413,8 +412,6 @@ xbribes <- xtable(format(bribes), caption="Distribution of corruption victimisat
 
 print(xbribes, include.rownames=FALSE)
 
-save(bribes, xbribes, file=paste(dir_name, "bribes.Rdata", sep=""))
-
 # Plot the distribution of bribes
 
 plot.bribes <- ggplot(bribes, aes(x=Events, y=Freq)) + geom_bar(stat="identity") +
@@ -563,14 +560,14 @@ plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() 
 # Save ggplots as images
 ggsave(plot.ey, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
 ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
-ggsave(plot.ey2, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
-ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey2.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey2.pdf", sep=""), width=5, height=4)
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.pdf", sep=""), width=5, height=4)
 
 ggsave(plot.ey, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.ey2, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey2.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey2.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
 
 ##########################################################################
@@ -1298,14 +1295,14 @@ plot.bribes_years <- ggplot(enve_test, aes(x=years, y=bribes)) + geom_jitter() +
 # Save ggplots as images
 ggsave(plot.by, file=paste(dir_name, "plot_by.pdf", sep=""), width=5, height=4)
 ggsave(plot.log_by, file=paste(dir_name, "plot_log_by.pdf", sep=""), width=5, height=4)
-ggsave(plot.by2, file=paste(dir_name, "plot_by.pdf", sep=""), width=5, height=4)
-ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by.pdf", sep=""), width=5, height=4)
+ggsave(plot.by2, file=paste(dir_name, "plot_by2.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by2.pdf", sep=""), width=5, height=4)
 ggsave(plot.bribes_years, file=paste(dir_name, "plot_bribes_years.pdf", sep=""), width=5, height=4)
 
 ggsave(plot.by, file=paste(dir_name, "plot_by.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.log_by, file=paste(dir_name, "plot_log_by.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.by2, file=paste(dir_name, "plot_by.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.by2, file=paste(dir_name, "plot_by2.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_by2, file=paste(dir_name, "plot_log_by2.png", sep=""), width=5, height=4, type="cairo-png")
 ggsave(plot.bribes_years, file=paste(dir_name, "plot_bribes_years.png", sep=""), width=5, height=4, type="cairo-png")
 
 ##########################################################################
