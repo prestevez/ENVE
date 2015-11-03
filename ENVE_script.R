@@ -760,7 +760,7 @@ print(xstate_summ1, include.rownames=FALSE)
 ##########################################################################
 ##########################################################################
 
-# Area prevalence and concentration ####### Aqui me quede, revisar bribery per state
+# Area prevalence and concentration
 
 ##########################################################################
 ##########################################################################
@@ -995,7 +995,132 @@ ggsave(plot.logpop_preval, file=paste(dir_name, "plot_logpop_preval.png", sep=""
 ggsave(plot.logpop_con, file=paste(dir_name, "plot_logpop_con.png", sep=""), width=5, height=4, type="cairo-png")
 
 
-#### Add aereal exploration of bribery
+#################### aereal exploration of bribery ######################
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+# Area-level influences: murder rate v bribes
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+plot.mur_brinc <- ggplot(state_summ1, aes(x=tasahom, y=`Bribes Inci.`)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murder rate") +
+                          theme_bw()
+
+cor.mur_brinc <- with(state_summ1, cor.test(`Bribes Inci.`, tasahom))
+
+cor.mur_brinc
+
+plot.mur_bpreval <- ggplot(state_summ1, aes(x=tasahom, y=`Bribes Preval.`)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Murder rate") +
+                          theme_bw()
+
+cor.mur_bpreval <- with(state_summ1, cor.test(`Bribes Preval.`, tasahom))
+
+cor.mur_bpreval
+
+plot.mur_bcon <- ggplot(state_summ1, aes(x=tasahom, y=`Bribes Conc.`)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Murder rate") +
+                            theme_bw()
+
+cor.mur_bcon <- with(state_summ1, cor.test(`Bribes Conc.`, tasahom))
+
+cor.mur_bcon
+
+# Save the ggplot objects as images
+ggsave(plot.mur_brinc, file=paste(dir_name, "plot_mur_brinc.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_bpreval, file=paste(dir_name, "plot_mur_bpreval.pdf", sep=""), width=5, height=4)
+ggsave(plot.mur_bcon, file=paste(dir_name, "plot_mur_bcon.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.mur_brinc, file=paste(dir_name, "plot_mur_brinc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_bpreval, file=paste(dir_name, "plot_mur_bpreval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.mur_bcon, file=paste(dir_name, "plot_mur_bcon.png", sep=""), width=5, height=4, type="cairo-png")
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+# Area-level influences: absolute murder raw and log transformed v bribes
+# denuncias_homs
+
+##########################################################################
+##########################################################################
+##########################################################################
+##########################################################################
+
+plot.raw_brinc <- ggplot(state_summ1, aes(x=denuncias_homs, y=`Bribes Inci.`)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murders (Abs.)") +
+                          theme_bw()
+
+cor.raw_brinc <- with(state_summ1, cor.test(`Bribes Inci.`, denuncias_homs))
+
+cor.raw_brinc
+
+plot.raw_bpreval <- ggplot(state_summ1, aes(x=denuncias_homs, y=`Bribes Preval.`)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Murders (Abs.)") +
+                          theme_bw()
+
+cor.raw_bpreval <- with(state_summ1, cor.test(`Bribes Preval.`, denuncias_homs))
+
+cor.raw_bpreval
+
+plot.raw_bcon <- ggplot(state_summ1, aes(x=denuncias_homs, y=`Bribes Conc.`)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Murders (Abs.)") +
+                            theme_bw()
+
+cor.raw_bcon <- with(state_summ1, cor.test(`Bribes Conc.`, denuncias_homs))
+
+cor.raw_bcon
+
+# Save the ggplot objects as images
+ggsave(plot.raw_brinc, file=paste(dir_name, "plot_raw_brinc.pdf", sep=""), width=5, height=4)
+ggsave(plot.raw_bpreval, file=paste(dir_name, "plot_raw_bpreval.pdf", sep=""), width=5, height=4)
+ggsave(plot.raw_bcon, file=paste(dir_name, "plot_raw_bcon.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.raw_brinc, file=paste(dir_name, "plot_raw_brinc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.raw_bpreval, file=paste(dir_name, "plot_raw_bpreval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.rawb_con, file=paste(dir_name, "plot_raw_bcon.png", sep=""), width=5, height=4, type="cairo-png")
+
+## log transformed
+
+plot.lograw_brinc <- ggplot(state_summ1, aes(x=log(denuncias_homs), y=`Bribes Inci.`)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Murders (log)") +
+                          theme_bw()
+
+cor.lograw_brinc <- with(state_summ1, cor.test(`Bribes Inci.`, log(denuncias_homs)))
+
+cor.lograw_brinc
+
+plot.lograw_bpreval <- ggplot(state_summ1, aes(x=log(denuncias_homs), y=`Bribes Preval.`)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Murders (log)") +
+                          theme_bw()
+
+cor.lograw_bpreval <- with(state_summ1, cor.test(`Bribes Preval.`, log(denuncias_homs)))
+
+cor.lograw_bpreval
+
+plot.lograw_bcon <- ggplot(state_summ1, aes(x=log(denuncias_homs), y=`Bribes Conc.`)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Murders (log)") +
+                            theme_bw()
+
+cor.lograw_bcon <- with(state_summ1, cor.test(`Bribes Conc.`, log(denuncias_homs)))
+
+cor.lograw_bcon
+
+# Save the ggplot objects as images
+ggsave(plot.lograw_brinc, file=paste(dir_name, "plot_lograw_brinc.pdf", sep=""), width=5, height=4)
+ggsave(plot.lograw_bpreval, file=paste(dir_name, "plot_lograw_bpreval.pdf", sep=""), width=5, height=4)
+ggsave(plot.lograw_bcon, file=paste(dir_name, "plot_lograw_bcon.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.lograw_brinc, file=paste(dir_name, "plot_lograw_brinc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.lograw_bpreval, file=paste(dir_name, "plot_lograw_bpreval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.lograw_bcon, file=paste(dir_name, "plot_lograw_bcon.png", sep=""), width=5, height=4, type="cairo-png")
 
 
 ##########################################################################
@@ -1003,12 +1128,83 @@ ggsave(plot.logpop_con, file=paste(dir_name, "plot_logpop_con.png", sep=""), wid
 ##########################################################################
 ##########################################################################
 
-# Before modelling must explore relationships between bribery and other IVs
+# Area-level influences: population raw and log transformed v bribes
+# poblacion
 
 ##########################################################################
 ##########################################################################
 ##########################################################################
 ##########################################################################
+
+plot.pop_brinc <- ggplot(state_summ1, aes(x=poblacion, y=`Bribes Inci.`)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Population") +
+                          theme_bw()
+
+cor.pop_brinc <- with(state_summ1, cor.test(`Bribes Inci.`, poblacion))
+
+cor.pop_brinc
+
+plot.pop_bpreval <- ggplot(state_summ1, aes(x=poblacion, y=`Bribes Preval.`)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                          theme_bw()
+
+cor.pop_bpreval <- with(state_summ1, cor.test(`Bribes Preval.`, poblacion))
+
+cor.pop_bpreval
+
+plot.pop_bcon <- ggplot(state_summ1, aes(x=poblacion, y=`Bribes Conc.`)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                            theme_bw()
+
+cor.pop_bcon <- with(state_summ1, cor.test(`Bribes Conc.`, poblacion))
+
+cor.pop_bcon
+
+# Save the ggplot objects as images
+ggsave(plot.pop_brinc, file=paste(dir_name, "plot_pop_brinc.pdf", sep=""), width=5, height=4)
+ggsave(plot.pop_bpreval, file=paste(dir_name, "plot_pop_bpreval.pdf", sep=""), width=5, height=4)
+ggsave(plot.pop_bcon, file=paste(dir_name, "plot_pop_bcon.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.pop_brinc, file=paste(dir_name, "plot_pop_brinc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.pop_bpreval, file=paste(dir_name, "plot_pop_bpreval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.pop_bcon, file=paste(dir_name, "plot_pop_bcon.png", sep=""), width=5, height=4, type="cairo-png")
+
+## log transformed
+
+plot.logpop_brinc <- ggplot(state_summ1, aes(x=log(poblacion), y=`Bribes Inci.`)) +
+                          geom_point() + geom_smooth(method="lm")  + xlab("Population") +
+                          theme_bw()
+
+cor.logpop_brinc <- with(state_summ1, cor.test(`Bribes Inci.`, log(poblacion)))
+
+cor.logpop_brinc
+
+plot.logpop_bpreval <- ggplot(state_summ1, aes(x=log(poblacion), y=`Bribes Preval.`)) +
+                          geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                          theme_bw()
+
+cor.logpop_bpreval <- with(state_summ1, cor.test(`Bribes Preval.`, log(poblacion)))
+
+cor.logpop_bpreval
+
+plot.logpop_con <- ggplot(state_summ1, aes(x=log(poblacion), y=`Bribes Conc.`)) +
+                            geom_point() + geom_smooth(method="lm") + xlab("Population") +
+                            theme_bw()
+
+cor.logpop_bcon <- with(state_summ1, cor.test(`Bribes Conc.`, log(poblacion)))
+
+cor.logpop_bcon
+
+# Save the ggplot objects as images
+ggsave(plot.logpop_brinc, file=paste(dir_name, "plot_logpop_brinc.pdf", sep=""), width=5, height=4)
+ggsave(plot.logpop_bpreval, file=paste(dir_name, "plot_logpop_bpreval.pdf", sep=""), width=5, height=4)
+ggsave(plot.logpop_bcon, file=paste(dir_name, "plot_logpop_bcon.pdf", sep=""), width=5, height=4)
+
+ggsave(plot.logpop_brinc, file=paste(dir_name, "plot_logpop_brinc.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.logpop_bpreval, file=paste(dir_name, "plot_logpop_bpreval.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.logpop_bcon, file=paste(dir_name, "plot_logpop_bcon.png", sep=""), width=5, height=4, type="cairo-png")
+
+
 
 ##########################################################################
 ##########################################################################
@@ -1116,7 +1312,7 @@ ggsave(plot.bribes_years, file=paste(dir_name, "plot_bribes_years.png", sep=""),
 ##########################################################################
 ##########################################################################
 
-## Sector
+## Sector v bribes
 
 ##########################################################################
 ##########################################################################
@@ -1142,7 +1338,7 @@ cv.bribes_sector
 ##########################################################################
 ##########################################################################
 
-## Subsector
+## Subsector v bribes
 
 ##########################################################################
 ##########################################################################
@@ -1171,7 +1367,7 @@ cv.bribes_subsector
 ##########################################################################
 ##########################################################################
 
-## restbar
+## restbar v bribes
 
 ##########################################################################
 ##########################################################################
@@ -1200,7 +1396,7 @@ cv.bribes_restbar
 ##########################################################################
 ##########################################################################
 
-## Size
+## Size v bribes
 
 ##########################################################################
 ##########################################################################
@@ -1234,21 +1430,7 @@ cv.bribes_size
 ##########################################################################
 ##########################################################################
 
-
-
-
-# Make sure we are using the correct lme4 version
-## Stick to glmmADMB for all
-
-### Compute sandwich estimates for significance
-### compute confidence intervals
-
-### Improve comparison metrics and tests.. make sure to obtain the deviance not given by glmmADMB
-
-## Test for interactions
-
-
-packageVersion("lme4")
+### compute confidence intervals and deviance
 
 # First round, all models using sector, from poisson to different types of me-NB
 
