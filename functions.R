@@ -68,3 +68,23 @@ cv.test = function(df) {
   print.noquote("Cramér V / Phi:")
   return(as.numeric(CV))
 }
+
+# Model deviance statistic function
+
+dev.stat <- function(m)
+{
+  y <- m$frame[,1]
+  mu <- m$fitted
+  fam <- m$family
+  if (fam == "poisson")
+  {
+    dev <- 2 * sum(y * log(ifelse(y==0, 1, y/mu)))
+  }
+  else
+  {
+    alpha <- m$alpha
+    dev <- 2 * sum(y * log(ifelse(y==0, 1, y/mu)) - (y+alpha) * log((y+alpha)/(mu+alpha)))
+  }
+
+  return(dev)
+}
