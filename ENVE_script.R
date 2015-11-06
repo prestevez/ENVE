@@ -3,7 +3,7 @@
 ##########################################################################
 ##########################################################################
 
-## ENVE_script.R
+## ENVE_script.R ##### Must fix size of plots, and we should be done.
 
 ##########################################################################
 ##########################################################################
@@ -238,7 +238,7 @@ oe_dfpo[oe_dfpo[,2] < 1,2] <- 0
 oe_dfpo
 
 oe_df <- data.frame(Events=rep(0:(length(obsexp$Events)-1), 3), Obs=c(obsexp$Obs, obsexp$exp_po, obsexp$exp_nb),
-                    Class=c(rep("Observed", length(obsexp$Events)), rep("Poisson", length(obsexp$Events)), 
+                    Class=c(rep("Observed", length(obsexp$Events)), rep("Poisson", length(obsexp$Events)),
                             rep("NB", length(obsexp$Events))))
 
 oe_df[oe_df[,2] < 1,2] <- 0
@@ -254,7 +254,7 @@ oe_df
 
 plot.obs <- ggplot(obsexp, aes(x=Events, y=clog10(Obs))) + geom_bar(stat="identity") +
               ylab("Frequency (log10)") +
-              scale_y_continuous(limits=c(clog10(0), clog10(100000)), labels=c(0,10,100,1000,10000,100000)) + 
+              scale_y_continuous(limits=c(clog10(0), clog10(100000)), labels=c(0,10,100,1000,10000,100000)) +
               theme_bw()
 
 plot.exp_po <- ggplot(obsexp, aes(x=Events, y=clog10(exp_po))) + geom_bar(stat="identity") +
@@ -264,7 +264,7 @@ plot.exp_po <- ggplot(obsexp, aes(x=Events, y=clog10(exp_po))) + geom_bar(stat="
 
 plot.exp_nb <- ggplot(obsexp, aes(x=Events, y=clog10(exp_nb))) + geom_bar(stat="identity") +
               ylab("Frequency (log10)") +
-              scale_y_continuous(limits=c(clog10(0), clog10(100000)), labels=c(0,10,100,1000,10000,100000)) + 
+              scale_y_continuous(limits=c(clog10(0), clog10(100000)), labels=c(0,10,100,1000,10000,100000)) +
               theme_bw()
 
 plot.obspo <- ggplot(oe_dfpo, aes(x=Events, y=clog10(Obs), fill=Class)) +
@@ -652,7 +652,7 @@ ext_restbar <- ftable(enve_test$restbar, temp_ext)
 
 ext_restbar
 
-xext_restbar <- xtable(format(ext_restbar), caption="Exortion victimisations of rest bar vs collapsed subectors", 
+xext_restbar <- xtable(format(ext_restbar), caption="Exortion victimisations of rest bar vs collapsed subectors",
                        label="T_ext_restbar")
 
 print(xext_restbar, include.rownames=FALSE)
@@ -1380,7 +1380,7 @@ bribes_restbar <- ftable(enve_test$restbar, temp_bribes)
 
 bribes_restbar
 
-xbribes_restbar <- xtable(format(bribes_restbar), caption="Bribery victimisations of rest bar vs collapsed subectors", 
+xbribes_restbar <- xtable(format(bribes_restbar), caption="Bribery victimisations of rest bar vs collapsed subectors",
                           label="T_bribes_restbar")
 
 print(xbribes_restbar, include.rownames=FALSE)
@@ -1546,7 +1546,7 @@ dev.stat(m4.0)
 
 # Comparison between Poisson and NB GLMMs
 
-tx.m3_m4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4", 
+tx.m3_m4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4",
                    booktabs=TRUE)
 
 tx.m3_m4
@@ -1555,7 +1555,7 @@ lr.m3_m4 <- lrtest(m3, m4.0)
 
 lr.m3_m4
 
-xlr.m3_m4 <- xtable(lr.m3_m4, caption="Likelihood ratio test between Poisson and NB Mixed Models", 
+xlr.m3_m4 <- xtable(lr.m3_m4, caption="Likelihood ratio test between Poisson and NB Mixed Models",
                     label="T_lrm3m4")
 
 print(xlr.m3_m4)
@@ -1722,7 +1722,7 @@ print(xlr.n1_n2)
 # 3. Poisson GLMM
 
 n3 <- glmmadmb(extortions ~ bribes +  tasahom + yearsquant + restbar + size +
-                (1 | NOM_ABR), data=enve_test, family="poisson", 
+                (1 | NOM_ABR), data=enve_test, family="poisson",
                zeroInflation=FALSE, extra.args="-ndi 60000",
                admb.opts = admbControl(noinit = FALSE))
 
@@ -1743,7 +1743,7 @@ dev.stat(n4.0)
 
 # Comparison between Poisson and NB GLMMs
 
-tx.n3_n4 <- texreg(list(n3, n4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4", 
+tx.n3_n4 <- texreg(list(n3, n4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4",
                    booktabs=TRUE)
 
 tx.n3_n4
@@ -1752,7 +1752,7 @@ lr.n3_n4 <- lrtest(n3, n4.0)
 
 lr.n3_n4
 
-xlr.n3_n4 <- xtable(lr.n3_n4, caption="Likelihood ratio test between Poisson and NB Mixed Models", 
+xlr.n3_n4 <- xtable(lr.n3_n4, caption="Likelihood ratio test between Poisson and NB Mixed Models",
                     label="T_lrn3n4")
 
 print(xlr.n3_n4)
@@ -1837,13 +1837,13 @@ anova.m2_n2 <- anova(m2, n2)
 
 anova.m2_n2
 
-xam2n2 <- xtable(anova.m2_n2, caption="ANOVA between the NB models using subsector and restbar", 
+xam2n2 <- xtable(anova.m2_n2, caption="ANOVA between the NB models using subsector and restbar",
                  label="T_xanm2n2")
 
 print(xam2n2)
 
 # GLMM
-tx.m4_n4 <- texreg(list(m4.0, n4.0), caption="NB Mixed Models using subsector and restbar covariates", 
+tx.m4_n4 <- texreg(list(m4.0, n4.0), caption="NB Mixed Models using subsector and restbar covariates",
                    label="T_m4n4")
 
 tx.m4_n4
@@ -1852,14 +1852,14 @@ anova.m4_n4 <- anova(m4.0, n4.0)
 
 anova.m4_n4
 
-xam4n4 <- xtable(anova.m4_n4, caption="ANOVA between the NB mixed models using sector and restbar", 
+xam4n4 <- xtable(anova.m4_n4, caption="ANOVA between the NB mixed models using sector and restbar",
                  label="T_xanm4n4")
 
 print(xam4n4)
 
 # Compare NB GLM to NB GLMM
 
-tx.m2_m4 <- texreg(list(m2, m4.0), caption="Comparison of NB GLM to Mixed Models", label="T_m2m4", 
+tx.m2_m4 <- texreg(list(m2, m4.0), caption="Comparison of NB GLM to Mixed Models", label="T_m2m4",
                    booktabs=TRUE)
 
 tx.m2_m4
@@ -1874,7 +1874,7 @@ print(xlr.m2_m4)
 
 ## from round 2
 
-tx.n2_n4 <- texreg(list(n2, n4.0), caption="Comparison of NB GLM to Mixed Models", label="T_n2n4ADn4", 
+tx.n2_n4 <- texreg(list(n2, n4.0), caption="Comparison of NB GLM to Mixed Models", label="T_n2n4ADn4",
                    booktabs=TRUE)
 
 tx.n2_n4
@@ -1903,7 +1903,7 @@ print(xlr.n2_n4)
 # First round, all models using subsector and yearsquant and denuncias and poblacion
 
 # 1. Poisson GLM
-o1 <- glmmadmb(extortions ~ bribes + log(denuncias_homs) + log(poblacion) + yearsquant + subsector + size, 
+o1 <- glmmadmb(extortions ~ bribes + log(denuncias_homs) + log(poblacion) + yearsquant + subsector + size,
                data=enve_test,
           family="poisson", zeroInflation=FALSE, extra.args="-ndi 60000",
           admb.opts = admbControl(noinit = FALSE))
@@ -2164,7 +2164,7 @@ dev.stat(p2.null)
 
 ## Compare different nb models
 
-tx.p2.x <- texreg(list(p2.pull, p2.4, p2.3, p2.2, p2.1, p2), caption="Comparison of all NB models",
+tx.p2.x <- texreg(list(p2.null, p2.4, p2.3, p2.2, p2.1, p2), caption="Comparison of all NB models",
                   label="T_tx_p2x", booktabs=TRUE)
 
 tx.p2.x
@@ -2272,7 +2272,7 @@ confint(p4.null)
 dev.stat(p4.null)
 
 # Compare all NB GLMMs
-tx.p4.x <- texreg(list(p4.0, p4.1, p4.2, p4.3, p4.4, p4.pull), caption="Comparison of all NB mixed models",
+tx.p4.x <- texreg(list(p4.0, p4.1, p4.2, p4.3, p4.4, p4.null), caption="Comparison of all NB mixed models",
                   label="T_tx_p4x", booktabs=TRUE)
 
 tx.p4.x
