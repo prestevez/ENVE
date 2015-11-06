@@ -47,6 +47,7 @@ obs_exp_test <- function(dataframe, exp, par)
 {
   for(i in 1:length(x))
   {
+    x[i] <- round(x[i])
     if (x[i] == 0)
     {
       x[i] <- x[i] + 1
@@ -65,7 +66,6 @@ obs_exp_test <- function(dataframe, exp, par)
 cv.test = function(df) {
   CV = sqrt(chisq.test(df)$statistic /
               (sum(df) * (min(ncol(df),nrow(df)) - 1)))
-  print.noquote("Cramér V / Phi:")
   return(as.numeric(CV))
 }
 
