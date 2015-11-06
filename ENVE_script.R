@@ -3,7 +3,7 @@
 ##########################################################################
 ##########################################################################
 
-## ENVE_script.R ##### Must fix size of plots, and we should be done.
+## ENVE_script.R
 
 ##########################################################################
 ##########################################################################
@@ -562,15 +562,15 @@ plot.ext_years <- ggplot(enve_test, aes(x=years, y=extortions)) + geom_jitter() 
 
 # Save ggplots as images
 ggsave(plot.ey, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
-ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
-ggsave(plot.ey2, file=paste(dir_name, "plot_ey.pdf", sep=""), width=5, height=4)
-ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.pdf", sep=""), width=5, height=5.5)
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey2.pdf", sep=""), width=5, height=4)
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey2.pdf", sep=""), width=5, height=5.5)
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.pdf", sep=""), width=5, height=4)
 
 ggsave(plot.ey, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.ey2, file=paste(dir_name, "plot_ey.png", sep=""), width=5, height=4, type="cairo-png")
-ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey, file=paste(dir_name, "plot_log_ey.png", sep=""), width=5, height=5.5, type="cairo-png")
+ggsave(plot.ey2, file=paste(dir_name, "plot_ey2.png", sep=""), width=5, height=4, type="cairo-png")
+ggsave(plot.log_ey2, file=paste(dir_name, "plot_log_ey2.png", sep=""), width=5, height=5.5, type="cairo-png")
 ggsave(plot.ext_years, file=paste(dir_name, "plot_ext_years.png", sep=""), width=5, height=4, type="cairo-png")
 
 ##########################################################################
