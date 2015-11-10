@@ -1650,6 +1650,16 @@ summary(n2)
 confint(n2)
 dev.stat(n2)
 
+# Interaction effect
+n2.int <- glmmadmb(extortions ~ bribes + tasahom + (yearsquant + restbar) * size + yearsquant:restbar, data=enve_test,
+          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+          admb.opts = admbControl(noinit = FALSE))
+
+summary(n2.int)
+confint(n2.int)
+dev.stat(n2.int)
+
+# End interaction
 n2.1 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar, data=enve_test,
           family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
           admb.opts = admbControl(noinit = FALSE))
@@ -1740,6 +1750,17 @@ n4.0 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar + size +
 summary(n4.0)
 confint(n4.0)
 dev.stat(n4.0)
+
+# Interactions
+n4.int <- glmmadmb(extortions ~ bribes + tasahom + (yearsquant + restbar) * size + yearsquant:restbar +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
+
+summary(n4.int)
+confint(n4.int)
+dev.stat(n4.int)
+
 
 # Comparison between Poisson and NB GLMMs
 
