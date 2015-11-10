@@ -16,10 +16,10 @@ library(dgof)
 
 
 ## Create directories where results and log will be written.
-#if (dir.exists("Output/") == FALSE)
-#{
-#  dir.create("Output/")
-#}
+if (dir.exists("Output/") == FALSE)
+{
+  dir.create("Output/")
+}
 
 # Create directories to save results outputs
 dir_name <- paste("Output/",as.integer(Sys.time()), "_results/", sep="")
