@@ -105,9 +105,9 @@ Sólo se requiere que el *path* al folder del proyecto sea especificado.
 
 ### Ejecutar el script
 
-El proyecto está contenido en dos scripts: **ENVE_script_00.R** y **ENVE_script.R**.
+El proyecto está contenido en tres scripts: **ENVE_script_00.R**, **ENVE_script.R** y **functions.R**.
 
-**Sólo es necesario correr ENVE_script_00.R**, pues este script contiene las instrucciones para correr el segundo script.
+**Sólo es necesario correr ENVE_script_00.R**, pues este script contiene las instrucciones para correr los otros dos.
 
 Para ejecutarlo, escriba el siguiente comando en la consola de R y ejecute:
 
