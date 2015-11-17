@@ -8,14 +8,18 @@ library(xtable)
 library(texreg)
 library(lmtest)
 library(MASS)
-library(lme4)
+# library(lme4) # will run all models (one level and ml) using glmmADMB
+#library(glmmADMB)
+library(evaluate)
+library(classInt)
+library(dgof)
 
 
 ## Create directories where results and log will be written.
-#if (dir.exists("Output/") == FALSE)
-#{
-#  dir.create("Output/")
-#}
+if (dir.exists("Output/") == FALSE)
+{
+  dir.create("Output/")
+}
 
 # Create directories to save results outputs
 dir_name <- paste("Output/",as.integer(Sys.time()), "_results/", sep="")
@@ -34,7 +38,27 @@ sink(logfile, append=TRUE, type=c("output","message"))
 
 # Run the scripts
 
-source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
+# Set seed for reproducibility
+
+set.seed(42)
+
+sessionInfo()
+
+#source("ENVE_script.R", echo=TRUE, max.deparse.length=10000)
+
+# Load functions
+source("functions.R", echo=TRUE, max.deparse.length=10000)
+
+
+starttime <- proc.time()
+results <- evaluate(file("ENVE_script.R"), new_device=FALSE)
+endtime <- proc.time()
+
+######### Processing time #########
+
+endtime - starttime
+
+replay(results)
 
 # End sink
 
