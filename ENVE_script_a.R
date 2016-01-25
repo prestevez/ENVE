@@ -167,7 +167,7 @@ summary(m4.1)
 confint(m4.1)
 dev.stat(m4.1)
 
-m4.2 <- glmmadmb(eextortions ~ bribes + tasahom  + subsector + size +
+m4.2 <- glmmadmb(extortions ~ bribes + tasahom  + subsector + size +
                  (1 | NOM_ABR), data=enve_test,
                  family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
@@ -376,9 +376,18 @@ o4.3.a <- glmmadmb(extortions ~ bribes + log(denuncias_homs) +
                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
-summary(o4.3)
-confint(o4.3)
-dev.stat(o4.3)
+summary(o4.3.a)
+confint(o4.3.a)
+dev.stat(o4.3.a)
+
+o4.nb <- glmmadmb(extortions ~  log(denuncias_homs) + log(poblacion) + yearsquant + subsector + size +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
+
+summary(o4.nb)
+confint(o4.nb)
+dev.stat(o4.nb)
 
 
 ##########################################################################
