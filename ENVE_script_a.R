@@ -142,220 +142,141 @@ xlr.m3_m4 <- xtable(lr.m3_m4, caption="Likelihood ratio test between Poisson and
 
 print(xlr.m3_m4)
 
-tx.m3_m4 <- texreg(list(m3, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4",
+tx.m3lme4_m4 <- texreg(list(m3.lme4, m4.0), caption="Comparison of Poisson and NB Mixed Models", label="T_m3m4",
                    booktabs=TRUE)
 
-tx.m3_m4
+tx.m3lme4_m4
 
-lr.m3_m4 <- lrtest(m3, m4.0)
+lr.m3lme4_m4 <- lrtest(m3.lme4, m4.0)
 
-lr.m3_m4
+lr.m3lme4_m4
 
-xlr.m3_m4 <- xtable(lr.m3_m4, caption="Likelihood ratio test between Poisson and NB Mixed Models",
+xlr.m3lme4_m4 <- xtable(lr.m3lme4_m4, caption="Likelihood ratio test between Poisson and NB Mixed Models",
                     label="T_lrm3m4")
 
-print(xlr.m3_m4)
+print(xlr.m3lme4_m4)
 
 # 4.x Investigating different variables in the NB GLMMs
 
-m4.1 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + subsector +
-                    (1 | NOM_ABR), data=enve_test,
-                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+m4.1 <- glmmadmb(extortions ~  tasahom + yearsquant + subsector + size +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
 summary(m4.1)
 confint(m4.1)
 dev.stat(m4.1)
 
-m4.2 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+m4.2 <- glmmadmb(eextortions ~ bribes + tasahom  + subsector + size +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
 summary(m4.2)
 confint(m4.2)
 dev.stat(m4.2)
 
-m4.3 <- glmmadmb(extortions ~ bribes + tasahom +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+m4.3 <- glmmadmb(extortions ~ bribes + yearsquant + subsector + size +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
 summary(m4.3)
 confint(m4.3)
 dev.stat(m4.3)
 
-m4.4 <- glmmadmb(extortions ~ bribes +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-                 admb.opts = admbControl(noinit = FALSE))
+anova.m4.1 <- anova(m4.1, m4.0)
 
-summary(m4.4)
-confint(m4.4)
-dev.stat(m4.4)
+anova.m4.1
 
-m4.null <- glmmadmb(extortions ~ 1 +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-                   admb.opts = admbControl(noinit = FALSE))
+xam4.1 <- xtable(anova.m4.1, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
 
-summary(m4.null)
-confint(m4.null)
-dev.stat(m4.null)
+print(xam4.1)
 
-# Compare all NB GLMMs
-tx.m4.x <- texreg(list(m4.0, m4.1, m4.2, m4.3, m4.4, m4.null), caption="Comparison of all NB mixed models",
-                  label="T_tx_m4x", booktabs=TRUE)
+anova.m4.2 <- anova(m4.2, m4.0)
 
-tx.m4.x
+anova.m4.2
 
-anova.m4.x <- anova(m4.null, m4.4, m4.3, m4.2, m4.1, m4.0)
+xam4.2 <- xtable(anova.m4.2, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
 
-anova.m4.x
+print(xam4.2)
 
-xam4.x <- xtable(anova.m4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
+anova.m4.3 <- anova(m4.3, m4.0)
+
+anova.m4.3
+
+xam4.3 <- xtable(anova.m4.3, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
+
+print(xam4.3)
+
 
 ##########################################################################
 ##########################################################################
 ##########################################################################
 ##########################################################################
 
-# Second round using restbar
+# Test for Interactions
 
 ##########################################################################
 ##########################################################################
 ##########################################################################
 ##########################################################################
-
-# 1. Poisson GLM
-n1 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar + size, data=enve_test,
-          family="poisson", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n1)
-confint(n1)
-dev.stat(n1)
-
-# 2. NB GLM
-
-n2 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar + size, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2)
-confint(n2)
-dev.stat(n2)
-
-# Interaction effect
-n2.int <- glmmadmb(extortions ~ bribes + tasahom + (yearsquant + restbar) * size + yearsquant:restbar, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2.int)
-confint(n2.int)
-dev.stat(n2.int)
-
-# End interaction
-n2.1 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2.1)
-confint(n2.1)
-dev.stat(n2.1)
-
-
-n2.2 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2.2)
-confint(n2.2)
-dev.stat(n2.2)
-
-
-n2.3 <- glmmadmb(extortions ~ bribes + tasahom, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2.3)
-confint(n2.3)
-dev.stat(n2.3)
-
-
-n2.4 <- glmmadmb(extortions ~ bribes, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2.4)
-confint(n2.4)
-dev.stat(n2.4)
-
-n2.null <- glmmadmb(extortions ~ 1, data=enve_test,
-          family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-          admb.opts = admbControl(noinit = FALSE))
-
-summary(n2.null)
-confint(n2.null)
-dev.stat(n2.null)
-
-## Compare different nb models
-
-tx.n2.x <- texreg(list(n2.null, n2.4, n2.3, n2.2, n2.1, n2), caption="Comparison of all NB models",
-                  label="T_tx_n2x", booktabs=TRUE)
-
-tx.n2.x
-
-anova.n2.x <- anova(n2.null, n2.4, n2.3, n2.2, n2.1, n2)
-
-anova.n2.x
-
-xan2.x <- xtable(anova.n2.x, caption="ANOVA test between variables of the NB models", label="T_xan2x")
-
-# Compare NB and Poisson
-tx.n1_n2 <- texreg(list(n1, n2), caption="Comparison of Poisson and NB GLMs", label="T_n1n2", booktabs=TRUE)
-
-tx.n1_n2
-
-lr.n1_n2 <- lrtest(n1, n2)
-
-lr.n1_n2
-
-xlr.n1_n2 <- xtable(lr.n1_n2, caption="Likelihood ratio test between Poisson and NB GLMs", label="T_lrn1n2")
-
-print(xlr.n1_n2)
-
-# 3. Poisson GLMM
-
-n3 <- glmmadmb(extortions ~ bribes +  tasahom + yearsquant + restbar + size +
-                (1 | NOM_ABR), data=enve_test, family="poisson",
-               zeroInflation=FALSE, extra.args="-ndi 60000",
-               admb.opts = admbControl(noinit = FALSE))
-
-summary(n3)
-confint(n3)
-dev.stat(n3)
-
-# 4. Negative Binomial GLMM
-
-n4.0 <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar + size +
-                 (1 | NOM_ABR), data=enve_test,
-                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-                 admb.opts = admbControl(noinit = FALSE))
-
-summary(n4.0)
-confint(n4.0)
-dev.stat(n4.0)
 
 # Interactions
-n4.int <- glmmadmb(extortions ~ bribes + tasahom + (yearsquant + restbar) * size + yearsquant:restbar +
-                 (1 | NOM_ABR), data=enve_test,
-                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+n4.int <- glmmadmb(extortions ~ bribes + tasahom + yearsquant + restbar
+                + size + yearsquant:restbar + yearsquant:size +
+                restbar:size + (1 | NOM_ABR),
+                data=enve_test, family="nbinom", zeroInflation=FALSE,
+                extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
 summary(n4.int)
 confint(n4.int)
 dev.stat(n4.int)
+BIC(n4.int)
+#vif
+vif(n4.int)
+
+n4.int.lm <- lm(extortions ~ bribes + tasahom + yearsquant + restbar
+                + size + yearsquant:restbar + yearsquant:size + restbar:size, data=enve_test)
+
+summary(n4.int.lm)
+vif(n4.int.lm)
+
+
+# Dropping yearsquant
+n4.1.int <- glmmadmb(extortions ~ bribes + tasahom  + restbar
+                + size + yearsquant:restbar + yearsquant:size +
+                restbar:size + (1 | NOM_ABR),
+                data=enve_test, family="nbinom", zeroInflation=FALSE,
+                extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
+
+summary(n4.1.int)
+confint(n4.1.int)
+dev.stat(n4.1.int)
+BIC(n4.1.int)
+#vif
+vif(n4.1.int)
+
+anova.n4.1.int <- anova(n4.1.int, n4.int)
+
+anova.n4.1.int
+
+xan4.1.int <- xtable(anova.n4.1.int, caption="ANOVA test dropping yearsquant of the NB mixed models with interactions", label="T_xan41int")
+
+print(xan4.1.int)
+
+## lr test for likelihood ratio for interactions full model
+lr.n4.int_m4 <- lrtest(n4.int, m4.0)
+
+lr.n4.int_m4
+
+xlr.n4.int_m4 <- xtable(lr.n4.int_m4, caption="Likelihood ratio test between Interactions and no interactions",
+                    label="T_lrm3m4")
+
+print(xlr.n4.int_m4)
+
 
 
 # Comparison between Poisson and NB GLMMs
