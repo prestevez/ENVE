@@ -10,6 +10,7 @@ library(lmtest)
 library(MASS)
 # library(lme4) # will run all models (one level and ml) using glmmADMB
 #library(glmmADMB)
+library(car)
 library(evaluate)
 library(classInt)
 library(dgof)
