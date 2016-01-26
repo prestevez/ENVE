@@ -1,4 +1,11 @@
+### Versiones anteriores
+
+- Versión 0.3.1
+
+
+- Versión 0.3
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.33882.svg)](http://dx.doi.org/10.5281/zenodo.33882)
+
 # Instrucciones de scripts para el análisis de ENVE 2014 en R
 *Patricio R. Estévez Soto*  
 
