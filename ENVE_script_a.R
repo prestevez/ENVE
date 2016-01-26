@@ -577,6 +577,21 @@ lr.p4c1_p4b1 <- lrtest(p4.c1, p4.b1)
 
 lr.p4c1_p4b1
 
+## Compare with full model with one level bribery
+
+lr.p4a1_m40 <- lrtest(p4.a1, m4.0)
+
+lr.p4a1_m40
+
+lr.p4b1_m40 <- lrtest(p4.b1, m4.0)
+
+lr.p4b1_m40
+
+lr.p4c1_m40 <- lrtest(p4.c1, m4.0)
+
+lr.p4c1_m40
+
+
 ## Now with raw state bribery aggregate
 
 p4.d <- glmmadmb(extortions ~ bribes + log(denuncias_homs) + log(poblacion) + yearsquant + restbar + size + bribes_abvic
@@ -617,197 +632,153 @@ lr.p4e_p4b
 
 ## Drop one level bribery
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 4.x Investigating different variables in the NB GLMMs
-
-p4.1 <- glmmadmb(extortions ~ bribes + log(denuncias_homs) + log(poblacion) + yearsquant + restbar +
+p4.d1 <- glmmadmb(extortions ~ log(denuncias_homs) + log(poblacion) + yearsquant + restbar + size + bribes_abvic
                     (1 | NOM_ABR), data=enve_test,
                     family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
-summary(p4.1)
-confint(p4.1)
-dev.stat(p4.1)
+summary(p4.d1)
+confint(p4.d1)
+dev.stat(p4.d1)
+vif(p4.d1)
 
-p4.2 <- glmmadmb(extortions ~ bribes + log(denuncias_homs) + log(poblacion) + yearsquant +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+p4.e1 <- glmmadmb(extortions ~ log(denuncias_homs) + log(poblacion) + yearsquant + restbar + size + bribes_abincs
+                    (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
-summary(p4.2)
-confint(p4.2)
-dev.stat(p4.2)
+summary(p4.e1)
+confint(p4.e1)
+dev.stat(p4.e1)
+vif(p4.e1)
 
-p4.3 <- glmmadmb(extortions ~ bribes + log(denuncias_homs) + log(poblacion) +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+# evaluate
+
+lr.p4d1_p4d <- lrtest(p4.d1, p4.d)
+
+lr.p4d1_p4d
+
+lr.p4e1_p4e <- lrtest(p4.e1, p4.e)
+
+lr.p4e1_p4e
+
+
+# compare with full models o4.0 y o4.nb
+
+lr.p4d1_o4.0 <- lrtest(p4.d1, o4.0)
+
+lr.p4d1_o4.0
+
+lr.p4e1_o4.0 <- lrtest(p4.e1, o4.0)
+
+lr.p4e1_o4.0
+
+lr.p4d1_o4.nb <- lrtest(p4.d1, o4.nb)
+
+lr.p4d1_o4.nb
+
+lr.p4e1_o4.nb <- lrtest(p4.e1, o4.nb)
+
+lr.p4e1_o4.nb
+
+# drop log pop
+
+p4.d2 <- glmmadmb(extortions ~ log(denuncias_homs) + yearsquant + restbar + size + bribes_abvic
+                    (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
-summary(p4.3)
-confint(p4.3)
-dev.stat(p4.3)
+summary(p4.d2)
+confint(p4.d2)
+dev.stat(p4.d2)
+vif(p4.d2)
 
-p4.4 <- glmmadmb(extortions ~ bribes +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+p4.e2 <- glmmadmb(extortions ~ log(denuncias_homs) + yearsquant + restbar + size + bribes_abincs
+                    (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
                  admb.opts = admbControl(noinit = FALSE))
 
-summary(p4.4)
-confint(p4.4)
-dev.stat(p4.4)
+summary(p4.e2)
+confint(p4.e2)
+dev.stat(p4.e2)
+vif(p4.e2)
 
-p4.null <- glmmadmb(extortions ~ 1 +
-                   (1 | NOM_ABR), data=enve_test,
-                   family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
-                   admb.opts = admbControl(noinit = FALSE))
+# evaluate
 
-summary(p4.null)
-confint(p4.null)
-dev.stat(p4.null)
+lr.p4d2_p4d1 <- lrtest(p4.d2, p4.d1)
 
-# Compare all NB GLMMs
-tx.p4.x <- texreg(list(p4.0, p4.1, p4.2, p4.3, p4.4, p4.null), caption="Comparison of all NB mixed models",
-                  label="T_tx_p4x", booktabs=TRUE)
+lr.p4d2_p4d1
 
-tx.p4.x
+lr.p4e2_p4e1 <- lrtest(p4.e2, p4.e1)
 
-anova.p4.x <- anova(p4.null, p4.4, p4.3, p4.2, p4.1, p4.0)
+lr.p4e2_p4e1
 
-anova.p4.x
+# drop log mur
 
-xap4.x <- xtable(anova.p4.x, caption="ANOVA test between variables of the NB mixed models", label="T_xam4x")
+p4.d3 <- glmmadmb(extortions ~ + yearsquant + restbar + size + bribes_abvic
+                    (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
 
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
+summary(p4.d3)
+confint(p4.d3)
+dev.stat(p4.d3)
+vif(p4.d3)
 
-# Comparison between using murder rate and raw numbers
+p4.e3 <- glmmadmb(extortions ~ + yearsquant + restbar + size + bribes_abincs
+                    (1 | NOM_ABR), data=enve_test,
+                    family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
 
-##########################################################################
-##########################################################################
-##########################################################################
-##########################################################################
+summary(p4.e3)
+confint(p4.e3)
+dev.stat(p4.e3)
+vif(p4.e3)
 
-# GLM
-tx.m2_o2 <- texreg(list(m2, o2), caption="NB Models using murder rate or log covariates", label="T_m2o2")
+# evaluate
 
-tx.m2_o2
+lr.p4d2_p4d3 <- lrtest(p4.d2, p4.d3)
 
-anova.m2_o2 <- anova(m2, o2)
+lr.p4d2_p4d3
 
-anova.m2_o2
+lr.p4e2_p4e3 <- lrtest(p4.e2, p4.e3)
 
-xam2o2 <- xtable(anova.m2_o2, caption="ANOVA between the NB models using murder rate or log", label="T_xanm2o2")
+lr.p4e2_p4e3
 
-print(xam2o2)
 
-# GLMM
-tx.m4_o4 <- texreg(list(m4.0, o4.0), caption="NB Mixed Models using murder rate or log covariates", label="T_m4o4")
+#############################
+### Birbery as a DV
 
-tx.m4_o4
+b4.0 <- glmmadmb(bribes ~ extortions + tasahom + yearsquant + subsector + size +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
 
-anova.m4_o4 <- anova(m4.0, o4.0)
+summary(b4.0)
+confint(b4.0)
+dev.stat(b4.0)
+# VIF
+vif(b4.0)
 
-anova.m4_o4
+## dropping extortion
+b4.1 <- glmmadmb(bribes ~ tasahom + yearsquant + subsector + size +
+                 (1 | NOM_ABR), data=enve_test,
+                 family="nbinom", zeroInflation=FALSE, extra.args="-ndi 60000",
+                 admb.opts = admbControl(noinit = FALSE))
 
-xam4o4 <- xtable(anova.m4_o4, caption="ANOVA between the NB mixed models using murder rate or log", label="T_xanm4o4")
+summary(b4.1)
+confint(b4.1)
+dev.stat(b4.1)
+# VIF
+vif(b4.1)
 
-print(xam4o4)
+# evaluate
 
-# Compare NB GLM to NB GLMM
+lr.b4_b41 <- lrtest(b4.0, b4.1)
 
-tx.o2_o4 <- texreg(list(o2, o4.0), caption="Comparison of NB GLM to Mixed Models", label="T_o2o4", booktabs=TRUE)
+lr.b4_b41
 
-tx.o2_o4
 
-lr.o2_o4 <- lrtest(o2, o4.0)
-
-lr.o2_o4
-
-xlr.o2_o4 <- xtable(lr.o2_o4, caption="Likelihood ratio test between NB GLM and Mixed Models", label="T_lro2_o4")
-
-print(xlr.o2_o4)
-
-## from round 2
-
-tx.p2_p4 <- texreg(list(n2, n4.0), caption="Comparison of NB GLM to Mixed Models", label="T_n2n4ADn4", booktabs=TRUE)
-
-tx.p2_p4
-
-lr.p2_p4 <- lrtest(p2, p4.0)
-
-lr.p2_p4
-
-xlr.p2_p4 <- xtable(lr.p2_p4, caption="Likelihood ratio test between NB GLM and Mixed Models", label="T_lrp2_p4")
-
-print(xlr.p2_p4)
-
-## n v p
-# GLM
-tx.n2_p2 <- texreg(list(n2, p2), caption="NB Models using murder rate or log covariates", label="T_n2p2")
-
-tx.n2_p2
-
-anova.n2_p2 <- anova(n2, p2)
-
-anova.n2_p2
-
-xan2p2 <- xtable(anova.n2_p2, caption="ANOVA between the NB models using murder rate or log", label="T_xan2p2")
-
-print(xan2p2)
-
-# GLMM
-tx.n4_p4 <- texreg(list(n4.0, p4.0), caption="NB Mixed Models using murder rate or log covariates", label="T_n4p4")
-
-tx.n4_p4
-
-anova.n4_p4 <- anova(n4.0, p4.0)
-
-anova.n4_p4
-
-xan4p4 <- xtable(anova.n4_p4, caption="ANOVA between the NB mixed models using murder rate or log", label="T_xan4p4")
-
-print(xan4p4)
-
-## o v p
-# GLM
-tx.o2_p2 <- texreg(list(o2, p2), caption="NB Models using murder rate or log covariates", label="T_o2p2")
-
-tx.o2_p2
-
-anova.o2_p2 <- anova(o2, p2)
-
-anova.o2_p2
-
-xao2p2 <- xtable(anova.o2_p2, caption="ANOVA between the NB models using murder rate or log", label="T_xao2p2")
-
-print(xao2p2)
-
-# GLMM
-tx.o4_p4 <- texreg(list(o4.0, p4.0), caption="NB Mixed Models using murder rate or log covariates", label="T_o4p4")
-
-tx.o4_p4
-
-anova.o4_p4 <- anova(o4.0, p4.0)
-
-anova.o4_p4
-
-xao4p4 <- xtable(anova.o4_p4, caption="ANOVA between the NB mixed models using murder rate or log", label="T_xao4p4")
-
-print(xao4p4)
 
 ##########################################################################
 ##########################################################################
