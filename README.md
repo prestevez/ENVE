@@ -1,4 +1,4 @@
-### Versiones anteriores
+### Releases
 
 - Versión 0.3.1
 
