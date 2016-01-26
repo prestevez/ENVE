@@ -2,7 +2,7 @@
 *Patricio R. Estévez Soto*  
 Email: [patricio.estevez.14@ucl.ac.uk](mailto:patricio.estevez.14@ucl.ac.uk)
 
-## Versión 0.4
+## Versión 0.3.1
 
 Estas instrucciones detallan brevemente el procedimiento necesario para correr exitosamente los scripts diseñados para el análisis de la ENVE 2014 en R.
 
