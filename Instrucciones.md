@@ -2,7 +2,7 @@
 *Patricio R. Estévez Soto*  
 Email: [patricio.estevez.14@ucl.ac.uk](mailto:patricio.estevez.14@ucl.ac.uk)
 
-## Versión 0.3
+## Versión 0.4
 
 Estas instrucciones detallan brevemente el procedimiento necesario para correr exitosamente los scripts diseñados para el análisis de la ENVE 2014 en R.
 
@@ -30,6 +30,9 @@ Los paquetes requeridos por este proyecto son los siguientes:
 - **glmmADMB**: Algoritmo utilizado para los modelos estadísticos multinivel (fuera de CRAN, requiere instalación desde código fuente).
 - **classInt**: Genera intervalos para quantiles
 - **dgof**: Requerido para prueba KS-Test de distribuciones discretas (Poisson y NB)
+- **lme4**: Paquete alternativo para correr modelos multinivel basados en la distribución Poisson
+- **car**: Permite realizar pruebas diagnósticas post-hoc, como evaluar los VIF.
+
 
 
 Algunos de estos paquetes pueden ya estar instalados en nuestra computadora. Aquellos que no estén instalados pueden instalarse mediante los siguientes comandos:
@@ -47,6 +50,8 @@ install.packages("coda")
 install.packages("R2admb")
 install.packages("classInt")
 install.packages("dgof")
+install.packages("lme4")
+install.packages("car")
 ```
 
 El paquete **glmmADMB** no se encuentra en los repositorios CRAN y debe de instalarse desde código fuente (para ello se requiere Rtools en un ambiente Windows; vea las instrucciones abajo). El paquete **glmmADMB** posiblemente requiera de la [**versión más nueva de R disponible en CRAN**](https://cran.r-project.org). De ser posible, asegúrese de contar con la versión más actualizada de R. De lo contrario, la instalación puede fallar.
@@ -105,19 +110,19 @@ Sólo se requiere que el *path* al folder del proyecto sea especificado.
 
 ### Ejecutar el script
 
-El proyecto está contenido en tres scripts: **ENVE_script_00.R**, **ENVE_script.R** y **functions.R**.
+El proyecto está contenido en tres scripts: **ENVE_script_00_a.R**, **ENVE_script_a.R** y **functions.R**.
 
-**Sólo es necesario correr ENVE_script_00.R**, pues este script contiene las instrucciones para correr los otros dos.
+**Sólo es necesario correr ENVE_script_00_a.R**, pues este script contiene las instrucciones para correr los otros dos.
 
 Para ejecutarlo, escriba el siguiente comando en la consola de R y ejecute:
 
 ```
-source(file="ENVE_script_00.R", echo=TRUE)
+source(file="ENVE_script_00_a.R", echo=TRUE)
 ```
 
 La ejecución tarda cerca de dos horas, es normal que parezca que no hace nada.
 
-Cuando termine de ejecutarse, la consola probablemente avisará que se generaron un número de *warnings*.
+Cuando termine de ejecutarse, la consola probablemente avisará que se generaron un número de *warnings* y/o *errors*.
 
 ## Resultados
 
@@ -125,7 +130,6 @@ El script automáticamente realizará los análisis requeridos y guardará los r
 
 Dentro de esta subcarpeta se encontrarán los siguientes archivos:
 - Archivo de texto **[número]_log.txt**: Contiene los comandos y resultados del script en texto.
-- Archivos **.pdf** y **.png**: Contienen imágenes con gráficas de los análisis realizados.
 
 ## Errores
 
