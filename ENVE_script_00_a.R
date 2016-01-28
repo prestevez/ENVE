@@ -52,7 +52,7 @@ source("functions.R", echo=TRUE, max.deparse.length=10000)
 
 
 starttime <- proc.time()
-results <- evaluate(file("ENVE_script.R"), new_device=FALSE)
+results <- evaluate(file("ENVE_script_a.R"), new_device=FALSE)
 endtime <- proc.time()
 
 ######### Processing time #########
@@ -65,4 +65,4 @@ replay(results)
 
 sink()
 
-## End of ENVE_script_00.R
+## End of ENVE_script_00_a.R
