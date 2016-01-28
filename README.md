@@ -1,7 +1,7 @@
 ### Releases
 
-- Versión 0.3.1
-
+- Versión 0.3.1  
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.45292.svg)](http://dx.doi.org/10.5281/zenodo.45292)
 
 - Versión 0.3  
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.33882.svg)](http://dx.doi.org/10.5281/zenodo.33882)
@@ -142,6 +142,10 @@ El script está diseñado para correr hasta el final aún y cuando se generen er
 El script de análisis está dividido en dos secciones. La primera realiza una batería de análisis exploratorios (EDA) para describir la distribución de los datos, así como para explorar las relaciones bivariadas entre la variable dependiente (conteo de extorsiones por empresa), y las variables independientes seleccionadas.
 
 La segunda sección realiza modelos estadísticos basados en distribuciones Poisson y Negative Binomial, en versión uni-nivel y multi-nivel.
+
+# Financiamiento
+
+Este proyecto de investigación está financiado por beca de posgrado CONACYT - Gobierno del Estado de Nuevo León, y por una beca complementaria de la Secretaría de Educación.
 
 # Licencia
 
