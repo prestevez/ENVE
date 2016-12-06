@@ -198,25 +198,147 @@ kable(bribes)
 
 ```
 
+## Years vs. extortions plot
+
+```{r years}
+### using the raw years variable
+
+cor.ext_years <- with(enve_test, cor.test(extortions, years, method="pearson"))
+cor.ext_years
+
+# For raw years number
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth(method="lm") +
+                        xlab("Years") +
+                        ylab("Extortions") +
+                        theme_bw()
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth(method="lm") +
+                        xlab("Years (sqrt scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="sqrt")
+
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth(method="lm") +
+                        xlab("Years (log scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="log1p")
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        xlab("Years") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        geom_density_2d()
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        xlab("Years (sqrt scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="sqrt") +
+                        geom_density_2d()
+
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        xlab("Years (log scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="log1p") +
+                        geom_density_2d()
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth() +
+                        xlab("Years") +
+                        ylab("Extortions") +
+                        theme_bw()
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth() +
+                        xlab("Years (sqrt scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="sqrt")
+
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth() +
+                        xlab("Years (log scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="log1p")
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth(method="loess") +
+                        xlab("Years") +
+                        ylab("Extortions") +
+                        theme_bw()
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth(method="loess") +
+                        xlab("Years (sqrt scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="sqrt")
+
+
+ggplot(enve_test, aes(x=years, y=extortions)) +
+                        geom_point() +
+                        geom_smooth(method="loess") +
+                        xlab("Years (log scale)") +
+                        ylab("Extortions") +
+                        theme_bw() +
+                        coord_trans(x="log1p")
+```
+
+
 # Model
 
 ```{r model}
 
-# 4. Negative Binomial GLMM
+# Negative Binomial GLMM
 
 m <- glmmadmb(extortions ~ bribes + tasahom + yearsquant +
                 subsector + size + (1 | NOM_ABR), data=enve_test,
                  family="nbinom", zeroInflation=FALSE,
                  extra.args="-ndi 60000", admb.opts = admbControl(noinit = FALSE))
 
-summary(m4)
+summary(m)
 
 ```
+
+Using lme4 instead of glmmadmb
 
 ```{r model-lme4}
 
 m_lme4 <- glmer.nb(extortions ~ bribes + tasahom + yearsquant +
                 subsector + size + (1 | NOM_ABR), data=enve_test)
 
+summary(m_lme4)
 
+screenreg(list(m,m_lme4))
+```
+
+# Benchmark stats
+
+```{r timing, cache=FALSE}
+endtime <- proc.time()
+time <- endtime - starttime
+time
+
+print(paste("the script took", round(time[3]/60,2),
+              "minutes to run.", sep=" "))
 ```
